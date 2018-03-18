@@ -20,9 +20,7 @@ set(SFML_INCS "lib/sfml/include")
 link_directories("${CMAKE_BINARY_DIR}/lib/sfml/lib")
 
 ### Download Assets ###
-if (NOT "${MY_DOWNLOAD_PATH}")
-	file(DOWNLOAD "${MY_URL}" "${MY_DOWNLOAD_PATH}" )
-endif()
+file(DOWNLOAD "${MY_URL}" "${MY_DOWNLOAD_PATH}" )
 # Extract Assets
 execute_process(
 	COMMAND ${CMAKE_COMMAND} -E tar xzf "${MY_DOWNLOAD_PATH}"
