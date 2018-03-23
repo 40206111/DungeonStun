@@ -33,6 +33,11 @@ U Axis - R2 -100 not pressed, 100 fully pressed
 
 InputManager::InputManager()
 {
+	ControlSystem pscontroller;
+	pscontroller.controls = {
+		{R1, SVM}, {L1, JUMP}, {O, JUMP},
+		{R2, FIRE}, {L2, SHIELD}, {X, ACTIVE} };
+	activeControls = pscontroller;
 	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
 	cout << "\nVendor ID: " << id.vendorId << "\nProduct ID: " << id.productId << endl;
 
@@ -48,65 +53,102 @@ InputManager::InputManager()
 		cout << "Button count: " << buttonCount << std::endl;
 		cout << "Has a z-axis: " << hasZ << std::endl;
 	}
-} 
+}
 
-void InputManager::Update(double dt)
+void InputManager::ButtonDebug()
 {
-	if (sf::Joystick::isButtonPressed(0, SQUARE))
+	if (GetButtonDown(SQUARE))
 	{
 		cout << "SQUARE" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, X))
+	if (GetButtonDown(X))
 	{
 		cout << "X" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, O))
+	if (GetButtonDown(O))
 	{
 		cout << "O" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, TRIANGLE))
+	if (GetButtonDown(TRIANGLE))
 	{
 		cout << "TRIANGLE" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, L1))
+	if (GetButtonDown(L1))
 	{
 		cout << "L1" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, R1))
+	if (GetButtonDown(R1))
 	{
 		cout << "R1" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, L2))
+	if (GetButtonDown(L2))
 	{
 		cout << "L2" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, R2))
+	if (GetButtonDown(R2))
 	{
 		cout << "R2" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, SELECT))
+	if (GetButtonDown(SELECT))
 	{
 		cout << "SELECT" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, START))
+	if (GetButtonDown(START))
 	{
 		cout << "START" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, LEFTA))
+	if (GetButtonDown(LEFTA))
 	{
 		cout << "LEFTA" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, RIGHTA))
+	if (GetButtonDown(RIGHTA))
 	{
 		cout << "RIGHTA" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, PS))
+	if (GetButtonDown(PS))
 	{
 		cout << "PS" << endl;
 	}
-	if (sf::Joystick::isButtonPressed(0, TOUCH))
+	if (GetButtonDown(TOUCH))
 	{
 		cout << "TOUCH" << endl;
 	}
+}
 
+void InputManager::Update(double dt)
+{
+	for (int i = 0; i < 14; ++i)
+	{
+		if (buttonDown[i]) {
+			buttonDown[i] = false;
+		}
+		if (buttonReleased[i]) {
+			buttonReleased[i] = false;
+		}
+		if (sf::Joystick::isButtonPressed(0, i))
+		{
+			if (!buttonHeld[i]) {
+				buttonDown[i] = true;
+				buttonHeld[i] = true;
+			}
+		}
+		else if (buttonHeld[i]) {
+			buttonHeld[i] = false;
+			buttonReleased[i] = true;
+		}
+	}
+
+	ButtonDebug();
+}
+
+bool InputManager::GetButtonDown(unsigned int button) {
+	return buttonDown[button];
+}
+
+bool InputManager::GetButtonHeld(unsigned int button) {
+	return buttonHeld[button];
+}
+
+bool InputManager::GetButtonReleased(unsigned int button) {
+	return buttonReleased[button];
 }
