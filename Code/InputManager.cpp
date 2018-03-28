@@ -170,8 +170,11 @@ void InputManager::CreateControlers()
 	ControlSystem pscontroller;
 	//set basic ps4 controls
 	pscontroller.controls = {
-		{SVM, std::make_pair(R1, NONE)},{ JUMP, std::make_pair(L1, O) },
-		{ FIRE, std::make_pair(R2, NONE) },{ SHIELD, std::make_pair(L2, NONE)},{ ACTIVE, std::make_pair(X, NONE)} };
+		{LEFT, std::make_pair(NONE, NONE)},{RIGHT, std::make_pair(NONE, NONE)},
+		{SVM, std::make_pair(R1, NONE)},{JUMP, std::make_pair(L1, O)},
+		{FIRE, std::make_pair(R2, NONE)},{SHIELD, std::make_pair(L2, NONE)},
+		{ACTIVE, std::make_pair(X, NONE)},{AIM, std::make_pair(NONE, NONE)}
+	};
 	pscontroller.controlType = "PS4";
 	keyMaps.insert({ "PS4", pscontroller });
 
@@ -181,7 +184,7 @@ void InputManager::CreateControlers()
 		{LEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Unknown)},{RIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Unknown)},
 		{SVM, std::make_pair(sf::Keyboard::W, sf::Keyboard::Unknown)},{JUMP, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
 		{FIRE, std::make_pair(sf::Mouse::Left, sf::Keyboard::Unknown)},{SHIELD, std::make_pair(sf::Mouse::Right, sf::Keyboard::Unknown)},
-		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)}
+		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(NONE, NONE)}
 	};
 	keyboard.controlType = "Keyboard";
 
@@ -257,19 +260,22 @@ void InputManager::Update(double dt)
 }
 
 bool InputManager::GetButtonDown(unsigned int action) {
-	if (buttonDown.test(activeControls.controls[action].first) || buttonDown.test(activeControls.controls[action].second))
+	if ((activeControls.controls[action].first != -1 && buttonDown.test(activeControls.controls[action].first)) ||
+		(activeControls.controls[action].second != -1 && buttonDown.test(activeControls.controls[action].second)))
 		return true;
 	return false;
 }
 
 bool InputManager::GetButtonHeld(unsigned int action) {
-	if (buttonHeld.test(activeControls.controls[action].first) || buttonHeld.test(activeControls.controls[action].second))
+	if ((activeControls.controls[action].first != -1 && buttonHeld.test(activeControls.controls[action].first)) ||
+		(activeControls.controls[action].second != -1 && buttonHeld.test(activeControls.controls[action].second)))
 		return true;
 	return false;
 }
 
 bool InputManager::GetButtonReleased(unsigned int action) {
-	if (buttonReleased.test(activeControls.controls[action].first) || buttonReleased.test(activeControls.controls[action].second))
+	if ((activeControls.controls[action].first != -1 && buttonHeld.test(activeControls.controls[action].first)) ||
+		(activeControls.controls[action].second != -1 && buttonHeld.test(activeControls.controls[action].second)))
 		return true;
 	return false;
 }
