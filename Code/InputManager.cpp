@@ -90,11 +90,8 @@ const std::map<sf::Keyboard::Key, std::string> InputManager::keyboardControls = 
 
 InputManager::InputManager()
 {
-	ControlSystem pscontroller;
-	pscontroller.controls = {
-		{R1, SVM}, {L1, JUMP}, {O, JUMP},
-		{R2, FIRE}, {L2, SHIELD}, {X, ACTIVE} };
-	activeControls = pscontroller;
+	InputManager::CreateControlers();
+	activeControls = keyMaps["PS4"];
 	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
 	cout << "\nVendor ID: " << id.vendorId << "\nProduct ID: " << id.productId << endl;
 
@@ -131,98 +128,148 @@ const std::map<InputManager::PS4, std::string> InputManager::ps4Controls = {
 
 void InputManager::ButtonDebug()
 {
-	if (GetButtonDown(SQUARE))
+	// LEFT, RIGHT, SVM, JUMP, AIM, FIRE, SHIELD, ACTIVE
+	if (GetButtonDown(LEFT))
 	{
-		cout << "SQUARE" << endl;
+		cout << "LEFT" << endl;
 	}
-	if (GetButtonDown(X))
+	if (GetButtonDown(RIGHT))
 	{
-		cout << "X" << endl;
+		cout << "RIGHT" << endl;
 	}
-	if (GetButtonDown(O))
+	if (GetButtonDown(SVM))
 	{
-		cout << "O" << endl;
+		cout << "SVM" << endl;
 	}
-	if (GetButtonDown(TRIANGLE))
+	if (GetButtonDown(JUMP))
 	{
-		cout << "TRIANGLE" << endl;
+		cout << "JUMP" << endl;
 	}
-	if (GetButtonDown(L1))
+	if (GetButtonDown(AIM))
 	{
-		cout << "L1" << endl;
+		cout << "AIM" << endl;
 	}
-	if (GetButtonDown(R1))
+	if (GetButtonDown(FIRE))
 	{
-		cout << "R1" << endl;
+		cout << "FIRE" << endl;
 	}
-	if (GetButtonDown(L2))
+	if (GetButtonDown(SHIELD))
 	{
-		cout << "L2" << endl;
+		cout << "SHEILD" << endl;
 	}
-	if (GetButtonDown(R2))
+	if (GetButtonDown(ACTIVE))
 	{
-		cout << "R2" << endl;
+		cout << "ACTIVE" << endl;
 	}
-	if (GetButtonDown(SELECT))
+
+}
+
+void InputManager::CreateControlers()
+{
+	//create playstation control system
+	ControlSystem pscontroller;
+	//set basic ps4 controls
+	pscontroller.controls = {
+		{SVM, std::make_pair(R1, NONE)},{ JUMP, std::make_pair(L1, O) },
+		{ FIRE, std::make_pair(R2, NONE) },{ SHIELD, std::make_pair(L2, NONE)},{ ACTIVE, std::make_pair(X, NONE)} };
+	pscontroller.controlType = "PS4";
+	keyMaps.insert({ "PS4", pscontroller });
+
+	ControlSystem keyboard;
+
+	keyboard.controls = {
+		{LEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Unknown)},{RIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Unknown)},
+		{SVM, std::make_pair(sf::Keyboard::W, sf::Keyboard::Unknown)},{JUMP, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
+		{FIRE, std::make_pair(sf::Mouse::Left, sf::Keyboard::Unknown)},{SHIELD, std::make_pair(sf::Mouse::Right, sf::Keyboard::Unknown)},
+		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)}
+	};
+	keyboard.controlType = "Keyboard";
+
+	keyMaps.insert({ "Keyboard", keyboard });
+}
+
+void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, std::string mapkey)
+{
+	Event event;
+	while (window.pollEvent(event))
 	{
-		cout << "SELECT" << endl;
-	}
-	if (GetButtonDown(START))
-	{
-		cout << "START" << endl;
-	}
-	if (GetButtonDown(LEFTA))
-	{
-		cout << "LEFTA" << endl;
-	}
-	if (GetButtonDown(RIGHTA))
-	{
-		cout << "RIGHTA" << endl;
-	}
-	if (GetButtonDown(PS))
-	{
-		cout << "PS" << endl;
-	}
-	if (GetButtonDown(TOUCH))
-	{
-		cout << "TOUCH" << endl;
+		unsigned int code = NULL;
+		std::string key = "";
+
+		if (keyMaps[mapkey].controlType == "keyboard")
+		{
+			if (event.type == sf::Event::KeyPressed)
+			{
+				code = event.key.code;
+			}
+
+			if (event.type == sf::Event::TextEntered)
+			{
+				key = (char)(event.text.unicode);
+			}
+
+			if (key == "")
+			{
+			}
+		}
+		else if (keyMaps[mapkey].controlType == "PS4")
+		{
+			if (event.type == sf::Event::JoystickButtonPressed)
+			{
+				code = event.joystickButton.button;
+				key = ps4Controls.at((PS4)code);
+			}
+		}
+
+		if (code != NULL)
+		{
+			if (primary)
+				keyMaps["keyboard"].controls[action].first = code;
+			else
+				keyMaps["keyboard"].controls[action].second = code;
+		}
 	}
 }
 
 void InputManager::Update(double dt)
 {
-	for (int i = 0; i < 14; ++i)
+	for (int i = 0; i < 16; ++i)
 	{
-		if (buttonDown[i]) {
-			buttonDown[i] = false;
+		if (buttonDown.test(i)) {
+			buttonDown.reset(i);
 		}
-		if (buttonReleased[i]) {
-			buttonReleased[i] = false;
+		if (buttonReleased.test(i)) {
+			buttonReleased.reset(i);
 		}
 		if (sf::Joystick::isButtonPressed(0, i))
 		{
-			if (!buttonHeld[i]) {
-				buttonDown[i] = true;
-				buttonHeld[i] = true;
+			if (!buttonHeld.test(i)) {
+				buttonDown.set(i);
+				buttonHeld.set(i);
 			}
 		}
-		else if (buttonHeld[i]) {
-			buttonHeld[i] = false;
-			buttonReleased[i] = true;
+		else if (buttonHeld.test(i)) {
+			buttonHeld.reset(i);
+			buttonReleased.set(i);
 		}
 	}
-
 	ButtonDebug();
 }
 
-bool InputManager::GetButtonDown(unsigned int button) {
-	return buttonDown[button];
+bool InputManager::GetButtonDown(unsigned int action) {
+	if (buttonDown.test(activeControls.controls[action].first) || buttonDown.test(activeControls.controls[action].second))
+		return true;
+	return false;
 }
 
-bool InputManager::GetButtonHeld(unsigned int button) {
-	return buttonHeld[button];
+bool InputManager::GetButtonHeld(unsigned int action) {
+	if (buttonHeld.test(activeControls.controls[action].first) || buttonHeld.test(activeControls.controls[action].second))
+		return true;
+	return false;
 }
 
-bool InputManager::GetButtonReleased(unsigned int button) {
-	return buttonReleased[button];
+bool InputManager::GetButtonReleased(unsigned int action) {
+	if (buttonReleased.test(activeControls.controls[action].first) || buttonReleased.test(activeControls.controls[action].second))
+		return true;
+	return false;
 }
