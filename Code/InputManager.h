@@ -10,6 +10,7 @@ struct ControlSystem {
 	std::map<unsigned int, std::pair<int, int>> controls;
 	//string for control type
 	std::string controlType;
+	std::map<unsigned int, int> mouseControls;
 };
 
 //Input Manager Class

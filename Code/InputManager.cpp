@@ -91,7 +91,7 @@ const std::map<sf::Keyboard::Key, std::string> InputManager::keyboardControls = 
 InputManager::InputManager()
 {
 	InputManager::CreateControlers();
-	activeControls = keyMaps["keyboard"];
+	activeControls = keyMaps["PS4"];
 	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
 	cout << "\nVendor ID: " << id.vendorId << "\nProduct ID: " << id.productId << endl;
 
@@ -183,12 +183,19 @@ void InputManager::CreateControlers()
 	keyboard.controls = {
 		{LEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Unknown)},{RIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Unknown)},
 		{SVM, std::make_pair(sf::Keyboard::W, sf::Keyboard::Unknown)},{JUMP, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
-		{FIRE, std::make_pair(sf::Mouse::Left, sf::Keyboard::Unknown)},{SHIELD, std::make_pair(sf::Mouse::Right, sf::Keyboard::Unknown)},
-		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(NONE, NONE)}
+		{FIRE, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},{SHIELD, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
+		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)}
 	};
 	keyboard.controlType = "keyboard";
 
+	keyboard.mouseControls = {
+		{LEFT, sf::Keyboard::Unknown},{RIGHT, sf::Keyboard::Unknown},
+		{SVM, sf::Keyboard::Unknown},{JUMP, sf::Keyboard::Unknown},
+		{FIRE, sf::Mouse::Left},{SHIELD, sf::Mouse::Right},
+		{ACTIVE, sf::Keyboard::Unknown},{AIM, sf::Keyboard::Unknown}
+	};
 	keyMaps.insert({ "keyboard", keyboard });
+
 }
 
 void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, std::string mapkey)
@@ -254,8 +261,15 @@ void InputManager::Update(double dt)
 				buttonHeld.set(i);
 			}
 		}
-		else if (first != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(0, second) ||
+		else if (second != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(0, second) ||
 			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)second)))
+		{
+			if (!buttonHeld.test(i)) {
+				buttonDown.set(i);
+				buttonHeld.set(i);
+			}
+		}
+		else if (activeControls.mouseControls[i] != -1 && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]))
 		{
 			if (!buttonHeld.test(i)) {
 				buttonDown.set(i);
@@ -271,7 +285,7 @@ void InputManager::Update(double dt)
 }
 
 bool InputManager::GetButtonDown(unsigned int action) {
-	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) && 
+	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1 && activeControls.mouseControls[action] == -1) && 
 		buttonDown.test(action))
 		return true;
 	return false;
