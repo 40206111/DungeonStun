@@ -91,7 +91,7 @@ const std::map<sf::Keyboard::Key, std::string> InputManager::keyboardControls = 
 InputManager::InputManager()
 {
 	InputManager::CreateControlers();
-	activeControls = keyMaps["PS4"];
+	activeControls = keyMaps["keyboard"];
 	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
 	cout << "\nVendor ID: " << id.vendorId << "\nProduct ID: " << id.productId << endl;
 
@@ -186,9 +186,9 @@ void InputManager::CreateControlers()
 		{FIRE, std::make_pair(sf::Mouse::Left, sf::Keyboard::Unknown)},{SHIELD, std::make_pair(sf::Mouse::Right, sf::Keyboard::Unknown)},
 		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(NONE, NONE)}
 	};
-	keyboard.controlType = "Keyboard";
+	keyboard.controlType = "keyboard";
 
-	keyMaps.insert({ "Keyboard", keyboard });
+	keyMaps.insert({ "keyboard", keyboard });
 }
 
 void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, std::string mapkey)
@@ -196,7 +196,7 @@ void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, 
 	Event event;
 	while (window.pollEvent(event))
 	{
-		unsigned int code = NULL;
+		int code = -1;
 		std::string key = "";
 
 		if (keyMaps[mapkey].controlType == "keyboard")
@@ -224,27 +224,38 @@ void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, 
 			}
 		}
 
-		if (code != NULL)
+		if (code != -1)
 		{
 			if (primary)
-				keyMaps["keyboard"].controls[action].first = code;
+				keyMaps[mapkey].controls[action].first = code;
 			else
-				keyMaps["keyboard"].controls[action].second = code;
+				keyMaps[mapkey].controls[action].second = code;
 		}
 	}
 }
 
 void InputManager::Update(double dt)
 {
-	for (int i = 0; i < 16; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
+		int first = activeControls.controls[i].first;
+		int second = activeControls.controls[i].second;
 		if (buttonDown.test(i)) {
 			buttonDown.reset(i);
 		}
 		if (buttonReleased.test(i)) {
-			buttonReleased.reset(i);
+			buttonReleased.reset();
 		}
-		if (sf::Joystick::isButtonPressed(0, i))
+		if (first != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(0, first) ||
+			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)first)))
+		{
+			if (!buttonHeld.test(i)) {
+				buttonDown.set(i);
+				buttonHeld.set(i);
+			}
+		}
+		else if (first != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(0, second) ||
+			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)second)))
 		{
 			if (!buttonHeld.test(i)) {
 				buttonDown.set(i);
@@ -260,22 +271,22 @@ void InputManager::Update(double dt)
 }
 
 bool InputManager::GetButtonDown(unsigned int action) {
-	if ((activeControls.controls[action].first != -1 && buttonDown.test(activeControls.controls[action].first)) ||
-		(activeControls.controls[action].second != -1 && buttonDown.test(activeControls.controls[action].second)))
+	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) && 
+		buttonDown.test(action))
 		return true;
 	return false;
 }
 
 bool InputManager::GetButtonHeld(unsigned int action) {
-	if ((activeControls.controls[action].first != -1 && buttonHeld.test(activeControls.controls[action].first)) ||
-		(activeControls.controls[action].second != -1 && buttonHeld.test(activeControls.controls[action].second)))
+	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
+		buttonHeld.test(action))
 		return true;
 	return false;
 }
 
 bool InputManager::GetButtonReleased(unsigned int action) {
-	if ((activeControls.controls[action].first != -1 && buttonHeld.test(activeControls.controls[action].first)) ||
-		(activeControls.controls[action].second != -1 && buttonHeld.test(activeControls.controls[action].second)))
+	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
+		buttonReleased.test(action))
 		return true;
 	return false;
 }

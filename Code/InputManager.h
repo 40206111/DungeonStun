@@ -7,7 +7,7 @@
 //Control System struct
 struct ControlSystem {
 	//map of controls
-	std::map<unsigned int, std::pair<unsigned int, unsigned int>> controls;
+	std::map<unsigned int, std::pair<int, int>> controls;
 	//string for control type
 	std::string controlType;
 };
