@@ -59,6 +59,10 @@ void Update(RenderWindow &window)
 		if (event.type == sf::Event::JoystickDisconnected)
 		{
 			cout << "controller disconnected: " << event.joystickMove.joystickId << endl;
+			if (!start && iMan->activeControls.controlType == "PS4" && iMan->controlerid == event.joystickMove.joystickId)
+			{
+				start = true;
+			}
 		}
 	}
 
