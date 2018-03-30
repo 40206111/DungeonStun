@@ -176,6 +176,12 @@ void InputManager::CreateControlers()
 		{ACTIVE, std::make_pair(X, NONE)},{AIM, std::make_pair(NONE, NONE)}
 	};
 	pscontroller.controlType = "PS4";
+	pscontroller.mouseControls = {
+		{LEFT, L},{RIGHT, R},
+		{SVM, U},{JUMP, NONE},
+		{FIRE, NONE},{SHIELD, NONE},
+		{ACTIVE, NONE},{AIM, NONE}
+	};
 	keyMaps.insert({ "PS4", pscontroller });
 
 	ControlSystem keyboard;
@@ -269,7 +275,9 @@ void InputManager::Update(double dt)
 				buttonHeld.set(i);
 			}
 		}
-		else if (activeControls.mouseControls[i] != -1 && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]))
+		else if (activeControls.mouseControls[i] != -1 && 
+			(activeControls.controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]) || 
+			activeControls.controlType == "PS4" && GetDpadDir(0, (Dpad)activeControls.mouseControls[i])))
 		{
 			if (!buttonHeld.test(i)) {
 				buttonDown.set(i);
@@ -283,6 +291,42 @@ void InputManager::Update(double dt)
 	}
 	ButtonDebug();
 }
+
+bool InputManager::GetDpadDir(unsigned int jid, Dpad dir)
+{
+	float x = sf::Joystick::getAxisPosition(jid, sf::Joystick::PovX);
+	float y = sf::Joystick::getAxisPosition(jid, sf::Joystick::PovY);
+
+	switch (dir)
+	{
+	case U:
+		if (y > 50)
+		{
+			return true;
+		}
+		break;
+	case D:
+		if (y < -50)
+		{
+			return true;
+		}
+		break;
+	case L:
+		if (x < -50)
+		{
+			return true;
+		}
+		break;
+	case R:
+		if (x > 50)
+		{
+			return true;
+		}
+		break;
+	}
+	return false;
+}
+
 
 bool InputManager::GetButtonDown(unsigned int action) {
 	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1 && activeControls.mouseControls[action] == -1) && 

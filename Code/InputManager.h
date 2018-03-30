@@ -19,6 +19,8 @@ class InputManager
 public:
 	//PS4 Enum
 	static enum PS4 { SQUARE, X, O, TRIANGLE, L1, R1, L2, R2, SELECT, START, LEFTA, RIGHTA, PS, TOUCH, NONE = -1};
+	//Dpad Enum
+	static enum Dpad{ U, D, L, R};
 	//Enum for actions
 	static enum Action { LEFT, RIGHT, SVM, JUMP, AIM, FIRE, SHIELD, ACTIVE };
 
@@ -36,6 +38,7 @@ public:
 	//methods
 	void Update(double dt);
 	void Remap(sf::RenderWindow &window, Action action, bool primary, std::string mapKey);
+	bool GetDpadDir(unsigned int jid, Dpad dir);
 	bool GetButtonDown(unsigned int button);
 	bool GetButtonHeld(unsigned int button);
 	bool GetButtonReleased(unsigned int button);
