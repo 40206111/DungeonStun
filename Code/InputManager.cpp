@@ -91,7 +91,8 @@ const std::map<sf::Keyboard::Key, std::string> InputManager::keyboardControls = 
 InputManager::InputManager()
 {
 	InputManager::CreateControlers();
-	activeControls = keyMaps["PS4"];
+	//activeControls = keyMaps["PS4"];
+	
 	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
 	cout << "\nVendor ID: " << id.vendorId << "\nProduct ID: " << id.productId << endl;
 
@@ -259,7 +260,7 @@ void InputManager::Update(double dt)
 		if (buttonReleased.test(i)) {
 			buttonReleased.reset();
 		}
-		if (first != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(0, first) ||
+		if (first != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, first) ||
 			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)first)))
 		{
 			if (!buttonHeld.test(i)) {
@@ -267,7 +268,7 @@ void InputManager::Update(double dt)
 				buttonHeld.set(i);
 			}
 		}
-		else if (second != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(0, second) ||
+		else if (second != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, second) ||
 			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)second)))
 		{
 			if (!buttonHeld.test(i)) {
@@ -277,7 +278,7 @@ void InputManager::Update(double dt)
 		}
 		else if (activeControls.mouseControls[i] != -1 && 
 			(activeControls.controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]) || 
-			activeControls.controlType == "PS4" && GetDpadDir(0, (Dpad)activeControls.mouseControls[i])))
+			activeControls.controlType == "PS4" && GetDpadDir(controlerid, (Dpad)activeControls.mouseControls[i])))
 		{
 			if (!buttonHeld.test(i)) {
 				buttonDown.set(i);

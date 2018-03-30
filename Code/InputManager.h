@@ -30,6 +30,10 @@ public:
 
 	//Control Systems
 	std::map<std::string, ControlSystem> keyMaps;
+	ControlSystem activeControls;
+
+	//controller ID
+	unsigned int controlerid = 0;
 	
 	//Constructor and Destructor
 	InputManager();
@@ -46,8 +50,6 @@ protected:
 	std::bitset<16> buttonDown;
 	std::bitset<16> buttonHeld;
 	std::bitset<16> buttonReleased;
-	
-	ControlSystem activeControls;
 
 	//methods
 	void ButtonDebug();

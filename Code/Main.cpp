@@ -21,8 +21,10 @@ void Update(RenderWindow &window)
 {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
+	static bool start = true;
 
-	iMan->Update(dt);
+	if (!start)
+		iMan->Update(dt);
 
 	Event event;
 
@@ -34,15 +36,24 @@ void Update(RenderWindow &window)
 			return;
 		}
 
-		//GET BUTTON CODE 
-		//if (event.type == sf::Event::JoystickButtonPressed)
-		//{
-		//	cout << event.joystickButton.button << endl;
-		//}
+		//get joystick id
+		if (start && event.type == sf::Event::JoystickButtonPressed)
+		{
+			iMan->controlerid = event.joystickMove.joystickId;
+			iMan->activeControls = iMan->keyMaps["PS4"];
+			start = false;
+		}
+
+		if (start && event.type == sf::Event::KeyPressed)
+		{
+			iMan->activeControls = iMan->keyMaps["keyboard"];
+			start = false;
+		}
 
 		if (event.type == sf::Event::JoystickConnected)
 		{
 			cout << "controller connected: "  << event.joystickMove.joystickId << endl;
+
 		}
 
 		if (event.type == sf::Event::JoystickDisconnected)
