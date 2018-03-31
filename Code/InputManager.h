@@ -25,7 +25,8 @@ public:
 	static enum Action { LEFT, RIGHT, SVM, JUMP,
 						AIM, FIRE, SHIELD, ACTIVE,
 						MENUUP, MENUDOWN, MENULEFT, 
-						MENURIGHT, ACTIONSIZE}; //action size shows how many actions there are in the enum
+						MENURIGHT, BACK, ACCEPT,
+						ACTIONSIZE}; //action size shows how many actions there are in the enum
 
 	//string Controls
 	static const std::map<PS4, std::string> ps4Controls;

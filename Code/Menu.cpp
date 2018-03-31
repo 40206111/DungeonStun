@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include <SFML/Graphics.hpp>
+#include <iostream>
 using namespace sf;
 using namespace std;
 
@@ -25,7 +26,6 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 	if (!start)
 	{
 		iMan->Update(dt);
-
 		if (iMan->GetButtonDown(iMan->MENUDOWN))
 		{
 			menu.reset(current);
@@ -48,6 +48,30 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 			}
 			menu.set(current);
 		}
+		if (iMan->GetButtonDown(iMan->BACK))
+		{
+			start = true;
+			first = true;
+			text[0].setString("Press Any Button To Continue");
+			text[0].setColor(sf::Color::White);
+			menu.reset(0);
+			menu.reset(1);
+			menu.reset(2);
+		}
+		if (!first && iMan->GetButtonDown(iMan->ACCEPT))
+		{
+			if (menu.test(0))
+			{
+			}			
+			if (menu.test(1))
+			{
+			}
+			if (menu.test(2))
+			{
+				window.close();
+			}
+		}
+		first = false;
 	}
 
 	Event event;
@@ -60,18 +84,32 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 			return;
 		}
 
-		//get joystick id
-		if (start && event.type == sf::Event::JoystickButtonPressed)
+		if (!iMan->GetButtonDown(iMan->BACK))
 		{
-			iMan->controlerid = event.joystickMove.joystickId;
-			iMan->activeControls = iMan->keyMaps["PS4"];
-			start = false;
+			//get joystick id
+			if (start && event.type == sf::Event::JoystickButtonPressed)
+			{
+				iMan->controlerid = event.joystickMove.joystickId;
+				iMan->activeControls = iMan->keyMaps["PS4"];
+				start = false;
+				text[0].setString("Play");
+				menu.set(current);
+			}
+
+			if (start && event.type == sf::Event::KeyPressed)
+			{
+				iMan->activeControls = iMan->keyMaps["keyboard"];
+				start = false;
+				text[0].setString("Play");
+				menu.set(current);
+
+			}
 		}
 
-		if (start && event.type == sf::Event::KeyPressed)
+		if (start && event.type == sf::Event::JoystickConnected)
 		{
-			iMan->activeControls = iMan->keyMaps["keyboard"];
-			start = false;
+			text[0].setString("Press Any Button To Continue");
+			text[0].setColor(sf::Color::White);
 		}
 
 		if (event.type == sf::Event::JoystickDisconnected)
@@ -79,19 +117,13 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 			if (!start && iMan->activeControls.controlType == "PS4" && iMan->controlerid == event.joystickMove.joystickId)
 			{
 				start = true;
+				text[0].setString("Controller Disconnected...");
+				text[0].setColor(sf::Color::Red);
+				menu.reset(0);
+				menu.reset(1);
+				menu.reset(2);
 			}
 		}
-	}
-
-	if (!start)
-	{
-		text[0].setString("Play");
-		menu.set(current);
-	}
-
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
-	{
-		window.close();
 	}
 }
 

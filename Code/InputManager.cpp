@@ -162,6 +162,15 @@ void InputManager::ButtonDebug()
 	{
 		cout << "ACTIVE" << endl;
 	}
+	if (GetButtonDown(BACK))
+	{
+		cout << "BACK" << endl;
+	}
+	if (GetButtonDown(SELECT))
+	{
+		cout << "SELECT" << endl;
+	}
+
 
 }
 
@@ -176,7 +185,8 @@ void InputManager::CreateControlers()
 		{FIRE, std::make_pair(R2, NONE)},{SHIELD, std::make_pair(L2, NONE)},
 		{ACTIVE, std::make_pair(X, NONE)},{AIM, std::make_pair(NONE, NONE)},
 		{MENUUP, std::make_pair(NONE, NONE)},{MENUDOWN, std::make_pair(NONE, NONE)},
-		{MENULEFT, std::make_pair(NONE, NONE)},{MENURIGHT, std::make_pair(NONE, NONE)}
+		{MENULEFT, std::make_pair(NONE, NONE)},{MENURIGHT, std::make_pair(NONE, NONE)},
+		{BACK, std::make_pair(O, NONE)},{ACCEPT, std::make_pair(X, NONE)}
 	};
 	pscontroller.controlType = "PS4";
 	pscontroller.mouseControls = {
@@ -185,7 +195,8 @@ void InputManager::CreateControlers()
 		{FIRE, NONE},{SHIELD, NONE},
 		{ACTIVE, NONE},{AIM, NONE},
 		{MENUUP, U}, {MENUDOWN, D},
-		{MENULEFT, L}, {MENURIGHT, R}
+		{MENULEFT, L}, {MENURIGHT, R},
+		{BACK, NONE}, {ACCEPT, NONE}
 	};
 	keyMaps.insert({ "PS4", pscontroller });
 
@@ -197,7 +208,8 @@ void InputManager::CreateControlers()
 		{FIRE, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},{SHIELD, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
 		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
 		{MENUUP, std::make_pair(sf::Keyboard::W, sf::Keyboard::Up)},{MENUDOWN, std::make_pair(sf::Keyboard::S, sf::Keyboard::Down)},
-		{MENULEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Left)},{MENURIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Right)}
+		{MENULEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Left)},{MENURIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Right)},
+		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)}
 	};
 	keyboard.controlType = "keyboard";
 
@@ -207,7 +219,8 @@ void InputManager::CreateControlers()
 		{FIRE, sf::Mouse::Left},{SHIELD, sf::Mouse::Right},
 		{ACTIVE, sf::Keyboard::Unknown},{AIM, sf::Keyboard::Unknown},
 		{MENUUP, sf::Keyboard::Unknown},{MENUDOWN, sf::Keyboard::Unknown },
-		{MENULEFT, sf::Keyboard::Unknown},{MENURIGHT, sf::Keyboard::Unknown}
+		{MENULEFT, sf::Keyboard::Unknown},{MENURIGHT, sf::Keyboard::Unknown},
+		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Keyboard::Unknown}
 	};
 	keyMaps.insert({ "keyboard", keyboard });
 
