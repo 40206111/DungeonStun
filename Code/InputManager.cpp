@@ -174,14 +174,18 @@ void InputManager::CreateControlers()
 		{LEFT, std::make_pair(NONE, NONE)},{RIGHT, std::make_pair(NONE, NONE)},
 		{SVM, std::make_pair(R1, NONE)},{JUMP, std::make_pair(L1, O)},
 		{FIRE, std::make_pair(R2, NONE)},{SHIELD, std::make_pair(L2, NONE)},
-		{ACTIVE, std::make_pair(X, NONE)},{AIM, std::make_pair(NONE, NONE)}
+		{ACTIVE, std::make_pair(X, NONE)},{AIM, std::make_pair(NONE, NONE)},
+		{MENUUP, std::make_pair(NONE, NONE)},{MENUDOWN, std::make_pair(NONE, NONE)},
+		{MENULEFT, std::make_pair(NONE, NONE)},{MENURIGHT, std::make_pair(NONE, NONE)}
 	};
 	pscontroller.controlType = "PS4";
 	pscontroller.mouseControls = {
 		{LEFT, L},{RIGHT, R},
 		{SVM, U},{JUMP, NONE},
 		{FIRE, NONE},{SHIELD, NONE},
-		{ACTIVE, NONE},{AIM, NONE}
+		{ACTIVE, NONE},{AIM, NONE},
+		{MENUUP, U}, {MENUDOWN, D},
+		{MENULEFT, L}, {MENURIGHT, R}
 	};
 	keyMaps.insert({ "PS4", pscontroller });
 
@@ -191,7 +195,9 @@ void InputManager::CreateControlers()
 		{LEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Unknown)},{RIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Unknown)},
 		{SVM, std::make_pair(sf::Keyboard::W, sf::Keyboard::Unknown)},{JUMP, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
 		{FIRE, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},{SHIELD, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
-		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)}
+		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
+		{MENUUP, std::make_pair(sf::Keyboard::W, sf::Keyboard::Up)},{MENUDOWN, std::make_pair(sf::Keyboard::S, sf::Keyboard::Down)},
+		{MENULEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Left)},{MENURIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Right)}
 	};
 	keyboard.controlType = "keyboard";
 
@@ -199,7 +205,9 @@ void InputManager::CreateControlers()
 		{LEFT, sf::Keyboard::Unknown},{RIGHT, sf::Keyboard::Unknown},
 		{SVM, sf::Keyboard::Unknown},{JUMP, sf::Keyboard::Unknown},
 		{FIRE, sf::Mouse::Left},{SHIELD, sf::Mouse::Right},
-		{ACTIVE, sf::Keyboard::Unknown},{AIM, sf::Keyboard::Unknown}
+		{ACTIVE, sf::Keyboard::Unknown},{AIM, sf::Keyboard::Unknown},
+		{MENUUP, sf::Keyboard::Unknown},{MENUDOWN, sf::Keyboard::Unknown },
+		{MENULEFT, sf::Keyboard::Unknown},{MENURIGHT, sf::Keyboard::Unknown}
 	};
 	keyMaps.insert({ "keyboard", keyboard });
 
@@ -250,7 +258,7 @@ void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, 
 
 void InputManager::Update(double dt)
 {
-	for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < ACTIONSIZE; ++i)
 	{
 		int first = activeControls.controls[i].first;
 		int second = activeControls.controls[i].second;

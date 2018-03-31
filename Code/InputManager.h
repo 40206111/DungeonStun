@@ -22,7 +22,10 @@ public:
 	//Dpad Enum
 	static enum Dpad{ U, D, L, R};
 	//Enum for actions
-	static enum Action { LEFT, RIGHT, SVM, JUMP, AIM, FIRE, SHIELD, ACTIVE };
+	static enum Action { LEFT, RIGHT, SVM, JUMP,
+						AIM, FIRE, SHIELD, ACTIVE,
+						MENUUP, MENUDOWN, MENULEFT, 
+						MENURIGHT, ACTIONSIZE}; //action size shows how many actions there are in the enum
 
 	//string Controls
 	static const std::map<PS4, std::string> ps4Controls;
@@ -47,9 +50,9 @@ public:
 	bool GetButtonHeld(unsigned int button);
 	bool GetButtonReleased(unsigned int button);
 protected:
-	std::bitset<16> buttonDown;
-	std::bitset<16> buttonHeld;
-	std::bitset<16> buttonReleased;
+	std::bitset<ACTIONSIZE> buttonDown;
+	std::bitset<ACTIONSIZE> buttonHeld;
+	std::bitset<ACTIONSIZE> buttonReleased;
 
 	//methods
 	void ButtonDebug();
