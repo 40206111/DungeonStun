@@ -166,9 +166,9 @@ void InputManager::ButtonDebug()
 	{
 		cout << "BACK" << endl;
 	}
-	if (GetButtonDown(SELECT))
+	if (GetButtonDown(ACCEPT))
 	{
-		cout << "SELECT" << endl;
+		cout << "ACCEPT" << endl;
 	}
 
 

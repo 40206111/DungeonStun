@@ -23,9 +23,9 @@ Menu::Menu(sf::RenderWindow &window) : Screen(window)
 
 void Menu::Update(sf::RenderWindow &window, float dt)
 {
+	iMan->Update(dt);
 	if (!start)
 	{
-		iMan->Update(dt);
 		if (iMan->GetButtonDown(iMan->MENUDOWN))
 		{
 			menu.reset(current);
@@ -48,7 +48,20 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 			}
 			menu.set(current);
 		}
-		if (iMan->GetButtonDown(iMan->BACK))
+		if (!first && iMan->GetButtonDown(iMan->ACCEPT))
+		{
+			if (menu.test(0))
+			{
+			}
+			if (menu.test(1))
+			{
+			}
+			if (menu.test(2))
+			{
+				window.close();
+			}
+		}
+		if (!first && iMan->GetButtonDown(iMan->BACK))
 		{
 			start = true;
 			first = true;
@@ -58,70 +71,78 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 			menu.reset(1);
 			menu.reset(2);
 		}
-		if (!first && iMan->GetButtonDown(iMan->ACCEPT))
+		else {
+			first = false;
+		}
+
+		Event event;
+		while (window.pollEvent(event))
 		{
-			if (menu.test(0))
-			{
-			}			
-			if (menu.test(1))
-			{
-			}
-			if (menu.test(2))
+			if (event.type == Event::Closed)
 			{
 				window.close();
+				return;
 			}
 		}
-		first = false;
 	}
+	else {
+		Event event;
 
-	Event event;
-
-	while (window.pollEvent(event))
-	{
-		if (event.type == Event::Closed)
+		while (window.pollEvent(event))
 		{
-			window.close();
-			return;
-		}
+			if (event.type == Event::Closed)
+			{
+				window.close();
+				return;
+			}
 
-		if (!iMan->GetButtonDown(iMan->BACK))
-		{
+			bool anyKey = false;
+			int testVal = -1;
 			//get joystick id
 			if (start && event.type == sf::Event::JoystickButtonPressed)
 			{
 				iMan->controlerid = event.joystickMove.joystickId;
 				iMan->activeControls = iMan->keyMaps["PS4"];
-				start = false;
-				text[0].setString("Play");
-				menu.set(current);
+				anyKey = true;
+				testVal = event.key.alt;
 			}
 
 			if (start && event.type == sf::Event::KeyPressed)
 			{
 				iMan->activeControls = iMan->keyMaps["keyboard"];
+				anyKey = true;
+				testVal = event.key.code;
+			}
+
+			if (anyKey) {
 				start = false;
 				text[0].setString("Play");
 				menu.set(current);
 
+				if (testVal == iMan->activeControls.controls[iMan->BACK].first 
+					|| testVal == iMan->activeControls.controls[iMan->BACK].second)
+				{
+					window.close();
+				}
 			}
-		}
 
-		if (start && event.type == sf::Event::JoystickConnected)
-		{
-			text[0].setString("Press Any Button To Continue");
-			text[0].setColor(sf::Color::White);
-		}
-
-		if (event.type == sf::Event::JoystickDisconnected)
-		{
-			if (!start && iMan->activeControls.controlType == "PS4" && iMan->controlerid == event.joystickMove.joystickId)
+			if (start && event.type == sf::Event::JoystickConnected)
 			{
-				start = true;
-				text[0].setString("Controller Disconnected...");
-				text[0].setColor(sf::Color::Red);
-				menu.reset(0);
-				menu.reset(1);
-				menu.reset(2);
+				text[0].setString("Press Any Button To Continue");
+				text[0].setColor(sf::Color::White);
+			}
+
+			if (event.type == sf::Event::JoystickDisconnected)
+			{
+				if (!start && iMan->activeControls.controlType == "PS4" && iMan->controlerid == event.joystickMove.joystickId)
+				{
+					start = true;
+					text[0].setString("Controller Disconnected...");
+					text[0].setColor(sf::Color::Red);
+					menu.reset(0);
+					menu.reset(1);
+					menu.reset(2);
+				}
 			}
 		}
 	}
