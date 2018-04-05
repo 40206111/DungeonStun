@@ -1,46 +1,36 @@
 #include <SFML/Graphics.hpp>
-#include "InputManager.h"
+#include "Screen.h"
+#include "Menu.h"
 #include <iostream>
 using namespace sf;
 using namespace std;
 
-int gameWidth = 800;
-int gameHeight = 600;
+Screen *current;
 
 void Render(RenderWindow &window)
 {
+	current->Render(window);
 }
 
 void Load()
-{
+{		
 }
 
 void Update(RenderWindow &window)
 {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
-
-	Event event;
-
-	while (window.pollEvent(event))
-	{
-		if (event.type == Event::Closed)
-		{
-			window.close();
-			return;
-		}
-	}
-
-	if (Keyboard::isKeyPressed(Keyboard::Escape))
-	{
-		window.close();
-	}
+	static bool start = true;
+	current->Update(window, dt);
 }
 
 int main()
 {
-	RenderWindow window(VideoMode(gameWidth, gameHeight), "Workin' 9 to Die");
+	int style = sf::Style::Default | sf::Style::Fullscreen;
+	std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
+	RenderWindow window(VModes.at(0), "Workin' 9 to Die", style);
 	Load();
+	current = new Menu(window);
 
 	while (window.isOpen())
 	{
