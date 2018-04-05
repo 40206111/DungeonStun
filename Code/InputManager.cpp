@@ -299,7 +299,7 @@ void InputManager::Update(double dt)
 		}
 		else if (activeControls.mouseControls[i] != -1 && 
 			(activeControls.controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]) || 
-			activeControls.controlType == "PS4" && GetDpadDir(controlerid, (Dpad)activeControls.mouseControls[i])))
+			activeControls.controlType == "PS4" && GetDpadDir(controlerid, (Dir)activeControls.mouseControls[i])))
 		{
 			if (!buttonHeld.test(i)) {
 				buttonDown.set(i);
@@ -311,24 +311,82 @@ void InputManager::Update(double dt)
 			buttonReleased.set(i);
 		}
 	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if (digiAnalogue.test(i)) {
+			digiAnalogue.reset(i); 
+		}
+		if (digiAnaReleased.test(i)) {
+			digiAnaReleased.reset();
+		}
+		if (GetDigiAnalogue(controlerid, (Dir)i))
+		{
+			if (!digiAnaHeld.test(i)) {
+				digiAnalogue.set(i);
+				digiAnaHeld.set(i);
+			}
+		}
+		else if (digiAnaHeld.test(i)) {
+			digiAnaHeld.reset(i);
+			digiAnaReleased.set(i);
+		}
+	}
+
+	///DEBUG///
 	ButtonDebug();
 }
 
-bool InputManager::GetDpadDir(unsigned int jid, Dpad dir)
+bool InputManager::GetDpadDir(unsigned int jid, Dir dir)
 {
-	float x = sf::Joystick::getAxisPosition(jid, sf::Joystick::PovX);
-	float y = sf::Joystick::getAxisPosition(jid, sf::Joystick::PovY);
+	float povX = sf::Joystick::getAxisPosition(jid, sf::Joystick::PovX);
+	float povY = sf::Joystick::getAxisPosition(jid, sf::Joystick::PovY);
 
 	switch (dir)
 	{
 	case U:
-		if (y > 50)
+		if (povY > 50)
 		{
 			return true;
 		}
 		break;
 	case D:
+		if (povY < -50)
+		{
+			return true;
+		}
+		break;
+	case L:
+		if (povX < -50)
+		{
+			return true;
+		}
+		break;
+	case R:
+		if (povX > 50)
+		{
+			return true;
+		}
+		break;
+	}
+	return false;
+}
+
+bool InputManager::GetDigiAnalogue(unsigned int jid, Dir dir)
+{
+	float x = sf::Joystick::getAxisPosition(jid, sf::Joystick::X);
+	float y = sf::Joystick::getAxisPosition(jid, sf::Joystick::Y);
+
+	switch (dir)
+	{
+	case U:
 		if (y < -50)
+		{
+			return true;
+		}
+		break;
+	case D:
+		if (y > 50)
 		{
 			return true;
 		}
@@ -349,6 +407,24 @@ bool InputManager::GetDpadDir(unsigned int jid, Dpad dir)
 	return false;
 }
 
+bool InputManager::GetAnaDown(Dir dir)
+{
+	if (digiAnalogue.test(dir))
+		return true;
+	return false;
+}
+bool InputManager::GetAnaHeld(Dir dir)
+{
+	if (digiAnaHeld.test(dir))
+		return true;
+	return false;
+}
+bool InputManager::GetAnaReleased(Dir dir)
+{
+	if (digiAnaReleased.test(dir))
+		return true;
+	return false;
+}
 
 bool InputManager::GetButtonDown(unsigned int action) {
 	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1 && activeControls.mouseControls[action] == -1) && 

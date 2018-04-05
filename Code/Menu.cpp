@@ -26,7 +26,7 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 	iMan->Update(dt);
 	if (!start)
 	{
-		if (iMan->GetButtonDown(iMan->MENUDOWN))
+		if (iMan->GetButtonDown(iMan->MENUDOWN)|| iMan->GetAnaDown(iMan->D))
 		{
 			menu.reset(current);
 			text[current].setColor(sf::Color::White);
@@ -37,7 +37,7 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 			}
 			menu.set(current);
 		}
-		if (iMan->GetButtonDown(iMan->MENUUP))
+		if (iMan->GetButtonDown(iMan->MENUUP) || iMan->GetAnaDown(iMan->U))
 		{
 			menu.reset(current);
 			text[current].setColor(sf::Color::White);
