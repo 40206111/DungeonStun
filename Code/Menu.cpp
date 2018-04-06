@@ -83,6 +83,19 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 				window.close();
 				return;
 			}
+
+			if (event.type == sf::Event::JoystickDisconnected)
+			{
+				if (iMan->activeControls.controlType == "PS4" && iMan->controlerid == event.joystickMove.joystickId)
+				{
+					start = true;
+					text[0].setString("Controller Disconnected...");
+					text[0].setColor(sf::Color::Red);
+					menu.reset(0);
+					menu.reset(1);
+					menu.reset(2);
+				}
+			}
 		}
 	}
 	else {
@@ -90,6 +103,12 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 
 		while (window.pollEvent(event))
 		{
+			if (event.type == sf::Event::JoystickConnected)
+			{
+				text[0].setString("Press Any Button To Continue");
+				text[0].setColor(sf::Color::White);
+			}
+
 			if (event.type == Event::Closed)
 			{
 				window.close();
@@ -99,7 +118,7 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 			bool anyKey = false;
 			int testVal = -1;
 			//get joystick id
-			if (start && event.type == sf::Event::JoystickButtonPressed)
+			if (event.type == sf::Event::JoystickButtonPressed)
 			{
 				iMan->controlerid = event.joystickMove.joystickId;
 				iMan->activeControls = iMan->keyMaps["PS4"];
@@ -107,7 +126,7 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 				testVal = event.key.alt;
 			}
 
-			if (start && event.type == sf::Event::KeyPressed)
+			if (event.type == sf::Event::KeyPressed)
 			{
 				iMan->activeControls = iMan->keyMaps["keyboard"];
 				anyKey = true;
@@ -123,25 +142,6 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 					|| testVal == iMan->activeControls.controls[iMan->BACK].second)
 				{
 					window.close();
-				}
-			}
-
-			if (start && event.type == sf::Event::JoystickConnected)
-			{
-				text[0].setString("Press Any Button To Continue");
-				text[0].setColor(sf::Color::White);
-			}
-
-			if (event.type == sf::Event::JoystickDisconnected)
-			{
-				if (!start && iMan->activeControls.controlType == "PS4" && iMan->controlerid == event.joystickMove.joystickId)
-				{
-					start = true;
-					text[0].setString("Controller Disconnected...");
-					text[0].setColor(sf::Color::Red);
-					menu.reset(0);
-					menu.reset(1);
-					menu.reset(2);
 				}
 			}
 		}
