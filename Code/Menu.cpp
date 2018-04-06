@@ -48,6 +48,20 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 			}
 			menu.set(current);
 		}
+		if (iMan->GetButtonDown(iMan->FULLSCREEN))
+		{
+			fullscreen = !fullscreen;
+			if (fullscreen)
+			{
+				int style = sf::Style::Default | sf::Style::Fullscreen;
+				std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
+				window.create(VModes.at(0), "Workin' 9 to Die", style);
+			}
+			else
+			{
+				window.create(VideoMode(1280, 720), "Workin' 9 to Die");
+			}
+		}
 		if (!first && iMan->GetButtonDown(iMan->ACCEPT))
 		{
 			if (menu.test(0))

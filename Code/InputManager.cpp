@@ -186,7 +186,8 @@ void InputManager::CreateControlers()
 		{ACTIVE, std::make_pair(X, NONE)},{AIM, std::make_pair(NONE, NONE)},
 		{MENUUP, std::make_pair(NONE, NONE)},{MENUDOWN, std::make_pair(NONE, NONE)},
 		{MENULEFT, std::make_pair(NONE, NONE)},{MENURIGHT, std::make_pair(NONE, NONE)},
-		{BACK, std::make_pair(O, NONE)},{ACCEPT, std::make_pair(X, NONE)}
+		{BACK, std::make_pair(O, NONE)},{ACCEPT, std::make_pair(X, NONE)},
+		{FULLSCREEN, std::make_pair(START, NONE)}
 	};
 	pscontroller.controlType = "PS4";
 	pscontroller.mouseControls = {
@@ -196,7 +197,8 @@ void InputManager::CreateControlers()
 		{ACTIVE, NONE},{AIM, NONE},
 		{MENUUP, U}, {MENUDOWN, D},
 		{MENULEFT, L}, {MENURIGHT, R},
-		{BACK, NONE}, {ACCEPT, NONE}
+		{BACK, NONE}, {ACCEPT, NONE},
+		{FULLSCREEN, NONE}
 	};
 	keyMaps.insert({ "PS4", pscontroller });
 
@@ -209,7 +211,8 @@ void InputManager::CreateControlers()
 		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
 		{MENUUP, std::make_pair(sf::Keyboard::W, sf::Keyboard::Up)},{MENUDOWN, std::make_pair(sf::Keyboard::S, sf::Keyboard::Down)},
 		{MENULEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Left)},{MENURIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Right)},
-		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)}
+		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
+		{FULLSCREEN, std::make_pair(sf::Keyboard::F, sf::Keyboard::Unknown)}
 	};
 	keyboard.controlType = "keyboard";
 
@@ -220,7 +223,8 @@ void InputManager::CreateControlers()
 		{ACTIVE, sf::Keyboard::Unknown},{AIM, sf::Keyboard::Unknown},
 		{MENUUP, sf::Keyboard::Unknown},{MENUDOWN, sf::Keyboard::Unknown },
 		{MENULEFT, sf::Keyboard::Unknown},{MENURIGHT, sf::Keyboard::Unknown},
-		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Keyboard::Unknown}
+		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Keyboard::Unknown},
+		{FULLSCREEN, sf::Keyboard::Unknown}
 	};
 	keyMaps.insert({ "keyboard", keyboard });
 

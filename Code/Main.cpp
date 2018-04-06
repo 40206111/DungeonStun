@@ -26,9 +26,7 @@ void Update(RenderWindow &window)
 
 int main()
 {
-	int style = sf::Style::Default | sf::Style::Fullscreen;
-	std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
-	RenderWindow window(VModes.at(0), "Workin' 9 to Die", style);
+	RenderWindow window(VideoMode(1280, 720), "Workin' 9 to Die");
 	Load();
 	current = new Menu(window);
 
