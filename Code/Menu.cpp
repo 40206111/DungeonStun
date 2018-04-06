@@ -13,7 +13,6 @@ Menu::Menu(sf::RenderWindow &window) : Screen(window)
 	{
 		text.push_back(sf::Text());
 		text[i].setFont(font);
-		text[i].setCharacterSize(238);
 	}
 
 	text[0].setString("Press Any Button To Continue");
@@ -26,7 +25,7 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 	iMan->Update(dt);
 	if (!start)
 	{
-		if (iMan->GetButtonDown(iMan->MENUDOWN)|| iMan->GetAnaDown(iMan->D))
+		if (iMan->GetButtonDown(iMan->MENUDOWN) || iMan->GetAnaDown(iMan->D))
 		{
 			menu.reset(current);
 			text[current].setColor(sf::Color::White);
@@ -47,6 +46,20 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 				current = 2;
 			}
 			menu.set(current);
+		}
+		if (iMan->GetButtonDown(iMan->FULLSCREEN))
+		{
+			fullscreen = !fullscreen;
+			if (fullscreen)
+			{
+				int style = sf::Style::Default | sf::Style::Fullscreen;
+				std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
+				window.create(VModes.at(0), "Workin' 9 to Die", style);
+			}
+			else
+			{
+				window.create(VideoMode(1280, 720), "Workin' 9 to Die");
+			}
 		}
 		if (!first && iMan->GetButtonDown(iMan->ACCEPT))
 		{
@@ -119,7 +132,7 @@ void Menu::Update(sf::RenderWindow &window, float dt)
 				text[0].setString("Play");
 				menu.set(current);
 
-				if (testVal == iMan->activeControls.controls[iMan->BACK].first 
+				if (testVal == iMan->activeControls.controls[iMan->BACK].first
 					|| testVal == iMan->activeControls.controls[iMan->BACK].second)
 				{
 					window.close();
@@ -156,6 +169,7 @@ void Menu::Render(sf::RenderWindow &window)
 		background.setScale(
 			window.getSize().x / background.getLocalBounds().width,
 			window.getSize().y / background.getLocalBounds().height);
+		text[0].setCharacterSize(window.getSize().x / 10);
 		text[0].setPosition((window.getSize().x * 0.5f) - (text[0].getLocalBounds().width * 0.5f), window.getSize().y - (text[0].getLocalBounds().height * 4));
 		window.draw(text[0]);
 	}
@@ -166,6 +180,7 @@ void Menu::Render(sf::RenderWindow &window)
 		text[2].setPosition((window.getSize().x * 0.5f) - (text[2].getLocalBounds().width), (window.getSize().y * 0.5f) + (text[2].getLocalBounds().height * 1));
 		for (int i = 0; i < text.size(); ++i)
 		{
+			text[i].setCharacterSize(window.getSize().x / 10);
 			if (menu.test(i))
 				text[i].setColor(sf::Color::Yellow);
 			window.draw(text[i]);

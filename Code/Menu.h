@@ -24,6 +24,7 @@ private:
 	//bool to test if on start menu
 	bool start = true;
 	bool first = true;
+	bool fullscreen = false;
 	//Textures and text
 	sf::Texture homescreen;
 	sf::Sprite background;

@@ -26,7 +26,7 @@ public:
 						AIM, FIRE, SHIELD, ACTIVE,
 						MENUUP, MENUDOWN, MENULEFT, 
 						MENURIGHT, BACK, ACCEPT,
-						ACTIONSIZE}; //action size shows how many actions there are in the enum
+						FULLSCREEN, ACTIONSIZE}; //action size shows how many actions there are in the enum
 
 	//string Controls
 	static const std::map<PS4, std::string> ps4Controls;
