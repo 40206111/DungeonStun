@@ -1,40 +1,54 @@
 #include <SFML/Graphics.hpp>
-#include "Screen.h"
-#include "Menu.h"
+#include "SystemRenderer.h"
+#include "Game.h"
 #include <iostream>
 using namespace sf;
 using namespace std;
 
-Screen *current;
+sf::Font font;
+shared_ptr<InputManager> player1;
+shared_ptr<Scene> homeScene;
+shared_ptr<Scene> menuScene;
+shared_ptr<Scene> settingsScene;
+shared_ptr<Scene> activeScene;
 
-void Render(RenderWindow &window)
+void Render()
 {
-	current->Render(window);
+	activeScene->Render();
+	Renderer::Render();
 }
 
 void Load()
-{		
+{	
+	font.loadFromFile("Assets/font/rm_typerighter_old.ttf");
+	player1.reset(new InputManager());
+	homeScene.reset(new HomeScene());
+	menuScene.reset(new MenuScene());
+	settingsScene.reset(new SettingsScene());
+	homeScene->Load();
+	menuScene->Load();
+	settingsScene->Load();
+	activeScene = homeScene;
 }
 
-void Update(RenderWindow &window)
+void Update()
 {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
-	static bool start = true;
-	current->Update(window, dt);
+	activeScene->Update(dt);
 }
 
 int main()
 {
-	RenderWindow window(VideoMode(1280, 720), "Workin' 9 to Die");
+	RenderWindow window(VideoMode(gameWidth, gameHeight), "Workin' 9 to Die");
+	Renderer::Initialise(window);
 	Load();
-	current = new Menu(window);
 
 	while (window.isOpen())
 	{
 		window.clear();
-		Update(window);
-		Render(window);
+		Update();
+		Render();
 		window.display();
 	}
 	return 0;
