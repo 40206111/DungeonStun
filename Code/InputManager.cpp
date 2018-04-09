@@ -230,7 +230,7 @@ void InputManager::CreateControlers()
 		{ACTIVE, sf::Keyboard::Unknown},{AIM, sf::Keyboard::Unknown},
 		{MENUUP, sf::Keyboard::Unknown},{MENUDOWN, sf::Keyboard::Unknown },
 		{MENULEFT, sf::Keyboard::Unknown},{MENURIGHT, sf::Keyboard::Unknown},
-		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Keyboard::Unknown},
+		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Mouse::Left},
 		{FULLSCREEN, sf::Keyboard::Unknown}
 	};
 	keyMaps.insert({ "keyboard", keyboard });
@@ -373,6 +373,8 @@ void InputManager::Update(double dt)
 		}
 	}
 
+	mMoved = mouseMoved();
+
 	///DEBUG///
 	ButtonDebug();
 }
@@ -496,5 +498,38 @@ bool InputManager::GetButtonReleased(unsigned int action) {
 	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
 		buttonReleased.test(action))
 		return true;
+	return false;
+}
+
+//Method to check if mouse is over text
+bool InputManager::onText(sf::Text t, sf::RenderWindow &window)
+{
+	//get mouse positon
+	Vector2i mousePos = sf::Mouse::getPosition(window);
+	//get text bounds
+	float leftEdge = t.getPosition().x;
+	float rightEdge = t.getPosition().x + t.getLocalBounds().width;
+	float topEdge = t.getPosition().y + t.getLocalBounds().height;
+	float bottomEdge = t.getPosition().y  + (t.getLocalBounds().height * 2);
+
+	//check if in bounds
+	if (mousePos.x > leftEdge && mousePos.x < rightEdge &&
+		mousePos.y > topEdge && mousePos.y < bottomEdge)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+//method to check if mouse has moved since last check
+bool InputManager::mouseMoved() 
+{
+	// if it has changed position return true
+	if (lastMousePos != sf::Mouse::getPosition())
+	{
+		lastMousePos = sf::Mouse::getPosition();
+		return true;
+	}
 	return false;
 }

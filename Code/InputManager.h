@@ -43,6 +43,9 @@ public:
 	InputManager();
 	~InputManager() = default;
 
+	//mouse moved bool
+	bool mMoved = false;
+
 	//methods
 	void Update(double dt);
 	void Remap(sf::RenderWindow &window, Action action, bool primary, std::string mapKey);
@@ -54,6 +57,7 @@ public:
 	bool GetButtonDown(unsigned int button);
 	bool GetButtonHeld(unsigned int button);
 	bool GetButtonReleased(unsigned int button);
+	bool onText(sf::Text t, sf::RenderWindow &window);
 protected:
 	//bools for button presses
 	std::bitset<ACTIONSIZE> buttonDown;
@@ -63,7 +67,11 @@ protected:
 	std::bitset<4> digiAnaHeld;
 	std::bitset<4> digiAnaReleased;
 
+	//mouse position
+	sf::Vector2i lastMousePos;
+
 	//methods
 	void ButtonDebug();
 	void CreateControlers();
+	bool mouseMoved();
 };
