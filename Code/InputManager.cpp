@@ -33,6 +33,7 @@ U Axis - R2 -100 not pressed, 100 fully pressed
 
 ///INPUT MANAGER CLASS///
 
+//Keyboard controls to string
 const std::map<sf::Keyboard::Key, std::string> InputManager::keyboardControls = {
 	{ sf::Keyboard::LShift, "LEFT SHIFT" },
 { sf::Keyboard::RShift, "RIGHT SHIFT" },
@@ -88,11 +89,30 @@ const std::map<sf::Keyboard::Key, std::string> InputManager::keyboardControls = 
 { sf::Keyboard::Numpad9, "NUMPAD 9" },
 };
 
+//ps4 controls to string
+const std::map<InputManager::PS4, std::string> InputManager::ps4Controls = {
+	{ InputManager::SQUARE, "SQUARE" },
+	{ InputManager::X, "X" },
+	{ InputManager::O, "CIRCLE" },
+	{ InputManager::TRIANGLE, "TRIANGLE" },
+	{ InputManager::L1, "L1" },
+	{ InputManager::R1, "R1" },
+	{ InputManager::L2, "L2" },
+	{ InputManager::R2, "R2" },
+	{ InputManager::SELECT, "SELECT" },
+	{ InputManager::START, "START" },
+	{ InputManager::LEFTA, "LEFT ANALOGUE" },
+	{ InputManager::RIGHTA, "RIGHT ANOLOGUE" },
+	{ InputManager::PS, "PLAY STATION" },
+	{ InputManager::TOUCH, "TOUCH PAD" },
+};
+
+//Input manager constructor
 InputManager::InputManager()
 {
 	InputManager::CreateControlers();
-	//activeControls = keyMaps["PS4"];
-	
+
+	/// DEBUG///
 	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
 	cout << "\nVendor ID: " << id.vendorId << "\nProduct ID: " << id.productId << endl;
 
@@ -108,28 +128,13 @@ InputManager::InputManager()
 		cout << "Button count: " << buttonCount << std::endl;
 		cout << "Has a z-axis: " << hasZ << std::endl;
 	}
+	///END OF DEBUG
 }
 
-const std::map<InputManager::PS4, std::string> InputManager::ps4Controls = {
-	{InputManager::SQUARE, "SQUARE" },
-	{InputManager::X, "X" },
-	{InputManager::O, "CIRCLE" },
-	{InputManager::TRIANGLE, "TRIANGLE" },
-	{InputManager::L1, "L1" },
-	{InputManager::R1, "R1" },
-	{InputManager::L2, "L2" },
-	{InputManager::R2, "R2" },
-	{InputManager::SELECT, "SELECT" },
-	{InputManager::START, "START" },
-	{InputManager::LEFTA, "LEFT ANALOGUE" },
-	{InputManager::RIGHTA, "RIGHT ANOLOGUE" },
-	{InputManager::PS, "PLAY STATION" },
-	{InputManager::TOUCH, "TOUCH PAD" },
-};
-
+//method to output what has been pressed
 void InputManager::ButtonDebug()
 {
-	// LEFT, RIGHT, SVM, JUMP, AIM, FIRE, SHIELD, ACTIVE
+	// LEFT, RIGHT, SVM, JUMP, AIM, FIRE, SHIELD, ACTIVE, Back, Accept
 	if (GetButtonDown(LEFT))
 	{
 		cout << "LEFT" << endl;
@@ -174,6 +179,7 @@ void InputManager::ButtonDebug()
 
 }
 
+//method to create default controls
 void InputManager::CreateControlers()
 {
 	//create playstation control system
@@ -202,8 +208,9 @@ void InputManager::CreateControlers()
 	};
 	keyMaps.insert({ "PS4", pscontroller });
 
+	//create keyboard control system
 	ControlSystem keyboard;
-
+	//set basic keyboard controls
 	keyboard.controls = {
 		{LEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Unknown)},{RIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Unknown)},
 		{SVM, std::make_pair(sf::Keyboard::W, sf::Keyboard::Unknown)},{JUMP, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
@@ -230,32 +237,42 @@ void InputManager::CreateControlers()
 
 }
 
+// method to remap controls
 void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, std::string mapkey)
 {
 	Event event;
+	//poll events
 	while (window.pollEvent(event))
 	{
+		//intitialise codes
 		int code = -1;
 		std::string key = "";
 
+		//check controller type
 		if (keyMaps[mapkey].controlType == "keyboard")
 		{
+			//check if key pressed
 			if (event.type == sf::Event::KeyPressed)
 			{
 				code = event.key.code;
 			}
 
+			//check if text entered
 			if (event.type == sf::Event::TextEntered)
 			{
 				key = (char)(event.text.unicode);
 			}
-
-			if (key == "")
+			
+			//set text if nothing in key entered
+			if (key.find_first_not_of(" \t\n\v\f\r") != std::string::npos)
 			{
+				//set key sting to be that in keyboard map
+				key = keyboardControls.at((sf::Keyboard::Key)code);
 			}
 		}
 		else if (keyMaps[mapkey].controlType == "PS4")
 		{
+			//check if joystick button pressed
 			if (event.type == sf::Event::JoystickButtonPressed)
 			{
 				code = event.joystickButton.button;
@@ -263,6 +280,7 @@ void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, 
 			}
 		}
 
+		//set action to code
 		if (code != -1)
 		{
 			if (primary)
@@ -273,57 +291,74 @@ void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, 
 	}
 }
 
+//Update method
 void InputManager::Update(double dt)
 {
+	//loop through actions
 	for (int i = 0; i < ACTIONSIZE; ++i)
 	{
+		//primary control
 		int first = activeControls.controls[i].first;
+		//secondary control
 		int second = activeControls.controls[i].second;
+		//check if button down
 		if (buttonDown.test(i)) {
 			buttonDown.reset(i);
 		}
+		//check if button released
 		if (buttonReleased.test(i)) {
 			buttonReleased.reset();
 		}
+		// check if primary button pressed
 		if (first != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, first) ||
 			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)first)))
 		{
+			// if action not held
 			if (!buttonHeld.test(i)) {
 				buttonDown.set(i);
 				buttonHeld.set(i);
 			}
 		}
+		// check if secondary button pressed
 		else if (second != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, second) ||
 			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)second)))
 		{
+			//check if action not held
 			if (!buttonHeld.test(i)) {
 				buttonDown.set(i);
 				buttonHeld.set(i);
 			}
 		}
-		else if (activeControls.mouseControls[i] != -1 && 
-			(activeControls.controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]) || 
-			activeControls.controlType == "PS4" && GetDpadDir(controlerid, (Dir)activeControls.mouseControls[i])))
+		//check if mouse controls are down
+		else if (activeControls.mouseControls[i] != -1 &&
+			(activeControls.controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]) ||
+				activeControls.controlType == "PS4" && GetDpadDir(controlerid, (Dir)activeControls.mouseControls[i])))
 		{
+			//if aaction not held
 			if (!buttonHeld.test(i)) {
 				buttonDown.set(i);
 				buttonHeld.set(i);
 			}
 		}
+		// if button held
 		else if (buttonHeld.test(i)) {
 			buttonHeld.reset(i);
 			buttonReleased.set(i);
 		}
 	}
 
+	//loop through digital analogue stick directions
 	for (int i = 0; i < 4; ++i)
 	{
+		// if analouge has been pushed in direction i
 		if (digiAnalogue.test(i)) {
-			digiAnalogue.reset(i); 
+			digiAnalogue.reset(i);
 		}
+		// if analogue released from direction i
 		if (digiAnaReleased.test(i)) {
 			digiAnaReleased.reset();
 		}
+		// if analogue pushed in directicion i
 		if (GetDigiAnalogue(controlerid, (Dir)i))
 		{
 			if (!digiAnaHeld.test(i)) {
@@ -331,6 +366,7 @@ void InputManager::Update(double dt)
 				digiAnaHeld.set(i);
 			}
 		}
+		// if analogue held in direction i
 		else if (digiAnaHeld.test(i)) {
 			digiAnaHeld.reset(i);
 			digiAnaReleased.set(i);
@@ -341,32 +377,35 @@ void InputManager::Update(double dt)
 	ButtonDebug();
 }
 
+//Method to get if dPad has been pressed in direction
 bool InputManager::GetDpadDir(unsigned int jid, Dir dir)
 {
+	// dpad x axis
 	float povX = sf::Joystick::getAxisPosition(jid, sf::Joystick::PovX);
+	// dpad y axis
 	float povY = sf::Joystick::getAxisPosition(jid, sf::Joystick::PovY);
 
 	switch (dir)
 	{
-	case U:
+	case U: //Up
 		if (povY > 50)
 		{
 			return true;
 		}
 		break;
-	case D:
+	case D: //Down
 		if (povY < -50)
 		{
 			return true;
 		}
 		break;
-	case L:
+	case L: //Left
 		if (povX < -50)
 		{
 			return true;
 		}
 		break;
-	case R:
+	case R: //Right
 		if (povX > 50)
 		{
 			return true;
@@ -376,32 +415,35 @@ bool InputManager::GetDpadDir(unsigned int jid, Dir dir)
 	return false;
 }
 
+//Method to get if anologue stick is pushed in cardinal direction
 bool InputManager::GetDigiAnalogue(unsigned int jid, Dir dir)
 {
+	// analogue stick x axis
 	float x = sf::Joystick::getAxisPosition(jid, sf::Joystick::X);
+	// analogue stick y axis
 	float y = sf::Joystick::getAxisPosition(jid, sf::Joystick::Y);
 
 	switch (dir)
 	{
-	case U:
+	case U: //Up
 		if (y < -50)
 		{
 			return true;
 		}
 		break;
-	case D:
+	case D: //Down
 		if (y > 50)
 		{
 			return true;
 		}
 		break;
-	case L:
+	case L: //Left
 		if (x < -50)
 		{
 			return true;
 		}
 		break;
-	case R:
+	case R: //Right
 		if (x > 50)
 		{
 			return true;
@@ -411,18 +453,21 @@ bool InputManager::GetDigiAnalogue(unsigned int jid, Dir dir)
 	return false;
 }
 
+//Method to check if analogue stick has been pushed in direction
 bool InputManager::GetAnaDown(Dir dir)
 {
 	if (digiAnalogue.test(dir))
 		return true;
 	return false;
 }
+//Method to check if analogue stick is being held in direction
 bool InputManager::GetAnaHeld(Dir dir)
 {
 	if (digiAnaHeld.test(dir))
 		return true;
 	return false;
 }
+//method to check if analogue stick has been released from direction
 bool InputManager::GetAnaReleased(Dir dir)
 {
 	if (digiAnaReleased.test(dir))
@@ -430,13 +475,15 @@ bool InputManager::GetAnaReleased(Dir dir)
 	return false;
 }
 
+//method to chek if button is down
 bool InputManager::GetButtonDown(unsigned int action) {
-	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1 && activeControls.mouseControls[action] == -1) && 
+	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1 && activeControls.mouseControls[action] == -1) &&
 		buttonDown.test(action))
 		return true;
 	return false;
 }
 
+//method to check if button is held
 bool InputManager::GetButtonHeld(unsigned int action) {
 	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
 		buttonHeld.test(action))
@@ -444,6 +491,7 @@ bool InputManager::GetButtonHeld(unsigned int action) {
 	return false;
 }
 
+//method to check if button is released
 bool InputManager::GetButtonReleased(unsigned int action) {
 	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
 		buttonReleased.test(action))

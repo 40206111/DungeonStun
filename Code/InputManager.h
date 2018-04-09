@@ -55,6 +55,7 @@ public:
 	bool GetButtonHeld(unsigned int button);
 	bool GetButtonReleased(unsigned int button);
 protected:
+	//bools for button presses
 	std::bitset<ACTIONSIZE> buttonDown;
 	std::bitset<ACTIONSIZE> buttonHeld;
 	std::bitset<ACTIONSIZE> buttonReleased;
