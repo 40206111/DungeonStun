@@ -14,7 +14,7 @@ public:
 	virtual ~Entity() = default;
 
 	virtual void Update(const double dt);
-	virtual void render() const = 0;
+	virtual void Render() const = 0;
 	const sf::Vector2f GetPosition();
 	void SetPosition(const sf::Vector2f &pos);
 	void Move(const sf::Vector2f &pos);
