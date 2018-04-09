@@ -6,6 +6,7 @@ using namespace sf;
 using namespace std;
 
 sf::Font font;
+shared_ptr<InputManager> player1;
 shared_ptr<Scene> homeScene;
 shared_ptr<Scene> menuScene;
 shared_ptr<Scene> settingsScene;
@@ -20,6 +21,7 @@ void Render()
 void Load()
 {	
 	font.loadFromFile("Assets/font/rm_typerighter_old.ttf");
+	player1.reset(new InputManager());
 	homeScene.reset(new HomeScene());
 	menuScene.reset(new MenuScene());
 	settingsScene.reset(new SettingsScene());
