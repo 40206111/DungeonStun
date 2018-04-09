@@ -20,11 +20,39 @@ Menu::Menu(sf::RenderWindow &window) : Screen(window)
 	text[2].setString("Exit");
 }
 
+
+
 void Menu::Update(sf::RenderWindow &window, float dt)
 {
 	iMan->Update(dt);
 	if (!start)
 	{
+
+		if (iMan->mMoved && iMan->onText(text[0], window))
+		{
+			text[1].setColor(sf::Color::White);
+			text[2].setColor(sf::Color::White);
+			menu.set(0);
+			menu.reset(1);
+			menu.reset(2);
+		}
+		else if (iMan->mMoved && iMan->onText(text[1], window))
+		{
+			text[0].setColor(sf::Color::White);
+			text[2].setColor(sf::Color::White);
+			menu.reset(0);
+			menu.set(1);
+			menu.reset(2);
+		}
+		else if (iMan->mMoved && iMan->onText(text[2], window))
+		{
+			text[0].setColor(sf::Color::White);
+			text[1].setColor(sf::Color::White);
+			menu.reset(0);
+			menu.reset(1);
+			menu.set(2);
+		}
+
 		if (iMan->GetButtonDown(iMan->MENUDOWN) || iMan->GetAnaDown(iMan->D))
 		{
 			menu.reset(current);
