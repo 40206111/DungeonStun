@@ -3,6 +3,15 @@
 
 namespace Renderer
 {
+
+	static const std::vector<std::pair<uint16_t, uint16_t>> resolutions{
+		std::make_pair(960,540), std::make_pair(1024,576),  std::make_pair(1152,648),
+		std::make_pair(1280,720),  std::make_pair(1366,768),  std::make_pair(1600,900),
+		std::make_pair(1920,1080)
+	};
+	static unsigned int currentRes = 3;
+	static unsigned int currentFullRes = 6;
+
 	void Initialise(sf::RenderWindow &);
 	sf::RenderWindow &GetWindow();
 	bool GetFullscreen();
@@ -12,4 +21,5 @@ namespace Renderer
 	void Queue(const sf::Drawable *s);
 	void Render();
 	void ToggleFullscreen();
+	void setResolution(int res);
 };

@@ -51,7 +51,7 @@ void Update()
 
 int main()
 {
-	RenderWindow window(VideoMode(gameWidth, gameHeight), "Workin' 9 to Die");
+	RenderWindow window(VideoMode(Renderer::resolutions[Renderer::currentRes].first, Renderer::resolutions[Renderer::currentRes].second), "Workin' 9 to Die");
 	Renderer::Initialise(window);
 	Load();
 

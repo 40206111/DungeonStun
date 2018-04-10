@@ -17,22 +17,22 @@ void GraphicsScene::Load()
 		text.push_back(sf::Text());
 		text[i].setFont(font);
 	}
-	text[0].setString("Resolution: " + to_string(gameWidth) + "x" + to_string(gameHeight));
+	text[0].setString("Resolution: " + to_string(Renderer::resolutions[Renderer::currentRes].first) + "x" + to_string(Renderer::resolutions[Renderer::currentRes].second));
 	text[0].setColor(sf::Color::Yellow);
-	text[1].setString("Apply");
 
 	if (Renderer::GetFullscreen())
 	{
-		text[2].setString("Fullscreen: true");
+		text[1].setString("Fullscreen: true");
 	}
 	else
 	{
-		text[2].setString("Fullscreen: false");
+		text[1].setString("Fullscreen: false");
 	}
-	text[3].setString("Back");
+	text[2].setString("Back");
 	textAmount = text.size();
 	previousScene = settingsScene;
 	fullscreen = Renderer::GetFullscreen();
+	shownRes = Renderer::currentRes;
 }
 
 //Update method
@@ -45,11 +45,40 @@ void GraphicsScene::Update(double dt)
 		fullscreen = Renderer::GetFullscreen();
 		if (fullscreen)
 		{
-			text[2].setString("Fullscreen: true");
+			text[1].setString("Fullscreen: true");
+			shownRes = Renderer::currentFullRes;
 		}
 		else
 		{
-			text[2].setString("Fullscreen: false");
+			text[1].setString("Fullscreen: false");
+			shownRes = Renderer::currentRes;
+		}
+		text[0].setString("Resolution: " + to_string(Renderer::resolutions[shownRes].first) + "x" + to_string(Renderer::resolutions[shownRes].second));
+	}
+	//Right
+	if (player1->GetButtonDown(player1->RIGHT) || player1->GetAnaDown(player1->R))
+	{
+		if (current == 0)
+		{
+			shownRes += 1;
+			if (shownRes >= Renderer::resolutions.size())
+			{
+				shownRes = 0;
+			}
+			text[0].setString("Resolution: " + to_string(Renderer::resolutions[shownRes].first) + "x" + to_string(Renderer::resolutions[shownRes].second));
+		}
+	}
+	//Left
+	if (player1->GetButtonDown(player1->LEFT) || player1->GetAnaDown(player1->L))
+	{
+		if (current == 0)
+		{
+			shownRes -= 1;
+			if (shownRes <= 0)
+			{
+				shownRes = Renderer::resolutions.size() - 1;
+			}
+			text[0].setString("Resolution: " + to_string(Renderer::resolutions[shownRes].first) + "x" + to_string(Renderer::resolutions[shownRes].second));
 		}
 	}
 	//accept option
@@ -58,13 +87,12 @@ void GraphicsScene::Update(double dt)
 		switch (current)
 		{
 		case 0:
+			Renderer::setResolution(shownRes);
 			break;
 		case 1:
-			break;
-		case 2:
 			Renderer::ToggleFullscreen();
 			break;
-		case 3:
+		case 2:
 			ChangeCurrent(0);
 			activeScene = previousScene;
 			break;
@@ -78,4 +106,18 @@ void GraphicsScene::Update(double dt)
 void GraphicsScene::Render()
 {
 	TextScene::Render();
+}
+
+void GraphicsScene::Reset()
+{
+	fullscreen = Renderer::GetFullscreen();
+	if (fullscreen)
+	{
+		shownRes = Renderer::currentFullRes;
+	}
+	else
+	{
+		shownRes = Renderer::currentRes;
+	}
+	text[0].setString("Resolution: " + to_string(Renderer::resolutions[shownRes].first) + "x" + to_string(Renderer::resolutions[shownRes].second));
 }

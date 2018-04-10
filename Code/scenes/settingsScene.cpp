@@ -37,6 +37,7 @@ void SettingsScene::Update(double dt)
 		{
 		case 0:
 			ChangeCurrent(0);
+			graphicsScene->Reset();
 			activeScene = graphicsScene;
 			break;
 		case 1:
