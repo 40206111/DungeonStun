@@ -11,6 +11,7 @@ extern std::shared_ptr<InputManager> player1;
 extern std::shared_ptr<Scene> homeScene;
 extern std::shared_ptr<Scene> menuScene;
 extern std::shared_ptr<Scene> settingsScene;
+extern std::shared_ptr<Scene> graphicsScene;
 extern std::shared_ptr<Scene> activeScene;
 
 class HomeScene : public Scene
@@ -52,6 +53,21 @@ private:
 	int current = 0;
 public:
 	SettingsScene() = default;
+	void Update(double dt) override;
+	void Render() override;
+	void Load() override;
+};
+
+class GraphicsScene : public Scene
+{
+private:
+	std::vector<sf::Text> text;
+	//Menu buttons
+	std::bitset<3> menu;
+	//currently selected
+	int current = 0;
+public:
+	GraphicsScene() = default;
 	void Update(double dt) override;
 	void Render() override;
 	void Load() override;
