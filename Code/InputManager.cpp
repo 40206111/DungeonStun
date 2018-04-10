@@ -505,16 +505,11 @@ bool InputManager::onText(sf::Text t)
 {
 	//get mouse positon
 	Vector2i mousePos = sf::Mouse::getPosition(Renderer::GetWindow());
-	//get text bounds
-	float leftEdge = t.getPosition().x;
-	float rightEdge = t.getPosition().x + t.getLocalBounds().width;
-	float topEdge = t.getPosition().y + t.getLocalBounds().height;
-	float bottomEdge = t.getPosition().y + (t.getLocalBounds().height * 2);
 
 	//check if in bounds
-	if (mousePos.x > leftEdge && mousePos.x < rightEdge &&
-		mousePos.y > topEdge && mousePos.y < bottomEdge)
+	if (t.getGlobalBounds().contains(Vector2f(mousePos)))
 	{
+		printf("%d : %d\n", mousePos.x, mousePos.y);
 		return true;
 	}
 
