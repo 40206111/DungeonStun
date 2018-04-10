@@ -29,6 +29,8 @@ execute_process(
 
 ### Main Project ###
 file(GLOB_RECURSE SOURCES Code/*.cpp Code/*.h)
+file(GLOB_RECURSE SCENES Code/scenes/*.cpp Code/scenes/*.h)
 add_executable(NINE_TO_DIE ${SOURCES})
+source_group("Scenes" FILES ${SCENES})
 target_include_directories(NINE_TO_DIE PRIVATE ${SFML_INCS})
 target_link_libraries(NINE_TO_DIE sfml-graphics)

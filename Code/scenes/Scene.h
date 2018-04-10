@@ -1,7 +1,7 @@
 #pragma once
-#include "Entity.h"
-#include "EntityManager.h"
-#include "InputManager.h"
+#include "../Entity.h"
+#include "../EntityManager.h"
+#include "../InputManager.h"
 #include <vector>
 #include <memory>
 
