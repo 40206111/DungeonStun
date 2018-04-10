@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "SystemRenderer.h"
 #include "Game.h"
+#include "scenes\homeScene.h"
 #include <iostream>
 using namespace sf;
 using namespace std;

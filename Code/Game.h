@@ -1,5 +1,6 @@
 #pragma once
-#include "Scene.h"
+#include "scenes/Scene.h"
+#include "InputManager.h"
 #include <memory>
 
 //gamesize
@@ -12,19 +13,6 @@ extern std::shared_ptr<Scene> homeScene;
 extern std::shared_ptr<Scene> menuScene;
 extern std::shared_ptr<Scene> settingsScene;
 extern std::shared_ptr<Scene> activeScene;
-
-class HomeScene : public Scene
-{
-private:
-	sf::Texture homescreen;
-	sf::Sprite background;
-	sf::Text text;
-public:
-	HomeScene() = default;
-	void Update(double dt) override;
-	void Render() override;
-	void Load() override;
-};
 
 class MenuScene : public Scene
 {
