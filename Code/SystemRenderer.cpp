@@ -12,7 +12,7 @@ static bool fullscreen = false;
 void Renderer::Initialise(sf::RenderWindow &r) { rw = &r;  }
 
 sf::RenderWindow & Renderer::GetWindow() { return *rw; }
-bool GetFullscreen() { return fullscreen; }
+bool Renderer::GetFullscreen() { return fullscreen; }
 
 void Renderer::Shutdown()
 {

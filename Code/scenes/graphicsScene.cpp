@@ -16,17 +16,15 @@ void GraphicsScene::Load()
 		text.push_back(sf::Text());
 		text[i].setFont(font);
 	}
-	text[0].setString("");
-	text[1].setString("Fullscreen: true");
-
-	//if (Renderer::GetFullscreen())
-	//{
-	//	text[1].setString("Fullscreen: true");
-	//}
-	//else
-	//{
-	//	text[1].setString("Fullscreen: false");
-	//}
+	text[0].setString("aaaa");
+	if (Renderer::GetFullscreen())
+	{
+		text[1].setString("Fullscreen: true");
+	}
+	else
+	{
+		text[1].setString("Fullscreen: false");
+	}
 	text[2].setString("Back");
 	menu.set(current);
 }
