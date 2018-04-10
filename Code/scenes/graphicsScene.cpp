@@ -11,165 +11,64 @@ using namespace std;
 void GraphicsScene::Load()
 {
 	//Load Text
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		text.push_back(sf::Text());
 		text[i].setFont(font);
 	}
-	text[0].setString("aaaa");
+	text[0].setString("Resolution: ");
+	text[0].setColor(sf::Color::Yellow);
+	text[1].setString("Apply");
+
 	if (Renderer::GetFullscreen())
 	{
-		text[1].setString("Fullscreen: true");
+		text[2].setString("Fullscreen: true");
 	}
 	else
 	{
-		text[1].setString("Fullscreen: false");
+		text[2].setString("Fullscreen: false");
 	}
-	text[2].setString("Back");
-	menu.set(current);
+	text[3].setString("Back");
+	textAmount = text.size();
+	previousScene = settingsScene;
+	fullscreen = Renderer::GetFullscreen();
 }
 
 //Update method
 void GraphicsScene::Update(double dt)
 {
-	//update input
-	player1->Update(dt);
-
-	//if keyboard controls allow mouse input
-	if (player1->activeControls.controlType == "keyboard")
-	{
-		//if mouse over text 0
-		if (player1->mMoved && player1->onText(text[0]))
-		{
-			text[1].setColor(sf::Color::White);
-			text[2].setColor(sf::Color::White);
-			menu.set(0);
-			menu.reset(1);
-			menu.reset(2);
-		}
-		//if mouse over text 1
-		else if (player1->mMoved && player1->onText(text[1]))
-		{
-			text[0].setColor(sf::Color::White);
-			text[2].setColor(sf::Color::White);
-			menu.reset(0);
-			menu.set(1);
-			menu.reset(2);
-		}
-		//if mouse over text 2
-		else if (player1->mMoved && player1->onText(text[2]))
-		{
-			text[0].setColor(sf::Color::White);
-			text[1].setColor(sf::Color::White);
-			menu.reset(0);
-			menu.reset(1);
-			menu.set(2);
-		}
-	}
-
-	//if menu down
-	if (player1->GetButtonDown(player1->MENUDOWN) || player1->GetAnaDown(player1->D))
-	{
-		//highlight next bit of text
-		menu.reset(current);
-		text[current].setColor(sf::Color::White);
-		//loop round text
-		current++;
-		if (current > 2)
-		{
-			current = 0;
-		}
-		menu.set(current);
-	}
-	if (player1->GetButtonDown(player1->MENUUP) || player1->GetAnaDown(player1->U))
-	{
-		//highlight next bit of text
-		menu.reset(current);
-		text[current].setColor(sf::Color::White);
-		//loop round text
-		current--;
-		if (current < 0)
-		{
-			current = 2;
-		}
-		menu.set(current);
-	}
+	TextScene::Update(dt);
 	//Fullscreen window
-	if (player1->GetButtonDown(player1->FULLSCREEN))
+	if (fullscreen != Renderer::GetFullscreen())
 	{
-		Renderer::ToggleFullscreen();
+		fullscreen = Renderer::GetFullscreen();
+		if (fullscreen)
+		{
+			text[2].setString("Fullscreen: true");
+		}
+		else
+		{
+			text[2].setString("Fullscreen: false");
+		}
 	}
 	//accept option
 	if (player1->GetButtonDown(player1->ACCEPT))
 	{
-		//Graphics
-		if (menu.test(0))
+		switch (current)
 		{
-		}
-		//Controls
-		if (menu.test(1))
-		{
-		}
-		//Back
-		if (menu.test(2))
-		{
-			//reset text colouurs
-			text[1].setColor(sf::Color::White);
-			text[2].setColor(sf::Color::White);
-			//set current to 0
-			current = 0;
-			//reset menu options bits
-			menu.set(0);
-			menu.reset(1);
-			menu.reset(2);
-			//set active screen
-			activeScene = menuScene;
-		}
-	}
-	//Back
-	if (player1->GetButtonDown(player1->BACK))
-	{
-		//reset text colouurs
-		text[1].setColor(sf::Color::White);
-		text[2].setColor(sf::Color::White);
-		//set current to 0
-		current = 0;
-		//reset menu options bits
-		menu.set(0);
-		menu.reset(1);
-		menu.reset(2);
-		//set active screen
-		activeScene = menuScene;
-	}
-
-	//poll events
-	Event event;
-	while (Renderer::GetWindow().pollEvent(event))
-	{
-		//Close window
-		if (event.type == Event::Closed)
-		{
-			Renderer::Shutdown();
-			Renderer::GetWindow().close();
-			return;
-		}
-		//If controller disconected
-		if (event.type == sf::Event::JoystickDisconnected)
-		{
-			if (player1->activeControls.controlType == "PS4" && player1->controlerid == event.joystickMove.joystickId)
-			{
-				//reset text colouurs
-				text[1].setColor(sf::Color::White);
-				text[2].setColor(sf::Color::White);
-				//set current to 0
-				current = 0;
-				//reset menu options bits
-				menu.set(0);
-				menu.reset(1);
-				menu.reset(2);
-				//set active screen
-				activeScene = homeScene;
-			}
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			Renderer::ToggleFullscreen();
+			break;
+		case 3:
+			ChangeCurrent(0);
+			activeScene = previousScene;
+			break;
+		default:
+			break;
 		}
 	}
 }
@@ -177,16 +76,5 @@ void GraphicsScene::Update(double dt)
 //render Method
 void GraphicsScene::Render()
 {
-	//set text positions to fit screen
-	text[0].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[0].getLocalBounds().width), (Renderer::GetWindow().getSize().y * 0.5f) - (text[0].getLocalBounds().height * 3));
-	text[1].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[1].getLocalBounds().width), Renderer::GetWindow().getSize().y * 0.5f - (text[1].getLocalBounds().height));
-	text[2].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[2].getLocalBounds().width), (Renderer::GetWindow().getSize().y * 0.5f) + (text[2].getLocalBounds().height * 1));
-	//render text
-	for (int i = 0; i < text.size(); ++i)
-	{
-		text[i].setCharacterSize(Renderer::GetWindow().getSize().x / 10);
-		if (menu.test(i))
-			text[i].setColor(sf::Color::Yellow);
-		Renderer::Queue(&text[i]);
-	}
+	TextScene::Render();
 }
