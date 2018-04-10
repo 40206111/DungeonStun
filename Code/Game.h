@@ -12,4 +12,5 @@ extern std::shared_ptr<InputManager> player1;
 extern std::shared_ptr<Scene> homeScene;
 extern std::shared_ptr<Scene> menuScene;
 extern std::shared_ptr<Scene> settingsScene;
+extern std::shared_ptr<Scene> graphicsScene;
 extern std::shared_ptr<Scene> activeScene;

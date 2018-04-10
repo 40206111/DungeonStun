@@ -1,14 +1,14 @@
-#include "settingsScene.h"
+#include "graphicsScene.h"
 #include "../Game.h"
 #include "../SystemRenderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
 
-///SETTINGS SCENE///
+///GRAPHICS SCENE///
 
 //Load method
-void SettingsScene::Load()
+void GraphicsScene::Load()
 {
 	//Load Text
 	for (int i = 0; i < 3; i++)
@@ -16,14 +16,23 @@ void SettingsScene::Load()
 		text.push_back(sf::Text());
 		text[i].setFont(font);
 	}
-	text[0].setString("Graphics");
-	text[1].setString("Controls");
+	text[0].setString("");
+	text[1].setString("Fullscreen: true");
+
+	//if (Renderer::GetFullscreen())
+	//{
+	//	text[1].setString("Fullscreen: true");
+	//}
+	//else
+	//{
+	//	text[1].setString("Fullscreen: false");
+	//}
 	text[2].setString("Back");
 	menu.set(current);
 }
 
 //Update method
-void SettingsScene::Update(double dt)
+void GraphicsScene::Update(double dt)
 {
 	//update input
 	player1->Update(dt);
@@ -98,7 +107,6 @@ void SettingsScene::Update(double dt)
 		//Graphics
 		if (menu.test(0))
 		{
-			activeScene = graphicsScene;
 		}
 		//Controls
 		if (menu.test(1))
@@ -169,7 +177,7 @@ void SettingsScene::Update(double dt)
 }
 
 //render Method
-void SettingsScene::Render()
+void GraphicsScene::Render()
 {
 	//set text positions to fit screen
 	text[0].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[0].getLocalBounds().width), (Renderer::GetWindow().getSize().y * 0.5f) - (text[0].getLocalBounds().height * 3));
