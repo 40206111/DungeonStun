@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <string>
+#include <list>
 #include <bitset>
 
 //Control System struct
@@ -29,13 +30,14 @@ public:
 						MENURIGHT, BACK, ACCEPT,
 						FULLSCREEN, ACTIONSIZE}; //action size shows how many actions there are in the enum
 
+	static const std::vector<std::string> Actions;
+
 	//string Controls
 	static const std::map<PS4, std::string> ps4Controls;
 	static const std::map<sf::Keyboard::Key, std::string> keyboardControls;
 
 	//Control Systems
 	std::vector<ControlSystem> keyMaps;
-	//std::map<int, ControlSystem> keyMaps;
 	ControlSystem activeControls;
 
 	//controller ID

@@ -108,6 +108,13 @@ const std::map<InputManager::PS4, std::string> InputManager::ps4Controls = {
 	{ InputManager::TOUCH, "TOUCH PAD" },
 };
 
+//Action string
+const std::vector<string> InputManager::Actions{ "Left", "Right", "SVM", "Jump",
+									"Aim", "Fire", "Sheild", "Active",
+									"Menu Up", "Menu Down", "Menu Left",
+									"MenuRight", "Back", "Accept",
+									"Fullscreen"};
+
 //Input manager constructor
 InputManager::InputManager()
 {
