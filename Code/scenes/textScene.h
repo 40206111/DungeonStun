@@ -7,10 +7,12 @@ class TextScene : public Scene
 protected:
 	std::vector<sf::Text> text;
 	int textAmount;
+	float space;
 	//currently selected
 	int current = 0;
 	std::shared_ptr<Scene> previousScene;
 	
+	void CalculateSpace();
 	void ChangeCurrent(int);
 public:
 	TextScene() = default;

@@ -20,6 +20,7 @@ void SettingsScene::Load()
 	text[1].setString("Controls");
 	text[2].setString("Back");
 	textAmount = text.size();
+	CalculateSpace();
 	previousScene = menuScene;
 }
 

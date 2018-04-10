@@ -78,6 +78,7 @@ void TextScene::Update(double dt)
 //render Method
 void TextScene::Render()
 {
+	CalculateSpace();
 	//set text positions to fit screen
 	/*text[0].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[0].getLocalBounds().width), (Renderer::GetWindow().getSize().y * 0.5f) - (text[0].getLocalBounds().height * 3));
 	text[1].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[1].getLocalBounds().width), Renderer::GetWindow().getSize().y * 0.5f - (text[1].getLocalBounds().height));
@@ -90,7 +91,7 @@ void TextScene::Render()
 		float xval = (Renderer::GetWindow().getSize().x * 0.5f) - (text[i].getGlobalBounds().width);
 		int co = i - textAmount / 2;
 		float yval = Renderer::GetWindow().getSize().y * 0.5f;
-		yval = yval + (yval * co / textAmount);
+		yval = yval + (co * space);
 		text[i].setPosition(Vector2f(xval, yval) - Vector2f(text[i].getLocalBounds().left, text[i].getLocalBounds().top));
 		if (false) {
 			Vector2f globPos = Vector2f(text[i].getGlobalBounds().left, text[i].getGlobalBounds().top);
@@ -100,6 +101,12 @@ void TextScene::Render()
 
 		Renderer::Queue(&text[i]);
 	}
+}
+
+void TextScene::CalculateSpace() {
+	int count = 8; // Number to fit on screen by default
+	float gap = Renderer::GetWindow().getSize().y / (textAmount < count ? (float)count + 1.0f : textAmount + 1);
+	space = gap;
 }
 
 void TextScene::ChangeCurrent(int value) 
