@@ -1,14 +1,14 @@
-#include "menuScene.h"
+#include "graphicsScene.h"
 #include "../Game.h"
 #include "../SystemRenderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
 
-///MENU SCENE///
+///GRAPHICS SCENE///
 
 //Load method
-void MenuScene::Load()
+void GraphicsScene::Load()
 {
 	//Load Text
 	for (int i = 0; i < 3; i++)
@@ -16,13 +16,23 @@ void MenuScene::Load()
 		text.push_back(sf::Text());
 		text[i].setFont(font);
 	}
-	text[0].setString("Play");
-	text[1].setString("Settings");
-	text[2].setString("Exit");
+	text[0].setString("");
+	text[1].setString("Fullscreen: true");
+
+	//if (Renderer::GetFullscreen())
+	//{
+	//	text[1].setString("Fullscreen: true");
+	//}
+	//else
+	//{
+	//	text[1].setString("Fullscreen: false");
+	//}
+	text[2].setString("Back");
 	menu.set(current);
 }
 
-void MenuScene::Update(double dt)
+//Update method
+void GraphicsScene::Update(double dt)
 {
 	//update input
 	player1->Update(dt);
@@ -94,20 +104,28 @@ void MenuScene::Update(double dt)
 	//accept option
 	if (player1->GetButtonDown(player1->ACCEPT))
 	{
-		//Play Game
+		//Graphics
 		if (menu.test(0))
 		{
 		}
-		//Settings
+		//Controls
 		if (menu.test(1))
 		{
-			activeScene = settingsScene;
 		}
-		//Exit
+		//Back
 		if (menu.test(2))
 		{
-			Renderer::Shutdown();
-			Renderer::GetWindow().close();
+			//reset text colouurs
+			text[1].setColor(sf::Color::White);
+			text[2].setColor(sf::Color::White);
+			//set current to 0
+			current = 0;
+			//reset menu options bits
+			menu.set(0);
+			menu.reset(1);
+			menu.reset(2);
+			//set active screen
+			activeScene = menuScene;
 		}
 	}
 	//Back
@@ -123,7 +141,7 @@ void MenuScene::Update(double dt)
 		menu.reset(1);
 		menu.reset(2);
 		//set active screen
-		activeScene = homeScene;
+		activeScene = menuScene;
 	}
 
 	//poll events
@@ -158,8 +176,8 @@ void MenuScene::Update(double dt)
 	}
 }
 
-//Render Method
-void MenuScene::Render()
+//render Method
+void GraphicsScene::Render()
 {
 	//set text positions to fit screen
 	text[0].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[0].getLocalBounds().width), (Renderer::GetWindow().getSize().y * 0.5f) - (text[0].getLocalBounds().height * 3));

@@ -2,6 +2,9 @@
 #include "SystemRenderer.h"
 #include "Game.h"
 #include "scenes\homeScene.h"
+#include "scenes\menuScene.h"
+#include "scenes\settingsScene.h"
+#include "scenes\graphicsScene.h"
 #include <iostream>
 using namespace sf;
 using namespace std;
@@ -11,6 +14,7 @@ shared_ptr<InputManager> player1;
 shared_ptr<Scene> homeScene;
 shared_ptr<Scene> menuScene;
 shared_ptr<Scene> settingsScene;
+shared_ptr<Scene> graphicsScene;
 shared_ptr<Scene> activeScene;
 
 void Render()
@@ -26,9 +30,11 @@ void Load()
 	homeScene.reset(new HomeScene());
 	menuScene.reset(new MenuScene());
 	settingsScene.reset(new SettingsScene());
+	graphicsScene.reset(new GraphicsScene());
 	homeScene->Load();
 	menuScene->Load();
 	settingsScene->Load();
+	graphicsScene->Load();
 	activeScene = homeScene;
 }
 

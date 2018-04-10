@@ -2,7 +2,7 @@
 #include "Scene.h"
 #include <SFML/Graphics.hpp>
 
-class SettingsScene : public Scene
+class GraphicsScene : public Scene
 {
 private:
 	std::vector<sf::Text> text;
@@ -11,7 +11,7 @@ private:
 	//currently selected
 	int current = 0;
 public:
-	SettingsScene() = default;
+	GraphicsScene() = default;
 	void Update(double dt) override;
 	void Render() override;
 	void Load() override;
