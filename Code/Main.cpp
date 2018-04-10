@@ -2,6 +2,8 @@
 #include "SystemRenderer.h"
 #include "Game.h"
 #include "scenes\homeScene.h"
+#include "scenes\menuScene.h"
+#include "scenes\settingsScene.h"
 #include <iostream>
 using namespace sf;
 using namespace std;
