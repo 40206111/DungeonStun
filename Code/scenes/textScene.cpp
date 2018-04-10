@@ -87,11 +87,16 @@ void TextScene::Render()
 	{
 		text[i].setCharacterSize(Renderer::GetWindow().getSize().x / 10);
 
-		float xval = (Renderer::GetWindow().getSize().x * 0.5f) - (text[i].getLocalBounds().width);
+		float xval = (Renderer::GetWindow().getSize().x * 0.5f) - (text[i].getGlobalBounds().width);
 		int co = i - textAmount / 2;
 		float yval = Renderer::GetWindow().getSize().y * 0.5f;
 		yval = yval + (yval * co / textAmount);
-		text[i].setPosition(xval, yval);
+		text[i].setPosition(Vector2f(xval, yval) - Vector2f(text[i].getLocalBounds().left, text[i].getLocalBounds().top));
+		if (false) {
+			Vector2f globPos = Vector2f(text[i].getGlobalBounds().left, text[i].getGlobalBounds().top);
+			Vector2f posPos = text[i].getPosition();
+			Vector2f locPos = Vector2f(text[i].getLocalBounds().left, text[i].getLocalBounds().top);
+		}
 
 		Renderer::Queue(&text[i]);
 	}
