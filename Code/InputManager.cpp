@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include "SystemRenderer.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 using namespace sf;
@@ -218,7 +219,7 @@ void InputManager::CreateControlers()
 		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
 		{MENUUP, std::make_pair(sf::Keyboard::W, sf::Keyboard::Up)},{MENUDOWN, std::make_pair(sf::Keyboard::S, sf::Keyboard::Down)},
 		{MENULEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Left)},{MENURIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Right)},
-		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
+		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Return)},
 		{FULLSCREEN, std::make_pair(sf::Keyboard::F, sf::Keyboard::Unknown)}
 	};
 	keyboard.controlType = "keyboard";
@@ -238,11 +239,11 @@ void InputManager::CreateControlers()
 }
 
 // method to remap controls
-void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, std::string mapkey)
+void InputManager::Remap(Action action, bool primary, std::string mapkey)
 {
 	Event event;
 	//poll events
-	while (window.pollEvent(event))
+	while (Renderer::GetWindow().pollEvent(event))
 	{
 		//intitialise codes
 		int code = -1;
@@ -262,7 +263,7 @@ void InputManager::Remap(sf::RenderWindow &window, Action action, bool primary, 
 			{
 				key = (char)(event.text.unicode);
 			}
-			
+
 			//set text if nothing in key entered
 			if (key.find_first_not_of(" \t\n\v\f\r") != std::string::npos)
 			{
@@ -372,9 +373,7 @@ void InputManager::Update(double dt)
 			digiAnaReleased.set(i);
 		}
 	}
-
 	mMoved = mouseMoved();
-
 	///DEBUG///
 	ButtonDebug();
 }
@@ -502,20 +501,15 @@ bool InputManager::GetButtonReleased(unsigned int action) {
 }
 
 //Method to check if mouse is over text
-bool InputManager::onText(sf::Text t, sf::RenderWindow &window)
+bool InputManager::onText(sf::Text t)
 {
 	//get mouse positon
-	Vector2i mousePos = sf::Mouse::getPosition(window);
-	//get text bounds
-	float leftEdge = t.getPosition().x;
-	float rightEdge = t.getPosition().x + t.getLocalBounds().width;
-	float topEdge = t.getPosition().y + t.getLocalBounds().height;
-	float bottomEdge = t.getPosition().y  + (t.getLocalBounds().height * 2);
+	Vector2i mousePos = sf::Mouse::getPosition(Renderer::GetWindow());
 
 	//check if in bounds
-	if (mousePos.x > leftEdge && mousePos.x < rightEdge &&
-		mousePos.y > topEdge && mousePos.y < bottomEdge)
+	if (t.getGlobalBounds().contains(Vector2f(mousePos)))
 	{
+		printf("%d : %d\n", mousePos.x, mousePos.y);
 		return true;
 	}
 
@@ -523,7 +517,7 @@ bool InputManager::onText(sf::Text t, sf::RenderWindow &window)
 }
 
 //method to check if mouse has moved since last check
-bool InputManager::mouseMoved() 
+bool InputManager::mouseMoved()
 {
 	// if it has changed position return true
 	if (lastMousePos != sf::Mouse::getPosition())

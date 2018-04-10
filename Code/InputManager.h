@@ -48,7 +48,7 @@ public:
 
 	//methods
 	void Update(double dt);
-	void Remap(sf::RenderWindow &window, Action action, bool primary, std::string mapKey);
+	void Remap(Action action, bool primary, std::string mapKey);
 	bool GetDpadDir(unsigned int jid, Dir dir);
 	bool GetDigiAnalogue(unsigned int jid, Dir dir);
 	bool GetAnaDown(Dir dir);
@@ -57,7 +57,7 @@ public:
 	bool GetButtonDown(unsigned int button);
 	bool GetButtonHeld(unsigned int button);
 	bool GetButtonReleased(unsigned int button);
-	bool onText(sf::Text t, sf::RenderWindow &window);
+	bool onText(sf::Text t);
 protected:
 	//bools for button presses
 	std::bitset<ACTIONSIZE> buttonDown;
