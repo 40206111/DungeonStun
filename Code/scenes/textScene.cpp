@@ -47,6 +47,7 @@ void TextScene::Update(double dt)
 	{
 		//set current to 0
 		ChangeCurrent(0);
+		Reset();
 		//set active screen
 		activeScene = previousScene;
 	}

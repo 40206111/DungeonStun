@@ -15,6 +15,7 @@ public:
 	virtual void Update(double dt) {}
 	virtual void Render() {}
 	virtual void Load() {}
+	virtual void Reset() {}
 
 	std::vector<std::shared_ptr<Entity>> &getEnts() {}
 protected:

@@ -207,7 +207,8 @@ void InputManager::CreateControlers()
 		{BACK, NONE}, {ACCEPT, NONE},
 		{FULLSCREEN, NONE}
 	};
-	keyMaps.insert({ "PS4", pscontroller });
+	keyMaps.push_back(pscontroller);
+	keyMaps[keyMaps.size() - 1].mapKey = keyMaps.size() - 1;
 
 	//create keyboard control system
 	ControlSystem keyboard;
@@ -234,12 +235,13 @@ void InputManager::CreateControlers()
 		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Mouse::Left},
 		{FULLSCREEN, sf::Keyboard::Unknown}
 	};
-	keyMaps.insert({ "keyboard", keyboard });
+	keyMaps.push_back(keyboard);
+	keyMaps[keyMaps.size() - 1].mapKey = keyMaps.size() - 1;
 
 }
 
 // method to remap controls
-void InputManager::Remap(Action action, bool primary, std::string mapkey)
+void InputManager::Remap(Action action, bool primary, int key)
 {
 	Event event;
 	//poll events
@@ -247,10 +249,10 @@ void InputManager::Remap(Action action, bool primary, std::string mapkey)
 	{
 		//intitialise codes
 		int code = -1;
-		std::string key = "";
+		std::string pressed = "";
 
 		//check controller type
-		if (keyMaps[mapkey].controlType == "keyboard")
+		if (keyMaps[key].controlType == "keyboard")
 		{
 			//check if key pressed
 			if (event.type == sf::Event::KeyPressed)
@@ -265,19 +267,19 @@ void InputManager::Remap(Action action, bool primary, std::string mapkey)
 			}
 
 			//set text if nothing in key entered
-			if (key.find_first_not_of(" \t\n\v\f\r") != std::string::npos)
+			if (pressed.find_first_not_of(" \t\n\v\f\r") != std::string::npos)
 			{
 				//set key sting to be that in keyboard map
-				key = keyboardControls.at((sf::Keyboard::Key)code);
+				pressed = keyboardControls.at((sf::Keyboard::Key)code);
 			}
 		}
-		else if (keyMaps[mapkey].controlType == "PS4")
+		else if (keyMaps[key].controlType == "PS4")
 		{
 			//check if joystick button pressed
 			if (event.type == sf::Event::JoystickButtonPressed)
 			{
 				code = event.joystickButton.button;
-				key = ps4Controls.at((PS4)code);
+				pressed = ps4Controls.at((PS4)code);
 			}
 		}
 
@@ -285,9 +287,9 @@ void InputManager::Remap(Action action, bool primary, std::string mapkey)
 		if (code != -1)
 		{
 			if (primary)
-				keyMaps[mapkey].controls[action].first = code;
+				keyMaps[key].controls[action].first = code;
 			else
-				keyMaps[mapkey].controls[action].second = code;
+				keyMaps[key].controls[action].second = code;
 		}
 	}
 }

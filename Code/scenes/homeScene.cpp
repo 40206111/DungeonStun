@@ -67,7 +67,7 @@ void HomeScene::Update(double dt)
 		if (event.type == sf::Event::JoystickButtonPressed)
 		{
 			player1->controlerid = event.joystickMove.joystickId;
-			player1->activeControls = player1->keyMaps["PS4"];
+			player1->activeControls = player1->keyMaps[player1->primaryPS4];
 			anyKey = true;
 			testVal = event.key.alt;
 		}
@@ -75,7 +75,7 @@ void HomeScene::Update(double dt)
 		//if keyboard key pressed
 		if (event.type == sf::Event::KeyPressed)
 		{
-			player1->activeControls = player1->keyMaps["keyboard"];
+			player1->activeControls = player1->keyMaps[player1->primaryKeyboard];
 			anyKey = true;
 			testVal = event.key.code;
 		}
