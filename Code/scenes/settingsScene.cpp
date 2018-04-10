@@ -41,10 +41,11 @@ void SettingsScene::Update(double dt)
 			break;
 		case 1:
 			ChangeCurrent(0);
+			activeScene = controlsScene;
 			break;
 		case 2:
 			ChangeCurrent(0);
-			activeScene = menuScene;
+			activeScene = previousScene;
 			break;
 		default:
 			break;

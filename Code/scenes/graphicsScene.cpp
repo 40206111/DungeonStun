@@ -2,6 +2,7 @@
 #include "../Game.h"
 #include "../SystemRenderer.h"
 #include <SFML/Graphics.hpp>
+#include <string>
 using namespace sf;
 using namespace std;
 
@@ -16,7 +17,7 @@ void GraphicsScene::Load()
 		text.push_back(sf::Text());
 		text[i].setFont(font);
 	}
-	text[0].setString("Resolution: ");
+	text[0].setString("Resolution: " + to_string(gameWidth) + "x" + to_string(gameHeight));
 	text[0].setColor(sf::Color::Yellow);
 	text[1].setString("Apply");
 

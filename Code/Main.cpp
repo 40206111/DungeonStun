@@ -5,6 +5,7 @@
 #include "scenes\menuScene.h"
 #include "scenes\settingsScene.h"
 #include "scenes\graphicsScene.h"
+#include "scenes\controlsScene.h"
 #include <iostream>
 using namespace sf;
 using namespace std;
@@ -16,6 +17,7 @@ shared_ptr<Scene> menuScene;
 shared_ptr<Scene> settingsScene;
 shared_ptr<Scene> graphicsScene;
 shared_ptr<Scene> activeScene;
+shared_ptr<Scene> controlsScene;
 
 void Render()
 {
@@ -31,10 +33,12 @@ void Load()
 	menuScene.reset(new MenuScene());
 	settingsScene.reset(new SettingsScene());
 	graphicsScene.reset(new GraphicsScene());
+	controlsScene.reset(new ControlsScene());
 	homeScene->Load();
 	menuScene->Load();
 	settingsScene->Load();
 	graphicsScene->Load();
+	controlsScene->Load();
 	activeScene = homeScene;
 }
 
