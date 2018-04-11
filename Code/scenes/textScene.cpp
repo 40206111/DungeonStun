@@ -14,7 +14,7 @@ void TextScene::Update(double dt)
 	player1->Update(dt);
 
 	//if keyboard controls allow mouse input
-	if (player1->activeControls.controlType == "keyboard")
+	if (player1->activeControls->controlType == "keyboard")
 	{
 		for (int i = 0; i < textAmount; ++i)
 		{
@@ -65,7 +65,7 @@ void TextScene::Update(double dt)
 		//If controller disconected
 		if (event.type == sf::Event::JoystickDisconnected)
 		{
-			if (player1->activeControls.controlType == "PS4" && player1->controlerid == event.joystickMove.joystickId)
+			if (player1->activeControls->controlType == "PS4" && player1->controlerid == event.joystickMove.joystickId)
 			{
 				ChangeCurrent(0);
 				//set active screen

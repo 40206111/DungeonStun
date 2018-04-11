@@ -253,7 +253,7 @@ void InputManager::CreateControlers()
 		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Mouse::Left},
 		{FULLSCREEN, sf::Keyboard::Unknown}
 	};
-	pscontroller.controlWords = {
+	keyboard.controlWords = {
 		{ LEFT, std::make_pair("A", "-") },{ RIGHT, std::make_pair("D", "-") },
 		{ SVM, std::make_pair("W", "-") },{ JUMP, std::make_pair("SPACE", "-") },
 		{ FIRE, std::make_pair("LEFT MOUSE", "-") },{ SHIELD, std::make_pair("RIGHT MOUSE", "-") },
@@ -269,7 +269,7 @@ void InputManager::CreateControlers()
 }
 
 // method to remap controls
-void InputManager::Remap(Action action, bool primary, int key)
+bool InputManager::Remap(Action action, int primary, int key)
 {
 	Event event;
 	//intitialise codes
@@ -302,13 +302,7 @@ void InputManager::Remap(Action action, bool primary, int key)
 				pressed = (char)(unic);
 			}
 
-			//set text if nothing in key entered
-			if (kPressed && (pressed.find_first_not_of(" \t\n\v\f\r") != std::string::npos || pressed == ""))
-			{
-				//set key sting to be that in keyboard map
-				pressed = keyboardControls.at((sf::Keyboard::Key)code);
-			}
-			else if (!kPressed && event.type == sf::Event::MouseButtonPressed)
+			if (!kPressed && event.type == sf::Event::MouseButtonPressed)
 			{
 				code = event.mouseButton.button;
 				if (code == sf::Mouse::Left)
@@ -340,6 +334,12 @@ void InputManager::Remap(Action action, bool primary, int key)
 			}
 		}
 	}
+	//set text if nothing in key entered
+	if (kPressed && (pressed.find_first_not_of(" \t\n\v\f\r") == std::string::npos || pressed == ""))
+	{
+		//set key sting to be that in keyboard map
+		pressed = keyboardControls.at((sf::Keyboard::Key)code);
+	}
 	if (!kPressed)
 	{
 		if (GetDpadDir(controlerid, U))
@@ -367,7 +367,7 @@ void InputManager::Remap(Action action, bool primary, int key)
 	//set action to code
 	if (kPressed)
 	{
-		if (primary)
+		if (primary == 1)
 		{
 			keyMaps[key].controls[action].first = code;
 			keyMaps[key].controlWords[action].first = pressed;
@@ -377,10 +377,11 @@ void InputManager::Remap(Action action, bool primary, int key)
 			keyMaps[key].controls[action].second = code;
 			keyMaps[key].controlWords[action].second = pressed;
 		}
+		return true;
 	}
 	else if (code != -1)
 	{
-		if (primary)
+		if (primary == 1)
 		{
 			keyMaps[key].mouseControls[action]= code;
 			keyMaps[key].controlWords[action].first = pressed;
@@ -398,7 +399,9 @@ void InputManager::Remap(Action action, bool primary, int key)
 				keyMaps[key].controls[action].second = -1;
 			}
 		}
+		return true;
 	}
+	return false;
 }
 
 //Update method
@@ -408,9 +411,9 @@ void InputManager::Update(double dt)
 	for (int i = 0; i < ACTIONSIZE; ++i)
 	{
 		//primary control
-		int first = activeControls.controls[i].first;
+		int first = activeControls->controls[i].first;
 		//secondary control
-		int second = activeControls.controls[i].second;
+		int second = activeControls->controls[i].second;
 		//check if button down
 		if (buttonDown.test(i)) {
 			buttonDown.reset(i);
@@ -420,8 +423,8 @@ void InputManager::Update(double dt)
 			buttonReleased.reset();
 		}
 		// check if primary button pressed
-		if (first != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, first) ||
-			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)first)))
+		if (first != -1 && (activeControls->controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, first) ||
+			activeControls->controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)first)))
 		{
 			// if action not held
 			if (!buttonHeld.test(i)) {
@@ -430,8 +433,8 @@ void InputManager::Update(double dt)
 			}
 		}
 		// check if secondary button pressed
-		else if (second != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, second) ||
-			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)second)))
+		else if (second != -1 && (activeControls->controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, second) ||
+			activeControls->controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)second)))
 		{
 			//check if action not held
 			if (!buttonHeld.test(i)) {
@@ -440,9 +443,9 @@ void InputManager::Update(double dt)
 			}
 		}
 		//check if mouse controls are down
-		else if (activeControls.mouseControls[i] != -1 &&
-			(activeControls.controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]) ||
-				activeControls.controlType == "PS4" && GetDpadDir(controlerid, (Dir)activeControls.mouseControls[i])))
+		else if (activeControls->mouseControls[i] != -1 &&
+			(activeControls->controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls->mouseControls[i]) ||
+				activeControls->controlType == "PS4" && GetDpadDir(controlerid, (Dir)activeControls->mouseControls[i])))
 		{
 			//if aaction not held
 			if (!buttonHeld.test(i)) {
@@ -587,7 +590,7 @@ bool InputManager::GetAnaReleased(Dir dir)
 
 //method to chek if button is down
 bool InputManager::GetButtonDown(unsigned int action) {
-	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1 && activeControls.mouseControls[action] == -1) &&
+	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1 && activeControls->mouseControls[action] == -1) &&
 		buttonDown.test(action))
 		return true;
 	return false;
@@ -595,7 +598,7 @@ bool InputManager::GetButtonDown(unsigned int action) {
 
 //method to check if button is held
 bool InputManager::GetButtonHeld(unsigned int action) {
-	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
+	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1) &&
 		buttonHeld.test(action))
 		return true;
 	return false;
@@ -603,7 +606,7 @@ bool InputManager::GetButtonHeld(unsigned int action) {
 
 //method to check if button is released
 bool InputManager::GetButtonReleased(unsigned int action) {
-	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
+	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1) &&
 		buttonReleased.test(action))
 		return true;
 	return false;

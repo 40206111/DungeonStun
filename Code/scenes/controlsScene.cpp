@@ -14,7 +14,6 @@ void ControlsScene::Load()
 	//Load Text
 
 	text.push_back(sf::Text());
-	text[0].setString("CONTROLS");
 	text[0].setFont(font);
 	text[0].setColor(sf::Color::Yellow);
 	for (int i = 1; i < player1->ACTIONSIZE; i++)
@@ -24,32 +23,73 @@ void ControlsScene::Load()
 	}
 	text.push_back(sf::Text());
 	textAmount = text.size();
-	text[textAmount - 1].setString("Back");
 	text[textAmount - 1].setFont(font);
 	previousScene = settingsScene;
 	TextGridScene::Load();
 	SetColumnCount(3);
 	SpreadRatios(columns, columnRatios);
 	SpreadRatios(rows, rowRatios);
+	GetElement(0, textAmount - 1).setString("Back");
+	GetElement(2, textAmount - 1).setString("Use");
 }
 
 
 //Update method
 void ControlsScene::Update(double dt)
 {
-	if (text[0].getString() == "CONTROLS")
+	if (remap)
 	{
-	}
-	TextGridScene::Update(dt);
-
-	//accept option
-	if (player1->GetButtonDown(player1->ACCEPT))
-	{
-		if (current == textAmount - 1)
+		remap = !player1->Remap((InputManager::Action)(action), primary, controlScheme);
+		if (!remap)
 		{
-			ChangeCurrent(0);
-			Reset();
-			activeScene = previousScene;
+			if (primary = 1)
+			{
+				GetElement(primary, action ).setString(player1->keyMaps[controlScheme].controlWords[action].first);
+			}
+			else if (primary == 2)
+			{
+				GetElement(primary, action).setString(player1->keyMaps[controlScheme].controlWords[action].second);
+			}
+		}
+	}
+	else
+	{
+		TextGridScene::Update(dt);
+		//accept option
+		if (player1->GetButtonDown(player1->ACCEPT))
+		{
+			if (currentX > 0 && current != 0 && current != textAmount - 1)
+			{
+				action = current;
+				primary = currentX;
+				if (controlScheme == 0 || controlScheme == 1)
+				{
+					player1->keyMaps.push_back(ControlSystem(player1->keyMaps[controlScheme]));
+					player1->keyMaps[player1->keyMaps.size() - 1].mapKey = player1->keyMaps.size() - 1;
+					controlScheme = player1->keyMaps.size() - 1;
+					GetElement(0, 0).setString(player1->keyMaps[controlScheme].controlType + " " + to_string(controlScheme));
+				}
+				remap = true;
+			}
+			if (current == textAmount - 1 && currentX == 0)
+			{
+				ChangeCurrent(0);
+				Reset();
+				activeScene = previousScene;
+			}
+			if ((current == textAmount - 1 && currentX == 2))
+			{
+				ControlSystem newCont = player1->keyMaps[controlScheme];
+				if (newCont.controlType == "PS4" && !sf::Joystick::isConnected(player1->controlerid))
+				{
+					GetElement(2, textAmount - 1).setColor(sf::Color::Red);
+				}
+				else
+				{
+					player1->activeControls = &newCont;
+					GetElement(2, textAmount - 1).setColor(sf::Color::Green);
+				}
+			}
 		}
 	}
 }
@@ -62,59 +102,12 @@ void ControlsScene::Render()
 
 void ControlsScene::Reset()
 {
-	text[0].setString(player1->keyMaps[player1->activeControls.mapKey].controlType + " " + to_string(player1->activeControls.mapKey));
+	controlScheme = player1->activeControls->mapKey;
+	GetElement(0, 0).setString(player1->keyMaps[controlScheme].controlType + " " + to_string(controlScheme));
 	for (int i = 1; i < player1->ACTIONSIZE; i++)
 	{
 		GetElement(0, i).setString(player1->Actions[i] + ": ");
-		if (player1->keyMaps[player1->activeControls.mapKey].controlType == "keyboard")
-		{
-			int xPos = 1;
-			if (player1->keyboardControls.find((sf::Keyboard::Key)(player1->activeControls.controls[i].first)) == player1->keyboardControls.end())
-			{
-				GetElement(xPos, i).setString(" ");
-			}
-			else if ((player1->activeControls.controls[i].first) != -1)
-			{
-				GetElement(xPos, i).setString(player1->keyboardControls.at((sf::Keyboard::Key)(player1->activeControls.controls[i].first)));
-			}
-			else
-			{
-				GetElement(xPos, i).setString("-");
-			}
-			xPos = 2;
-			if (player1->keyboardControls.find((sf::Keyboard::Key)(player1->activeControls.controls[i].second)) == player1->keyboardControls.end())
-			{
-				GetElement(xPos, i).setString(" ");
-			}
-			else if ((player1->activeControls.controls[i].second) != -1)
-			{
-				GetElement(xPos, i).setString(player1->keyboardControls.at((sf::Keyboard::Key)(player1->activeControls.controls[i].second)));
-			}
-			else
-			{
-				GetElement(xPos, i).setString("-");
-			}
-		}
-		else if (player1->keyMaps[player1->activeControls.mapKey].controlType == "PS4")
-		{
-			int xPos = 1;
-			if ((player1->activeControls.controls[i].first) != -1)
-			{
-				GetElement(xPos, i).setString(player1->ps4Controls.at((InputManager::PS4)(player1->activeControls.controls[i].first)));
-			}
-			else
-			{
-				GetElement(xPos, i).setString("-");
-			}
-			xPos = 2;
-			if ((player1->activeControls.controls[i].second) != -1)
-			{
-				GetElement(xPos, i).setString(player1->ps4Controls.at((InputManager::PS4)(player1->activeControls.controls[i].second)));
-			}
-			else
-			{
-				GetElement(xPos, i).setString("-");
-			}
-		}
+		GetElement(1, i).setString(player1->activeControls->controlWords[i].first);
+		GetElement(2, i).setString(player1->activeControls->controlWords[i].second);
 	}
 }

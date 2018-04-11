@@ -39,7 +39,7 @@ public:
 
 	//Control Systems
 	std::vector<ControlSystem> keyMaps;
-	ControlSystem activeControls;
+	ControlSystem *activeControls = nullptr;
 
 	//controller ID
 	unsigned int controlerid = 0;
@@ -55,7 +55,7 @@ public:
 
 	//methods
 	void Update(double dt);
-	void Remap(Action action, bool primary, int key);
+	bool Remap(Action action, int primary, int key);
 	bool GetDpadDir(unsigned int jid, Dir dir);
 	bool GetDigiAnalogue(unsigned int jid, Dir dir);
 	bool GetAnaDown(Dir dir);
