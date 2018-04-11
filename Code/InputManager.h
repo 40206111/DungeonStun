@@ -13,6 +13,7 @@ struct ControlSystem {
 	std::string controlType;
 	int mapKey;
 	std::map<unsigned int, int> mouseControls;
+	std::map<unsigned int, std::pair<std::string, std::string>> controlWords;
 };
 
 //Input Manager Class

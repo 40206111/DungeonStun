@@ -214,6 +214,16 @@ void InputManager::CreateControlers()
 		{BACK, NONE}, {ACCEPT, NONE},
 		{FULLSCREEN, NONE}
 	};
+	pscontroller.controlWords = {
+		{ LEFT, std::make_pair("DPAD LEFT", "-") },{ RIGHT, std::make_pair("DPAD RIGHT", "-") },
+		{ SVM, std::make_pair("R1", "-") },{ JUMP, std::make_pair("L1", "CIRCLE") },
+		{ FIRE, std::make_pair("R2", "-") },{ SHIELD, std::make_pair("L2", "-") },
+		{ ACTIVE, std::make_pair("X", "-") },{ AIM, std::make_pair("-", "-") },
+		{ MENUUP, std::make_pair("DPAD UP", "-") },{ MENUDOWN, std::make_pair("DPAD DOWN", "-") },
+		{ MENULEFT, std::make_pair("DPAD LEFT", "-") },{ MENURIGHT, std::make_pair("DPAD RIGHT", "-") },
+		{ BACK, std::make_pair("CIRCLE", "-") },{ ACCEPT, std::make_pair("X", "-") },
+		{ FULLSCREEN, std::make_pair("START", "-") }
+	};
 	keyMaps.push_back(pscontroller);
 	keyMaps[keyMaps.size() - 1].mapKey = keyMaps.size() - 1;
 
@@ -227,7 +237,7 @@ void InputManager::CreateControlers()
 		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
 		{MENUUP, std::make_pair(sf::Keyboard::W, sf::Keyboard::Up)},{MENUDOWN, std::make_pair(sf::Keyboard::S, sf::Keyboard::Down)},
 		{MENULEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Left)},{MENURIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Right)},
-		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Return)},
+		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
 		{FULLSCREEN, std::make_pair(sf::Keyboard::F, sf::Keyboard::Unknown)}
 	};
 	keyboard.controlType = "keyboard";
@@ -241,6 +251,16 @@ void InputManager::CreateControlers()
 		{MENULEFT, sf::Keyboard::Unknown},{MENURIGHT, sf::Keyboard::Unknown},
 		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Mouse::Left},
 		{FULLSCREEN, sf::Keyboard::Unknown}
+	};
+	pscontroller.controlWords = {
+		{ LEFT, std::make_pair("A", "-") },{ RIGHT, std::make_pair("D", "-") },
+		{ SVM, std::make_pair("W", "-") },{ JUMP, std::make_pair("SPACE", "-") },
+		{ FIRE, std::make_pair("LEFT MOUSE", "-") },{ SHIELD, std::make_pair("RIGHT MOUSE", "-") },
+		{ ACTIVE, std::make_pair("E", "-") },{ AIM, std::make_pair("-", "-") },
+		{ MENUUP, std::make_pair("W", "UP ARROW") },{ MENUDOWN, std::make_pair("S", "DOWN ARROW") },
+		{ MENULEFT, std::make_pair("A", "LEFT ARROW") },{ MENURIGHT, std::make_pair("D", "RIGHT ARROW") },
+		{ BACK, std::make_pair("ESC", "-") },{ ACCEPT, std::make_pair("SPACE", "LEFT MOUSE") },
+		{ FULLSCREEN, std::make_pair("F", "-") }
 	};
 	keyMaps.push_back(keyboard);
 	keyMaps[keyMaps.size() - 1].mapKey = keyMaps.size() - 1;
