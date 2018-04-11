@@ -2,13 +2,11 @@
 #include "textScene.h"
 #include <SFML/Graphics.hpp>
 
-class GraphicsScene : public TextScene
+class ControlsScene : public TextScene
 {
 private:
-	bool fullscreen;
-	int shownRes;
 public:
-	GraphicsScene() = default;
+	ControlsScene() = default;
 	void Update(double dt) override;
 	void Render() override;
 	void Load() override;

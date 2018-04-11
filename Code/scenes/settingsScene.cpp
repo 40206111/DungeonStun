@@ -37,14 +37,16 @@ void SettingsScene::Update(double dt)
 		{
 		case 0:
 			ChangeCurrent(0);
+			graphicsScene->Reset();
 			activeScene = graphicsScene;
 			break;
 		case 1:
 			ChangeCurrent(0);
+			activeScene = controlsScene;
 			break;
 		case 2:
 			ChangeCurrent(0);
-			activeScene = menuScene;
+			activeScene = previousScene;
 			break;
 		default:
 			break;
