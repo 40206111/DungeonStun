@@ -27,6 +27,10 @@ void ControlsScene::Load()
 	text[textAmount - 1].setString("Back");
 	text[textAmount - 1].setFont(font);
 	previousScene = settingsScene;
+	TextGridScene::Load();
+	SetColumnCount(3);
+	SpreadRatios(columns, columnRatios);
+	SpreadRatios(rows, rowRatios);
 }
 
 
@@ -36,7 +40,7 @@ void ControlsScene::Update(double dt)
 	if (text[0].getString() == "CONTROLS")
 	{
 	}
-	TextScene::Update(dt);
+	TextGridScene::Update(dt);
 
 	//accept option
 	if (player1->GetButtonDown(player1->ACCEPT))
@@ -53,7 +57,7 @@ void ControlsScene::Update(double dt)
 //render Method
 void ControlsScene::Render()
 {
-	TextScene::Render();
+	TextGridScene::Render();
 }
 
 void ControlsScene::Reset()
@@ -61,57 +65,56 @@ void ControlsScene::Reset()
 	text[0].setString(player1->keyMaps[player1->activeControls.mapKey].controlType + " " + to_string(player1->activeControls.mapKey));
 	for (int i = 1; i < player1->ACTIONSIZE; i++)
 	{
-		string theText = player1->Actions[i] + ": ";
+		GetElement(0, i).setString(player1->Actions[i] + ": ");
 		if (player1->keyMaps[player1->activeControls.mapKey].controlType == "keyboard")
 		{
+			int xPos = 1;
 			if (player1->keyboardControls.find((sf::Keyboard::Key)(player1->activeControls.controls[i].first)) == player1->keyboardControls.end())
 			{
-				theText += " ";
+				GetElement(xPos, i).setString(" ");
 			}
 			else if ((player1->activeControls.controls[i].first) != -1)
 			{
-				theText += player1->keyboardControls.at((sf::Keyboard::Key)(player1->activeControls.controls[i].first));
+				GetElement(xPos, i).setString(player1->keyboardControls.at((sf::Keyboard::Key)(player1->activeControls.controls[i].first)));
 			}
 			else
 			{
-				theText += "-";
+				GetElement(xPos, i).setString("-");
 			}
-			theText += "\t";
+			xPos = 2;
 			if (player1->keyboardControls.find((sf::Keyboard::Key)(player1->activeControls.controls[i].second)) == player1->keyboardControls.end())
 			{
-				//theText += char(player1->activeControls.controls[i].second);
+				GetElement(xPos, i).setString(" ");
 			}
 			else if ((player1->activeControls.controls[i].second) != -1)
 			{
-				theText += player1->keyboardControls.at((sf::Keyboard::Key)(player1->activeControls.controls[i].second));
+				GetElement(xPos, i).setString(player1->keyboardControls.at((sf::Keyboard::Key)(player1->activeControls.controls[i].second)));
 			}
 			else
 			{
-				theText += "-";
+				GetElement(xPos, i).setString("-");
 			}
 		}
 		else if (player1->keyMaps[player1->activeControls.mapKey].controlType == "PS4")
 		{
-
+			int xPos = 1;
 			if ((player1->activeControls.controls[i].first) != -1)
 			{
-				theText += player1->ps4Controls.at((InputManager::PS4)(player1->activeControls.controls[i].first));
+				GetElement(xPos, i).setString(player1->ps4Controls.at((InputManager::PS4)(player1->activeControls.controls[i].first)));
 			}
 			else
 			{
-				theText += "-";
+				GetElement(xPos, i).setString("-");
 			}
-			theText += "\t";
+			xPos = 2;
 			if ((player1->activeControls.controls[i].second) != -1)
 			{
-				theText += player1->ps4Controls.at((InputManager::PS4)(player1->activeControls.controls[i].second));
+				GetElement(xPos, i).setString(player1->ps4Controls.at((InputManager::PS4)(player1->activeControls.controls[i].second)));
 			}
 			else
 			{
-				theText += "-";
+				GetElement(xPos, i).setString("-");
 			}
 		}
-
-		text[i].setString(theText);
 	}
 }

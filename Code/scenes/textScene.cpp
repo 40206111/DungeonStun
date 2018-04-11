@@ -88,7 +88,7 @@ void TextScene::Render()
 	{
 		text[i].setCharacterSize(Renderer::GetWindow().getSize().x / 10);
 
-		float xval = (Renderer::GetWindow().getSize().x * 0.5f) - (text[i].getGlobalBounds().width);
+		float xval = (Renderer::GetWindow().getSize().x * 0.25);
 		int co = i - textAmount / 2;
 		float yval = Renderer::GetWindow().getSize().y * 0.5f;
 		yval = yval + (co * space);
