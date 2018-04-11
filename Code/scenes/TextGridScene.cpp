@@ -13,14 +13,13 @@ TextGridScene::TextGridScene() {
 	rows = texts[0]->size();
 
 }
-
+// Equally spread out ratios in list
 void TextGridScene::SpreadRatios(int count, std::vector<int>& ratios) {
 	for (int& val : ratios) {
 		val = 0;
 	}
 	ChangeOtherRatios(true, -1, 100, ratios);
 }
-
 // increase - True adds value, false takes it away
 // index - the ratio to avoid, set to -1 to avoid none
 // value - the value to distribute or remove
@@ -28,16 +27,22 @@ void TextGridScene::SpreadRatios(int count, std::vector<int>& ratios) {
 void TextGridScene::ChangeOtherRatios(bool increase, int index, int value, std::vector<int>& ratios) {
 	int k = (increase ? 1 : -1);
 	int total = 0;
-	while (total < value) {
+	int loopCount = 0;
+	while (total < value && loopCount < 4) {
 		int change = (value - total) / (ratios.size() - (index >= 0 ? 1 : 0));
 		for (int i = 0; i < ratios.size() && total < value; ++i) {
 			if (i != index) {
-				total += ChangeRatio(ratios[i], k * change);
+				total += k * ChangeRatio(ratios[i], k * change);
 			}
 		}
+		loopCount++;
+	}
+	if (total != value && index >= 0) {
+		int shortfall = value - total;
+		ChangeRatio(ratios[index], k * shortfall);
 	}
 }
-
+// Change the value of one specific ratio
 int TextGridScene::ChangeRatio(int& ratio, int change) {
 	if (ratio + change < minRatio) {
 		change = minRatio - ratio;
@@ -45,75 +50,138 @@ int TextGridScene::ChangeRatio(int& ratio, int change) {
 	ratio += change;
 	return change;
 }
+// Fix ratios if they don't make 100
+void TextGridScene::VerifyRatios() {
+	int total;
+	vector<int>& ratios = rowRatios;
+	for (int i = 0; i < 2; ++i) {
+		total = 0;
+		for (int val : ratios) {
+			total += val;
+		}
+		if (total != 100) {
+			int diff = 100 - total;
+			ChangeOtherRatios((diff > 0), -1, (int)fabsf(diff), ratios);
+		}
+		ratios = columnRatios;
+	}
+}
 
+void TextGridScene::SetRowRatio(int row, int value) {
+	if (!(row < rows)) {
+		return;
+	}
+	int before = rowRatios[row];
+	rowRatios[row] = value;
+	int diff = rowRatios[row] - before;
+	ChangeOtherRatios((diff > 0), row, (int)abs(diff), rowRatios);
+	VerifyRatios();
+}
+void TextGridScene::SetColumnRatio(int column, int value) {
+	if (!(column < columns)) {
+		return;
+	}
+	int before = columnRatios[column];
+	columnRatios[column] = value;
+	int diff = columnRatios[column] - before;
+	ChangeOtherRatios((diff > 0), column, (int)abs(diff), columnRatios);
+	VerifyRatios();
+}
+
+void TextGridScene::SetRowCount(int value) {
+	if (rows > value) {
+		for (vector<Text>* vec : texts) {
+			int excess = rows - value;
+			for (int i = 0; i < excess; ++i) {
+				vec->pop_back();
+			}
+		}
+	}
+	else if (rows < value) {
+		Text basic = Text();
+		basic.setFont(font);
+		basic.setString("-");
+		for (vector<Text>* vec : texts) {
+			int shortfall = value - rows;
+			for (int i = 0; i < shortfall; ++i) {
+				Text copy = Text(basic);
+				vec->push_back(copy);
+			}
+		}
+	}
+	rows = value;
+}
+void TextGridScene::SetColumnCount(int value) {
+	if (columns > value) {
+		int excess = columns - value;
+		for (int i = 0; i < excess; ++i) {
+			texts.pop_back();
+		}
+	}
+	else if (columns < value) {
+		Text basic = Text();
+		basic.setFont(font);
+		basic.setString("-");
+		int shortfall = value - columns;
+		for (int i = 0; i < shortfall; ++i) {
+			vector<Text>* column;
+			for (int i = 0; i < rows; ++i) {
+				Text copy = Text(basic);
+				column->push_back(copy);
+			}
+			texts.push_back(column);
+		}
+	}
+	columns = value;
+}
+// Set element as a text object
+bool TextGridScene::SetElement(int column, int row, const Text& text) {
+	if (column < columns && row < rows) {
+		texts[column]->at(row) = text;
+		return true;
+	}
+	return false;
+}
 //Update method
 void TextGridScene::Update(double dt)
 {
-	//update input
-	player1->Update(dt);
+	// store current
+	int currWatch = current;
+	TextScene::Update(dt);
+	//check current
+	if (currWatch != current && currentX != 0) {
+		// respond to change
+		GetElement(currentX, current).setColor(Color::White);
+		ChangeCurrent(current);
+	}
 
 	//if keyboard controls allow mouse input
 	if (player1->activeControls.controlType == "keyboard")
 	{
-		for (int i = 0; i < textAmount; ++i)
-		{
-			//if mouse over text 0
-			if (player1->mMoved && player1->onText(text[i]))
+		for (int i = 0; i < columns; ++i) {
+			for (int j = 0; j < rows; ++j)
 			{
-				ChangeCurrent(i);
+				//if mouse over text 0
+				if (player1->mMoved && player1->onText(GetElement(i, j)))
+				{
+					ChangeCurrentBoth(i, j);
+				}
 			}
 		}
 	}
 
 	//if menu down
-	if (player1->GetButtonDown(player1->MENUDOWN) || player1->GetAnaDown(player1->D))
+	if (player1->GetButtonDown(player1->MENURIGHT) || player1->GetAnaDown(player1->R))
 	{
 		//loop round text
-		ChangeCurrent(current + 1);
+		ChangeCurrentX(currentX + 1);
 	}
-	if (player1->GetButtonDown(player1->MENUUP) || player1->GetAnaDown(player1->U))
+	if (player1->GetButtonDown(player1->MENULEFT) || player1->GetAnaDown(player1->L))
 	{
 		//loop round text
-		ChangeCurrent(current - 1);
-	}
-	//Fullscreen window
-	if (player1->GetButtonDown(player1->FULLSCREEN))
-	{
-		Renderer::ToggleFullscreen();
-	}
-	//Back
-	if (player1->GetButtonDown(player1->BACK))
-	{
-		//set current to 0
-		ChangeCurrent(0);
-		//set active screen
-		activeScene = previousScene;
-	}
-
-	//poll events
-	Event event;
-	while (Renderer::GetWindow().pollEvent(event))
-	{
-		//Close window
-		if (event.type == Event::Closed)
-		{
-			Renderer::Shutdown();
-			Renderer::GetWindow().close();
-			return;
-		}
-		//If controller disconected
-		if (event.type == sf::Event::JoystickDisconnected)
-		{
-			if (player1->activeControls.controlType == "PS4" && player1->controlerid == event.joystickMove.joystickId)
-			{
-				ChangeCurrent(0);
-				//set active screen
-				activeScene = homeScene;
-			}
-		}
+		ChangeCurrentX(currentX - 1);
 	}
 }
-
 //render Method
 void TextGridScene::Render()
 {
@@ -161,14 +229,32 @@ void TextGridScene::CalculateSpaceX() {
 	float gap = Renderer::GetWindow().getSize().y / (textAmount < count ? (float)count + 1.0f : textAmount + 1);
 	space = gap;
 }
-
+// Change row highlighting
+void TextGridScene::ChangeCurrent(int value) {
+	int lastY = current;
+	if (value < 0) {
+		current = rows + (value % rows);
+	}
+	else if (value >= columns) {
+		current = value % rows;
+	}
+	else {
+		current = value;
+	}
+	if (current != lastY)
+	{
+		texts[currentX]->at(lastY).setColor(sf::Color::White);
+		texts[currentX]->at(current).setColor(sf::Color::Yellow);
+	}
+}
+// Change column highlighting
 void TextGridScene::ChangeCurrentX(int value)
 {
 	int lastX = currentX;
 	if (value < 0) {
 		currentX = rows + (value % rows);
 	}
-	else if (value >= textAmount) {
+	else if (value >= rows) {
 		currentX = value % rows;
 	}
 	else {
@@ -179,4 +265,9 @@ void TextGridScene::ChangeCurrentX(int value)
 		texts[lastX]->at(current).setColor(sf::Color::White);
 		texts[currentX]->at(current).setColor(sf::Color::Yellow);
 	}
+}
+// Change row and column highlight
+void TextGridScene::ChangeCurrentBoth(int valX, int valY) {
+	ChangeCurrent(valY);
+	ChangeCurrentX(valX);
 }

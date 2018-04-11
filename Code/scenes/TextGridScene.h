@@ -17,12 +17,15 @@ protected:
 	int maxIndex = 100 / minRatio;
 	bool stealUp = false;
 
+	void ChangeCurrent(int) override;
 	void ChangeCurrentX(int);
+	void ChangeCurrentBoth(int, int);
 	void CalculateSpaceX();
 
 	void SpreadRatios(int count, std::vector<int>& ratios);
 	void ChangeOtherRatios(bool increase, int index, int value, std::vector<int>& ratios);
 	int ChangeRatio(int& ratio, int change);
+	void VerifyRatios();
 
 public:
 	int GetRowRatio(int row) { return rowRatios[row]; }
@@ -35,7 +38,7 @@ public:
 	void SetRowCount(int value);
 	void SetColumnRatio(int column, int ratio);
 	void SetColumnCount(int value);
-	void SetElement(int column, int row, const sf::Text&);
+	bool SetElement(int column, int row, const sf::Text&);
 
 	TextGridScene() = default;
 	void Update(double dt) override;
