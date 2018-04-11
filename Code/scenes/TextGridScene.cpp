@@ -7,11 +7,18 @@ using namespace std;
 
 ///ABSTRACT TEXT GRID SCENE///
 
-TextGridScene::TextGridScene() {
+void TextGridScene::Load() {
 	texts.push_back(&text);
 	columns = texts.size();
 	rows = texts[0]->size();
-
+	for (int i = 0; i < columns; ++i) {
+		columnRatios.push_back(0);
+	}
+	for (int i = 0; i < rows; ++i) {
+		rowRatios.push_back(0);
+	}
+	SpreadRatios(columns, columnRatios);
+	SpreadRatios(rows, rowRatios);
 }
 // Equally spread out ratios in list
 void TextGridScene::SpreadRatios(int count, std::vector<int>& ratios) {
@@ -90,23 +97,31 @@ void TextGridScene::SetColumnRatio(int column, int value) {
 
 void TextGridScene::SetRowCount(int value) {
 	if (rows > value) {
+		int excess = rows - value;
 		for (vector<Text>* vec : texts) {
-			int excess = rows - value;
 			for (int i = 0; i < excess; ++i) {
 				vec->pop_back();
 			}
+		}
+		for (int i = 0; i < excess; ++i) {
+			rowRatios.pop_back();
 		}
 	}
 	else if (rows < value) {
 		Text basic = Text();
 		basic.setFont(font);
 		basic.setString("-");
+		int shortfall = value - rows;
 		for (vector<Text>* vec : texts) {
-			int shortfall = value - rows;
 			for (int i = 0; i < shortfall; ++i) {
-				Text copy = Text(basic);
-				vec->push_back(copy);
+				Text* copy = new Text();
+				*copy = basic;
+				vec->push_back(*copy);
 			}
+		}
+		for (int i = 0; i < shortfall; ++i) {
+			rowRatios.push_back(0);
+			SetRowRatio(rowRatios.size() - 1, 0);
 		}
 	}
 	rows = value;
@@ -117,6 +132,9 @@ void TextGridScene::SetColumnCount(int value) {
 		for (int i = 0; i < excess; ++i) {
 			texts.pop_back();
 		}
+		for (int i = 0; i < excess; ++i) {
+			columnRatios.pop_back();
+		}
 	}
 	else if (columns < value) {
 		Text basic = Text();
@@ -124,12 +142,18 @@ void TextGridScene::SetColumnCount(int value) {
 		basic.setString("-");
 		int shortfall = value - columns;
 		for (int i = 0; i < shortfall; ++i) {
-			vector<Text>* column;
+			vector<Text>* column = new vector<Text>();
 			for (int i = 0; i < rows; ++i) {
-				Text copy = Text(basic);
-				column->push_back(copy);
+				Text* copy = new Text();
+				copy->setFont(font);
+				copy->setString("-");
+				column->push_back(*copy);
 			}
 			texts.push_back(column);
+		}
+		for (int i = 0; i < shortfall; ++i) {
+			columnRatios.push_back(0);
+			SetColumnRatio(columnRatios.size() - 1, 0);
 		}
 	}
 	columns = value;
@@ -152,7 +176,9 @@ void TextGridScene::Update(double dt)
 	if (currWatch != current && currentX != 0) {
 		// respond to change
 		GetElement(currentX, current).setColor(Color::White);
-		ChangeCurrent(current);
+		int newCurr = current;
+		current = currWatch;
+		ChangeCurrent(newCurr);
 	}
 
 	//if keyboard controls allow mouse input
@@ -189,22 +215,26 @@ void TextGridScene::Render()
 	float yPos = 0.0f;
 	float xPos = 0.0f;
 	Vector2f border = Vector2f((float)screenSize.x / 100.0f, (float)screenSize.y / 100.0f);
-	for (int y = 0; y < rows; ++y) {
-		float ySpace = (float)screenSize.y * (float)rowRatios[y] / 100.0f;
-		float yMid = yPos + ySpace / 2.0f;
-		for (int x = 0; x < columns; ++x) {
-			float xSpace = (float)screenSize.x * (float)columnRatios[x] / 100.0f;
-			float xMid = xPos + xSpace / 2.0f;
+	for (int x = 0; x < columns; ++x) {
+		float xSpace = (float)screenSize.x * (float)columnRatios[x] / 100.0f;
+		//float xMid = xPos + xSpace / 2.0f;
+		float xMid = xPos + border.x;
+		for (int y = 0; y < rows; ++y) {
+			float ySpace = (float)screenSize.y * (float)rowRatios[y] / 100.0f;
+			//float yMid = yPos + ySpace / 2.0f;
+			float yMid = yPos + border.y;
 
 			Vector2f localpos = Vector2f(texts[x]->at(y).getLocalBounds().left, texts[x]->at(y).getLocalBounds().top);
 
 			texts[x]->at(y).setPosition(Vector2f(xMid, yMid) - localpos);
+			texts[x]->at(y).setCharacterSize(Renderer::GetWindow().getSize().x / 10);
 			Renderer::Queue(&texts[x]->at(y));
 
 
-			xPos += xSpace; // At end of loop only
+			yPos += ySpace; // At end of loop only
 		}
-		yPos += ySpace; // At end of loop only
+		yPos = 0.0f;
+		xPos += xSpace; // At end of loop only
 	}
 
 
@@ -252,10 +282,10 @@ void TextGridScene::ChangeCurrentX(int value)
 {
 	int lastX = currentX;
 	if (value < 0) {
-		currentX = rows + (value % rows);
+		currentX = columns + (value % columns);
 	}
-	else if (value >= rows) {
-		currentX = value % rows;
+	else if (value >= columns) {
+		currentX = value % columns;
 	}
 	else {
 		currentX = value;

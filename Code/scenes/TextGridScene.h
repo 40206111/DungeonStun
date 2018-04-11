@@ -41,6 +41,7 @@ public:
 	bool SetElement(int column, int row, const sf::Text&);
 
 	TextGridScene() = default;
+	void Load() override;
 	void Update(double dt) override;
 	void Render() override;
 };
