@@ -2,6 +2,7 @@
 #include "SystemRenderer.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
 using namespace sf;
 using namespace std;
 
@@ -271,13 +272,14 @@ void InputManager::CreateControlers()
 void InputManager::Remap(Action action, bool primary, int key)
 {
 	Event event;
+	//intitialise codes
+	int code = -1;
+	std::string pressed = "";
+	bool kPressed = false;
+
 	//poll events
 	while (Renderer::GetWindow().pollEvent(event))
 	{
-		//intitialise codes
-		int code = -1;
-		std::string pressed = "";
-
 		//check controller type
 		if (keyMaps[key].controlType == "keyboard")
 		{
@@ -285,38 +287,116 @@ void InputManager::Remap(Action action, bool primary, int key)
 			if (event.type == sf::Event::KeyPressed)
 			{
 				code = event.key.code;
+				kPressed = true;
 			}
 
 			//check if text entered
 			if (event.type == sf::Event::TextEntered)
 			{
-				key = (char)(event.text.unicode);
+				int unic = event.text.unicode;
+				//make character capital
+				if (unic >= 97 || unic <= 122)
+				{
+					unic -= 32;
+				}
+				pressed = (char)(unic);
 			}
 
 			//set text if nothing in key entered
-			if (pressed.find_first_not_of(" \t\n\v\f\r") != std::string::npos)
+			if (kPressed && (pressed.find_first_not_of(" \t\n\v\f\r") != std::string::npos || pressed == ""))
 			{
 				//set key sting to be that in keyboard map
 				pressed = keyboardControls.at((sf::Keyboard::Key)code);
 			}
+			else if (!kPressed && event.type == sf::Event::MouseButtonPressed)
+			{
+				code = event.mouseButton.button;
+				if (code == sf::Mouse::Left)
+				{
+					pressed = "LEFT MOUSE";
+				}
+				else if (code == sf::Mouse::Middle)
+				{
+					pressed = "MIDDLE MOUSE";
+				}
+				else if (code == sf::Mouse::Right)
+				{
+					pressed = "RIGHT MOUSE";
+				}
+				else
+				{
+					pressed = "MOUSE " + to_string(code);
+				}
+			}
 		}
-		else if (keyMaps[key].controlType == "PS4")
+		if (keyMaps[key].controlType == "PS4")
 		{
 			//check if joystick button pressed
 			if (event.type == sf::Event::JoystickButtonPressed)
 			{
 				code = event.joystickButton.button;
 				pressed = ps4Controls.at((PS4)code);
+				kPressed = true;
 			}
 		}
-
-		//set action to code
-		if (code != -1)
+	}
+	if (!kPressed)
+	{
+		if (GetDpadDir(controlerid, U))
 		{
-			if (primary)
-				keyMaps[key].controls[action].first = code;
-			else
-				keyMaps[key].controls[action].second = code;
+			code = U;
+			pressed = "DPAD UP";
+		}
+		else if (GetDpadDir(controlerid, D))
+		{
+			code = D;
+			pressed = "DPAD DOWN";
+		}
+		else if (GetDpadDir(controlerid, L))
+		{
+			code = L;
+			pressed = "DPAD LEFT";
+		}
+		else if (GetDpadDir(controlerid, R))
+		{
+			code = R;
+			pressed = "DPAD RIGHT";
+		}
+
+	}
+	//set action to code
+	if (kPressed)
+	{
+		if (primary)
+		{
+			keyMaps[key].controls[action].first = code;
+			keyMaps[key].controlWords[action].first = pressed;
+		}
+		else
+		{
+			keyMaps[key].controls[action].second = code;
+			keyMaps[key].controlWords[action].second = pressed;
+		}
+	}
+	else if (code != -1)
+	{
+		if (primary)
+		{
+			keyMaps[key].mouseControls[action]= code;
+			keyMaps[key].controlWords[action].first = pressed;
+			if (keyMaps[key].controls[action].first != -1)
+			{
+				keyMaps[key].controls[action].first = -1;
+			}
+		}
+		else
+		{
+			keyMaps[key].controls[action].second = code;
+			keyMaps[key].controlWords[action].second = pressed;
+			if (keyMaps[key].controls[action].second != -1)
+			{
+				keyMaps[key].controls[action].second = -1;
+			}
 		}
 	}
 }
