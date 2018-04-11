@@ -6,9 +6,11 @@ class GraphicsScene : public TextScene
 {
 private:
 	bool fullscreen;
+	int shownRes;
 public:
 	GraphicsScene() = default;
 	void Update(double dt) override;
 	void Render() override;
 	void Load() override;
+	void Reset() override;
 };

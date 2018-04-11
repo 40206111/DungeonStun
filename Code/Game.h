@@ -3,10 +3,6 @@
 #include "InputManager.h"
 #include <memory>
 
-//gamesize
-static uint16_t gameWidth = 1280;
-static uint16_t gameHeight = 720;
-
 extern sf::Font font;
 extern std::shared_ptr<InputManager> player1;
 extern std::shared_ptr<Scene> homeScene;

@@ -49,6 +49,15 @@ void Renderer::ToggleFullscreen()
 	}
 	else
 	{
-		Renderer::GetWindow().create(VideoMode(gameWidth, gameHeight), "Workin' 9 to Die");
+		Renderer::GetWindow().create(VideoMode(resolutions[currentRes].first, resolutions[currentRes].second), "Workin' 9 to Die");
 	}
+}
+
+void Renderer::setResolution(int res) 
+{
+		currentRes = res;
+		if (!fullscreen)
+		{
+			Renderer::GetWindow().create(VideoMode(resolutions[currentRes].first, resolutions[currentRes].second), "Workin' 9 to Die");
+		}
 }
