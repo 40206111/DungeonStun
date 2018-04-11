@@ -1,7 +1,6 @@
 #include "SystemRenderer.h"
 #include "Game.h"
 #include <queue>
-
 using namespace std;
 using namespace sf;
 
@@ -9,7 +8,11 @@ static queue<const Drawable *> sprites;
 static RenderWindow *rw;
 static bool fullscreen = false;
 
-void Renderer::Initialise(sf::RenderWindow &r) { rw = &r;  }
+unsigned int Renderer::currentRes = 3;
+
+void Renderer::Initialise(sf::RenderWindow &r) {
+	rw = &r;
+}
 
 sf::RenderWindow & Renderer::GetWindow() { return *rw; }
 bool Renderer::GetFullscreen() { return fullscreen; }
@@ -20,7 +23,7 @@ void Renderer::Shutdown()
 		sprites.pop();
 }
 
-void Renderer::Update(const double &) 
+void Renderer::Update(const double &)
 {}
 
 void Renderer::Render()
@@ -53,11 +56,11 @@ void Renderer::ToggleFullscreen()
 	}
 }
 
-void Renderer::setResolution(int res) 
+void Renderer::setResolution(int res)
 {
-		currentRes = res;
-		if (!fullscreen)
-		{
-			Renderer::GetWindow().create(VideoMode(resolutions[currentRes].first, resolutions[currentRes].second), "Workin' 9 to Die");
-		}
+	Renderer::currentRes = res;
+	if (!fullscreen)
+	{
+		Renderer::GetWindow().create(VideoMode(resolutions[currentRes].first, resolutions[currentRes].second), "Workin' 9 to Die");
+	}
 }
