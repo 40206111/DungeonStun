@@ -1,8 +1,8 @@
 #pragma once
-#include "textScene.h"
+#include "TextGridScene.h"
 #include <SFML/Graphics.hpp>
 
-class ControlsScene : public TextScene
+class ControlsScene : public TextGridScene
 {
 private:
 public:
