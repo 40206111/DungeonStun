@@ -54,7 +54,7 @@ void GraphicsScene::Update(double dt)
 		
 	}
 	//Right
-	if (player1->GetButtonDown(player1->RIGHT) || player1->GetAnaDown(player1->R))
+	if (player1->GetButtonDown(player1->MENURIGHT) || player1->GetAnaDown(player1->R))
 	{
 		if (current == 0)
 		{
@@ -67,7 +67,7 @@ void GraphicsScene::Update(double dt)
 		}
 	}
 	//Left
-	if (player1->GetButtonDown(player1->LEFT) || player1->GetAnaDown(player1->L))
+	if (player1->GetButtonDown(player1->MENULEFT) || player1->GetAnaDown(player1->L))
 	{
 		if (current == 0)
 		{
