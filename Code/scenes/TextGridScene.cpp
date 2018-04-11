@@ -223,11 +223,14 @@ void TextGridScene::Render()
 			float ySpace = (float)screenSize.y * (float)rowRatios[y] / 100.0f;
 			//float yMid = yPos + ySpace / 2.0f;
 			float yMid = yPos + border.y;
+			if (x == 0) {
+				xMid = xPos + xSpace - GetElement(x,y).getGlobalBounds().width - border.x;
+			}
 
 			Vector2f localpos = Vector2f(texts[x]->at(y).getLocalBounds().left, texts[x]->at(y).getLocalBounds().top);
 
 			texts[x]->at(y).setPosition(Vector2f(xMid, yMid) - localpos);
-			texts[x]->at(y).setCharacterSize(Renderer::GetWindow().getSize().x / 10);
+			texts[x]->at(y).setCharacterSize(Renderer::GetWindow().getSize().x / (rows>10 ? rows : 10));
 			Renderer::Queue(&texts[x]->at(y));
 
 

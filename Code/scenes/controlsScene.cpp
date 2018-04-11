@@ -30,6 +30,7 @@ void ControlsScene::Load()
 	TextGridScene::Load();
 	SetColumnCount(3);
 	SpreadRatios(columns, columnRatios);
+	SpreadRatios(rows, rowRatios);
 }
 
 
