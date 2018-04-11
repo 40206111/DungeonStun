@@ -38,7 +38,7 @@ public:
 	static const std::map<sf::Keyboard::Key, std::string> keyboardControls;
 
 	//Control Systems
-	std::vector<ControlSystem> keyMaps;
+	std::vector<ControlSystem*> keyMaps;
 	ControlSystem *activeControls = nullptr;
 
 	//controller ID

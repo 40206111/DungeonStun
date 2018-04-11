@@ -42,13 +42,13 @@ void ControlsScene::Update(double dt)
 		remap = !player1->Remap((InputManager::Action)(action), primary, controlScheme);
 		if (!remap)
 		{
-			if (primary = 1)
+			if (primary == 1)
 			{
-				GetElement(primary, action ).setString(player1->keyMaps[controlScheme].controlWords[action].first);
+				GetElement(primary, action ).setString(player1->keyMaps[controlScheme]->controlWords[action].first);
 			}
 			else if (primary == 2)
 			{
-				GetElement(primary, action).setString(player1->keyMaps[controlScheme].controlWords[action].second);
+				GetElement(primary, action).setString(player1->keyMaps[controlScheme]->controlWords[action].second);
 			}
 		}
 	}
@@ -64,10 +64,11 @@ void ControlsScene::Update(double dt)
 				primary = currentX;
 				if (controlScheme == 0 || controlScheme == 1)
 				{
-					player1->keyMaps.push_back(ControlSystem(player1->keyMaps[controlScheme]));
-					player1->keyMaps[player1->keyMaps.size() - 1].mapKey = player1->keyMaps.size() - 1;
+					ControlSystem *newMap = player1->keyMaps[controlScheme];
+					player1->keyMaps.push_back(newMap);
+					player1->keyMaps[player1->keyMaps.size() - 1]->mapKey = player1->keyMaps.size() - 1;
 					controlScheme = player1->keyMaps.size() - 1;
-					GetElement(0, 0).setString(player1->keyMaps[controlScheme].controlType + " " + to_string(controlScheme));
+					GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 				}
 				remap = true;
 			}
@@ -79,14 +80,14 @@ void ControlsScene::Update(double dt)
 			}
 			if ((current == textAmount - 1 && currentX == 2))
 			{
-				ControlSystem newCont = player1->keyMaps[controlScheme];
-				if (newCont.controlType == "PS4" && !sf::Joystick::isConnected(player1->controlerid))
+				ControlSystem *newCont = player1->keyMaps[controlScheme];
+				if (newCont->controlType == "PS4" && !sf::Joystick::isConnected(player1->controlerid))
 				{
 					GetElement(2, textAmount - 1).setColor(sf::Color::Red);
 				}
 				else
 				{
-					player1->activeControls = &newCont;
+					player1->activeControls = newCont;
 					GetElement(2, textAmount - 1).setColor(sf::Color::Green);
 				}
 			}
@@ -103,7 +104,7 @@ void ControlsScene::Render()
 void ControlsScene::Reset()
 {
 	controlScheme = player1->activeControls->mapKey;
-	GetElement(0, 0).setString(player1->keyMaps[controlScheme].controlType + " " + to_string(controlScheme));
+	GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 	for (int i = 1; i < player1->ACTIONSIZE; i++)
 	{
 		GetElement(0, i).setString(player1->Actions[i] + ": ");

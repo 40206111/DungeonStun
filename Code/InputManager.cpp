@@ -225,8 +225,8 @@ void InputManager::CreateControlers()
 		{ BACK, std::make_pair("CIRCLE", "-") },{ ACCEPT, std::make_pair("X", "-") },
 		{ FULLSCREEN, std::make_pair("START", "-") }
 	};
-	keyMaps.push_back(pscontroller);
-	keyMaps[keyMaps.size() - 1].mapKey = keyMaps.size() - 1;
+	keyMaps.push_back(new ControlSystem(pscontroller));
+	keyMaps[keyMaps.size() - 1]->mapKey = keyMaps.size() - 1;
 
 	//create keyboard control system
 	ControlSystem keyboard;
@@ -263,8 +263,8 @@ void InputManager::CreateControlers()
 		{ BACK, std::make_pair("ESC", "-") },{ ACCEPT, std::make_pair("SPACE", "LEFT MOUSE") },
 		{ FULLSCREEN, std::make_pair("F", "-") }
 	};
-	keyMaps.push_back(keyboard);
-	keyMaps[keyMaps.size() - 1].mapKey = keyMaps.size() - 1;
+	keyMaps.push_back(new ControlSystem(keyboard));
+	keyMaps[keyMaps.size() - 1]->mapKey = keyMaps.size() - 1;
 
 }
 
@@ -281,7 +281,7 @@ bool InputManager::Remap(Action action, int primary, int key)
 	while (Renderer::GetWindow().pollEvent(event))
 	{
 		//check controller type
-		if (keyMaps[key].controlType == "keyboard")
+		if (keyMaps[key]->controlType == "keyboard")
 		{
 			//check if key pressed
 			if (event.type == sf::Event::KeyPressed)
@@ -323,7 +323,7 @@ bool InputManager::Remap(Action action, int primary, int key)
 				}
 			}
 		}
-		if (keyMaps[key].controlType == "PS4")
+		if (keyMaps[key]->controlType == "PS4")
 		{
 			//check if joystick button pressed
 			if (event.type == sf::Event::JoystickButtonPressed)
@@ -369,13 +369,13 @@ bool InputManager::Remap(Action action, int primary, int key)
 	{
 		if (primary == 1)
 		{
-			keyMaps[key].controls[action].first = code;
-			keyMaps[key].controlWords[action].first = pressed;
+			keyMaps[key]->controls[action].first = code;
+			keyMaps[key]->controlWords[action].first = pressed;
 		}
 		else
 		{
-			keyMaps[key].controls[action].second = code;
-			keyMaps[key].controlWords[action].second = pressed;
+			keyMaps[key]->controls[action].second = code;
+			keyMaps[key]->controlWords[action].second = pressed;
 		}
 		return true;
 	}
@@ -383,20 +383,20 @@ bool InputManager::Remap(Action action, int primary, int key)
 	{
 		if (primary == 1)
 		{
-			keyMaps[key].mouseControls[action]= code;
-			keyMaps[key].controlWords[action].first = pressed;
-			if (keyMaps[key].controls[action].first != -1)
+			keyMaps[key]->mouseControls[action]= code;
+			keyMaps[key]->controlWords[action].first = pressed;
+			if (keyMaps[key]->controls[action].first != -1)
 			{
-				keyMaps[key].controls[action].first = -1;
+				keyMaps[key]->controls[action].first = -1;
 			}
 		}
 		else
 		{
-			keyMaps[key].controls[action].second = code;
-			keyMaps[key].controlWords[action].second = pressed;
-			if (keyMaps[key].controls[action].second != -1)
+			keyMaps[key]->controls[action].second = code;
+			keyMaps[key]->controlWords[action].second = pressed;
+			if (keyMaps[key]->controls[action].second != -1)
 			{
-				keyMaps[key].controls[action].second = -1;
+				keyMaps[key]->controls[action].second = -1;
 			}
 		}
 		return true;
