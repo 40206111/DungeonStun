@@ -44,7 +44,8 @@ void Renderer::ToggleFullscreen()
 	if (fullscreen)
 	{
 		int style = sf::Style::Default | sf::Style::Fullscreen;
-		Renderer::GetWindow().create(VideoMode(resolutions[currentFullRes].first, resolutions[currentFullRes].second), "Workin' 9 to Die", style);
+		std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
+		Renderer::GetWindow().create(VModes.at(0), "Workin' 9 to Die", style);
 	}
 	else
 	{
@@ -54,15 +55,9 @@ void Renderer::ToggleFullscreen()
 
 void Renderer::setResolution(int res) 
 {
-	if (fullscreen)
-	{
-		currentFullRes = res;
-		int style = sf::Style::Default | sf::Style::Fullscreen;
-		Renderer::GetWindow().create(VideoMode(resolutions[currentFullRes].first, resolutions[currentFullRes].second), "Workin' 9 to Die", style);
-	}
-	else
-	{
 		currentRes = res;
-		Renderer::GetWindow().create(VideoMode(resolutions[currentRes].first, resolutions[currentRes].second), "Workin' 9 to Die");
-	}
+		if (!fullscreen)
+		{
+			Renderer::GetWindow().create(VideoMode(resolutions[currentRes].first, resolutions[currentRes].second), "Workin' 9 to Die");
+		}
 }

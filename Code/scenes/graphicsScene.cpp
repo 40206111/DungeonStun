@@ -46,14 +46,12 @@ void GraphicsScene::Update(double dt)
 		if (fullscreen)
 		{
 			text[1].setString("Fullscreen: true");
-			shownRes = Renderer::currentFullRes;
 		}
 		else
 		{
 			text[1].setString("Fullscreen: false");
-			shownRes = Renderer::currentRes;
 		}
-		text[0].setString("Resolution: " + to_string(Renderer::resolutions[shownRes].first) + "x" + to_string(Renderer::resolutions[shownRes].second));
+		
 	}
 	//Right
 	if (player1->GetButtonDown(player1->RIGHT) || player1->GetAnaDown(player1->R))
@@ -111,13 +109,6 @@ void GraphicsScene::Render()
 void GraphicsScene::Reset()
 {
 	fullscreen = Renderer::GetFullscreen();
-	if (fullscreen)
-	{
-		shownRes = Renderer::currentFullRes;
-	}
-	else
-	{
-		shownRes = Renderer::currentRes;
-	}
+	shownRes = Renderer::currentRes;
 	text[0].setString("Resolution: " + to_string(Renderer::resolutions[shownRes].first) + "x" + to_string(Renderer::resolutions[shownRes].second));
 }

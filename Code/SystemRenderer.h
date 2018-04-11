@@ -10,7 +10,6 @@ namespace Renderer
 		std::make_pair(1920,1080)
 	};
 	static unsigned int currentRes = 3;
-	static unsigned int currentFullRes = 6;
 
 	void Initialise(sf::RenderWindow &);
 	sf::RenderWindow &GetWindow();
