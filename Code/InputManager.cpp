@@ -621,7 +621,6 @@ bool InputManager::onText(sf::Text t)
 	//check if in bounds
 	if (t.getGlobalBounds().contains(Vector2f(mousePos)))
 	{
-		printf("%d : %d\n", mousePos.x, mousePos.y);
 		return true;
 	}
 
