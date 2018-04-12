@@ -64,9 +64,10 @@ void ControlsScene::Update(double dt)
 				primary = currentX;
 				if (controlScheme == 0 || controlScheme == 1)
 				{
-					ControlSystem *newMap = player1->keyMaps[controlScheme];
+					ControlSystem *newMap = new ControlSystem;
+					*newMap = *player1->keyMaps[controlScheme];
 					player1->keyMaps.push_back(newMap);
-					player1->keyMaps[player1->keyMaps.size() - 1]->mapKey = player1->keyMaps.size() - 1;
+					//player1->keyMaps[player1->keyMaps.size() - 1]->mapKey = player1->keyMaps.size() - 1;
 					controlScheme = player1->keyMaps.size() - 1;
 					GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 				}
