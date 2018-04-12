@@ -46,6 +46,7 @@ const std::map<sf::Keyboard::Key, std::string> InputManager::keyboardControls = 
 { sf::Keyboard::Tab, "TAB" },
 { sf::Keyboard::Return, "ENTER" },
 { sf::Keyboard::BackSpace, "BACKSPACE" },
+{ sf::Keyboard::Space, "SPACE" },
 { sf::Keyboard::F1, "F1" },
 { sf::Keyboard::F2, "F2" },
 { sf::Keyboard::F3, "F3" },
@@ -288,20 +289,29 @@ bool InputManager::Remap(Action action, int primary, int key)
 			{
 				code = event.key.code;
 				kPressed = true;
+				printf("%d\n", event.key.control);
 			}
 
 			//check if text entered
 			if (event.type == sf::Event::TextEntered)
 			{
-				int unic = event.text.unicode;
-				//make character capital
-				if (unic >= 97 || unic <= 122)
+				if (event.text.unicode > 32 && event.text.unicode < 127)
 				{
-					unic -= 32;
+					int unic = event.text.unicode;
+					//make character capital
+					if (unic >= 97 && unic <= 122)
+					{
+						unic -= 32;
+					}
+					//exclude numbers
+					if (unic < 48 || unic > 57)
+					{
+						pressed = static_cast<char>(unic);
+					}
 				}
-				pressed = (char)(unic);
 			}
 
+			//get mouse press
 			if (!kPressed && event.type == sf::Event::MouseButtonPressed)
 			{
 				code = event.mouseButton.button;
@@ -335,7 +345,7 @@ bool InputManager::Remap(Action action, int primary, int key)
 		}
 	}
 	//set text if nothing in key entered
-	if (kPressed && (pressed.find_first_not_of(" \t\n\v\f\r") == std::string::npos || pressed == ""))
+	if ((code != -1 && kPressed) && (pressed.find_first_not_of(" \t\n\v\f\r") == std::string::npos || pressed == ""))
 	{
 		//set key sting to be that in keyboard map
 		pressed = keyboardControls.at((sf::Keyboard::Key)code);
@@ -364,42 +374,45 @@ bool InputManager::Remap(Action action, int primary, int key)
 		}
 
 	}
-	//set action to code
-	if (kPressed)
+	if (code != -1)
 	{
-		if (primary == 1)
+		//set action to code
+		if (kPressed)
 		{
-			keyMaps[key]->controls[action].first = code;
-			keyMaps[key]->controlWords[action].first = pressed;
+			if (primary == 1)
+			{
+				keyMaps[key]->controls[action].first = code;
+				keyMaps[key]->controlWords[action].first = pressed;
+			}
+			else
+			{
+				keyMaps[key]->controls[action].second = code;
+				keyMaps[key]->controlWords[action].second = pressed;
+			}
+			return true;
 		}
 		else
 		{
-			keyMaps[key]->controls[action].second = code;
-			keyMaps[key]->controlWords[action].second = pressed;
-		}
-		return true;
-	}
-	else if (code != -1)
-	{
-		if (primary == 1)
-		{
-			keyMaps[key]->mouseControls[action]= code;
-			keyMaps[key]->controlWords[action].first = pressed;
-			if (keyMaps[key]->controls[action].first != -1)
+			if (primary == 1)
 			{
-				keyMaps[key]->controls[action].first = -1;
+				keyMaps[key]->mouseControls[action] = code;
+				keyMaps[key]->controlWords[action].first = pressed;
+				if (keyMaps[key]->controls[action].first != -1)
+				{
+					keyMaps[key]->controls[action].first = -1;
+				}
 			}
-		}
-		else
-		{
-			keyMaps[key]->controls[action].second = code;
-			keyMaps[key]->controlWords[action].second = pressed;
-			if (keyMaps[key]->controls[action].second != -1)
+			else
 			{
-				keyMaps[key]->controls[action].second = -1;
+				keyMaps[key]->controls[action].second = code;
+				keyMaps[key]->controlWords[action].second = pressed;
+				if (keyMaps[key]->controls[action].second != -1)
+				{
+					keyMaps[key]->controls[action].second = -1;
+				}
 			}
+			return true;
 		}
-		return true;
 	}
 	return false;
 }
