@@ -110,7 +110,7 @@ void TextGridScene::SetRowCount(int value) {
 	else if (rows < value) {
 		Text basic = Text();
 		basic.setFont(font);
-		basic.setString("-");
+		basic.setString("<UNEXPECTED>");
 		int shortfall = value - rows;
 		for (vector<Text>* vec : texts) {
 			for (int i = 0; i < shortfall; ++i) {
