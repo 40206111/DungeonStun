@@ -8,6 +8,8 @@ static queue<const Drawable*> sprites;
 static RenderWindow* rw;
 static bool fullscreen = false;
 
+unsigned int Renderer::currentRes = 3;
+
 void Renderer::Initialise(sf::RenderWindow& r) { rw = &r; }
 
 sf::RenderWindow & Renderer::GetWindow() { return *rw; }
