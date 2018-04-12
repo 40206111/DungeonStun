@@ -639,3 +639,17 @@ bool InputManager::mouseMoved()
 	}
 	return false;
 }
+
+void InputManager::ChangeActive(int controlScheme)
+{
+	ControlSystem *newCont = keyMaps[controlScheme];
+	activeControls = newCont;
+	if (activeControls->controlType == "PS4")
+	{
+		primaryPS4 = newCont->mapKey;
+	}
+	else
+	{
+		primaryKeyboard = newCont->mapKey;
+	}
+}

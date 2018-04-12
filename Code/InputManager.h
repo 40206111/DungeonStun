@@ -65,6 +65,7 @@ public:
 	bool GetButtonHeld(unsigned int button);
 	bool GetButtonReleased(unsigned int button);
 	bool onText(sf::Text t);
+	void ChangeActive(int controlScheme);
 protected:
 	//bools for button presses
 	std::bitset<ACTIONSIZE> buttonDown;

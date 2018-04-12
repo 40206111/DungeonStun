@@ -59,6 +59,11 @@ void ControlsScene::Update(double dt)
 			{
 				GetElement(primary, action).setString(player1->keyMaps[controlScheme]->controlWords[action].second);
 			}
+			if (newSys)
+			{
+				player1->ChangeActive(controlScheme);
+				GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
+			}
 		}
 	}
 	else
@@ -103,12 +108,18 @@ void ControlsScene::Update(double dt)
 				primary = currentX;
 				if (controlScheme == 0 || controlScheme == 1)
 				{
+					if (player1->keyMaps[controlScheme]->controlType == player1->activeControls->controlType)
+						newSys = true;
+
 					ControlSystem *newMap = new ControlSystem;
 					*newMap = *player1->keyMaps[controlScheme];
 					player1->keyMaps.push_back(newMap);
 					player1->keyMaps[player1->keyMaps.size() - 1]->mapKey = player1->keyMaps.size() - 1;
 					controlScheme = player1->keyMaps.size() - 1;
-					GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
+				}
+				else
+				{
+					newSys = false;
 				}
 				remap = true;
 			}
@@ -127,7 +138,7 @@ void ControlsScene::Update(double dt)
 				}
 				else
 				{
-					player1->activeControls = newCont;
+					player1->ChangeActive(controlScheme);
 					GetElement(2, textAmount - 1).setColor(sf::Color::Green);
 				}
 			}
