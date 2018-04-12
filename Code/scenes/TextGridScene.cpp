@@ -307,6 +307,10 @@ void TextGridScene::ChangeCurrentX(int value)
 	if (texts[currentX]->at(current).getString() == "")
 	{
 		ChangeCurrentX(currentX + 1);
+		if (currentX == lastX)
+		{
+			ChangeCurrentX(currentX - 2);
+		}
 	}
 	if (currentX != lastX)
 	{
