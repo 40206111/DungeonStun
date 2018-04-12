@@ -6,6 +6,7 @@
 #include "scenes\settingsScene.h"
 #include "scenes\graphicsScene.h"
 #include "scenes\controlsScene.h"
+#include "scenes\gameScene.h"
 #include <iostream>
 using namespace sf;
 using namespace std;
@@ -18,6 +19,7 @@ shared_ptr<Scene> settingsScene;
 shared_ptr<Scene> graphicsScene;
 shared_ptr<Scene> activeScene;
 shared_ptr<Scene> controlsScene;
+GameScene gameScene;
 
 void Render()
 {
@@ -51,6 +53,7 @@ void Update()
 
 int main()
 {
+	Engine::Start(1920, 1080, "Dungeon Stun", &gameScene);
 	RenderWindow window(VideoMode(Renderer::resolutions[Renderer::currentRes].first, Renderer::resolutions[Renderer::currentRes].second), "Workin' 9 to Die");
 	Renderer::Initialise(window);
 	Load();

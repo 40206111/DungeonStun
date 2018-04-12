@@ -4,7 +4,7 @@
 
 class GameScene : public Scene {
 protected:
-	Entity * player;
+	std::shared_ptr<Entity> player;
 	std::vector<Entity*> enemies;
 	std::vector<Entity*> projectiles;
 
@@ -15,5 +15,6 @@ public:
 	void Update(const double &dt) override;
 	void Render() override;
 	void Load() override;
+	void UnLoad() override;
 	void Reset() override;
 };
