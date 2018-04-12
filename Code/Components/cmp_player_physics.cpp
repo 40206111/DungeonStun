@@ -11,7 +11,7 @@ bool PlayerPhysicsComponent::isGrounded() const {
   auto touch = getTouching();
   const auto& pos = _body->GetPosition();
   const float halfPlrHeigt = _size.y * .5f;
-  const float halfPlrWidth = _size.x * .52f;
+  const float halfPlrWidth = _size.x * .5f;
   b2WorldManifold manifold;
   for (const auto& contact : touch) {
     contact->GetWorldManifold(&manifold);
