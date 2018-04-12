@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <string>
+#include <list>
 #include <bitset>
 
 //Control System struct
@@ -10,7 +11,9 @@ struct ControlSystem {
 	std::map<unsigned int, std::pair<int, int>> controls;
 	//string for control type
 	std::string controlType;
+	int mapKey;
 	std::map<unsigned int, int> mouseControls;
+	std::map<unsigned int, std::pair<std::string, std::string>> controlWords;
 };
 
 //Input Manager Class
@@ -28,16 +31,20 @@ public:
 						MENURIGHT, BACK, ACCEPT,
 						FULLSCREEN, ACTIONSIZE}; //action size shows how many actions there are in the enum
 
+	static const std::vector<std::string> Actions;
+
 	//string Controls
 	static const std::map<PS4, std::string> ps4Controls;
 	static const std::map<sf::Keyboard::Key, std::string> keyboardControls;
 
 	//Control Systems
-	std::map<std::string, ControlSystem> keyMaps;
-	ControlSystem activeControls;
+	std::vector<ControlSystem*> keyMaps;
+	ControlSystem *activeControls = nullptr;
 
 	//controller ID
 	unsigned int controlerid = 0;
+	unsigned int primaryPS4 = 0;
+	unsigned int primaryKeyboard = 1;
 	
 	//Constructor and Destructor
 	InputManager();
@@ -48,7 +55,7 @@ public:
 
 	//methods
 	void Update(double dt);
-	void Remap(Action action, bool primary, std::string mapKey);
+	bool Remap(Action action, int primary, int key);
 	bool GetDpadDir(unsigned int jid, Dir dir);
 	bool GetDigiAnalogue(unsigned int jid, Dir dir);
 	bool GetAnaDown(Dir dir);
@@ -58,6 +65,7 @@ public:
 	bool GetButtonHeld(unsigned int button);
 	bool GetButtonReleased(unsigned int button);
 	bool onText(sf::Text t);
+	void ChangeActive(int controlScheme);
 protected:
 	//bools for button presses
 	std::bitset<ACTIONSIZE> buttonDown;

@@ -17,6 +17,7 @@ void SettingsScene::Load()
 		text[i].setFont(font);
 	}
 	text[0].setString("Graphics");
+	text[0].setColor(sf::Color::Yellow);
 	text[1].setString("Controls");
 	text[2].setString("Back");
 	textAmount = text.size();
@@ -35,13 +36,18 @@ void SettingsScene::Update(double dt)
 		switch (current)
 		{
 		case 0:
+			ChangeCurrent(0);
+			graphicsScene->Reset();
 			activeScene = graphicsScene;
 			break;
 		case 1:
+			ChangeCurrent(0);
+			controlsScene->Reset();
+			activeScene = controlsScene;
 			break;
 		case 2:
 			ChangeCurrent(0);
-			activeScene = menuScene;
+			activeScene = previousScene;
 			break;
 		default:
 			break;

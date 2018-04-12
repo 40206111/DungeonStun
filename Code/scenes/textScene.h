@@ -13,7 +13,7 @@ protected:
 	std::shared_ptr<Scene> previousScene;
 	
 	void CalculateSpace();
-	void ChangeCurrent(int);
+	virtual void ChangeCurrent(int);
 public:
 	TextScene() = default;
 	void Update(double dt) override;

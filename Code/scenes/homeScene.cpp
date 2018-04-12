@@ -21,25 +21,28 @@ void HomeScene::Load()
 
 void HomeScene::Update(double dt)
 {
-	//check if controller disconnected
-	if (!sf::Joystick::isConnected(player1->controlerid) && player1->activeControls.controlType == "PS4")
+	if (player1->activeControls != nullptr)
 	{
-		text.setString("Controller Disconnected...");
-		text.setColor(sf::Color::Red);
-	}
-	//update input
-	player1->Update(dt);
+		//check if controller disconnected
+		if (!sf::Joystick::isConnected(player1->controlerid) && player1->activeControls->controlType == "PS4")
+		{
+			text.setString("Controller Disconnected...");
+			text.setColor(sf::Color::Red);
+		}
+		//update input
+		player1->Update(dt);
 
-	//check if fullscreen
-	if (player1->GetButtonDown(player1->FULLSCREEN))
-	{
-		Renderer::ToggleFullscreen();
-	}
-	//Exit
-	if (player1->GetButtonDown(player1->BACK))
-	{
-		Renderer::Shutdown();
-		Renderer::GetWindow().close();
+		//check if fullscreen
+		if (player1->GetButtonDown(player1->FULLSCREEN))
+		{
+			Renderer::ToggleFullscreen();
+		}
+		//Exit
+		if (player1->GetButtonDown(player1->BACK))
+		{
+			Renderer::Shutdown();
+			Renderer::GetWindow().close();
+		}
 	}
 
 	//Poll events
@@ -67,7 +70,7 @@ void HomeScene::Update(double dt)
 		if (event.type == sf::Event::JoystickButtonPressed)
 		{
 			player1->controlerid = event.joystickMove.joystickId;
-			player1->activeControls = player1->keyMaps["PS4"];
+			player1->activeControls = player1->keyMaps[player1->primaryPS4];
 			anyKey = true;
 			testVal = event.key.alt;
 		}
@@ -75,7 +78,7 @@ void HomeScene::Update(double dt)
 		//if keyboard key pressed
 		if (event.type == sf::Event::KeyPressed)
 		{
-			player1->activeControls = player1->keyMaps["keyboard"];
+			player1->activeControls = player1->keyMaps[player1->primaryKeyboard];
 			anyKey = true;
 			testVal = event.key.code;
 		}
@@ -83,15 +86,15 @@ void HomeScene::Update(double dt)
 		// if any key pressed
 		if (anyKey) {
 			//exit if back pressed
-			if (testVal == player1->activeControls.controls[player1->BACK].first
-				|| testVal == player1->activeControls.controls[player1->BACK].second)
+			if (testVal == player1->activeControls->controls[player1->BACK].first
+				|| testVal == player1->activeControls->controls[player1->BACK].second)
 			{
 				Renderer::Shutdown();
 				Renderer::GetWindow().close();
 			}
 			//next scene if not fullscreen
-			if (testVal != player1->activeControls.controls[player1->FULLSCREEN].first
-				|| testVal != player1->activeControls.controls[player1->FULLSCREEN].second)
+			if (testVal != player1->activeControls->controls[player1->FULLSCREEN].first
+				|| testVal != player1->activeControls->controls[player1->FULLSCREEN].second)
 			{
 				activeScene = menuScene;
 			}

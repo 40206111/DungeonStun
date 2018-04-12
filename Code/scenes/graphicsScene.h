@@ -1,18 +1,16 @@
 #pragma once
-#include "Scene.h"
+#include "textScene.h"
 #include <SFML/Graphics.hpp>
 
-class GraphicsScene : public Scene
+class GraphicsScene : public TextScene
 {
 private:
-	std::vector<sf::Text> text;
-	//Menu buttons
-	std::bitset<3> menu;
-	//currently selected
-	int current = 0;
+	bool fullscreen;
+	int shownRes;
 public:
 	GraphicsScene() = default;
 	void Update(double dt) override;
 	void Render() override;
 	void Load() override;
+	void Reset() override;
 };

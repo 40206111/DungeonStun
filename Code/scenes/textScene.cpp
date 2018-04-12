@@ -14,7 +14,7 @@ void TextScene::Update(double dt)
 	player1->Update(dt);
 
 	//if keyboard controls allow mouse input
-	if (player1->activeControls.controlType == "keyboard")
+	if (player1->activeControls->controlType == "keyboard")
 	{
 		for (int i = 0; i < textAmount; ++i)
 		{
@@ -65,7 +65,7 @@ void TextScene::Update(double dt)
 		//If controller disconected
 		if (event.type == sf::Event::JoystickDisconnected)
 		{
-			if (player1->activeControls.controlType == "PS4" && player1->controlerid == event.joystickMove.joystickId)
+			if (player1->activeControls->controlType == "PS4" && player1->controlerid == event.joystickMove.joystickId)
 			{
 				ChangeCurrent(0);
 				//set active screen
@@ -88,7 +88,7 @@ void TextScene::Render()
 	{
 		text[i].setCharacterSize(Renderer::GetWindow().getSize().x / 10);
 
-		float xval = (Renderer::GetWindow().getSize().x * 0.5f) - (text[i].getGlobalBounds().width);
+		float xval = (Renderer::GetWindow().getSize().x * 0.25);
 		int co = i - textAmount / 2;
 		float yval = Renderer::GetWindow().getSize().y * 0.5f;
 		yval = yval + (co * space);
