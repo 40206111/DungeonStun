@@ -75,3 +75,8 @@ add_executable(NINE_TO_DIE ${SOURCES})
 source_group("Scenes" FILES ${SCENES})
 target_include_directories(NINE_TO_DIE PRIVATE ${SFML_INCS})
 target_link_libraries(NINE_TO_DIE sfml-graphics)
+
+#set working directory to build directory
+set_target_properties(${exe} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
+	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
+)
