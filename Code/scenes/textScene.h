@@ -1,5 +1,5 @@
 #pragma once
-#include "Scene.h"
+#include "engine.h"
 #include <SFML/Graphics.hpp>
 
 class TextScene : public Scene
@@ -16,6 +16,6 @@ protected:
 	virtual void ChangeCurrent(int);
 public:
 	TextScene() = default;
-	void Update(double dt) override;
+	void Update(const double &dt) override;
 	void Render() override;
 };

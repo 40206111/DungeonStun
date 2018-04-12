@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "SystemRenderer.h"
+#include "system_renderer.h"
 #include "Game.h"
 #include "scenes\homeScene.h"
 #include "scenes\menuScene.h"

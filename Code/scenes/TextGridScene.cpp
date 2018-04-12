@@ -1,6 +1,6 @@
 #include "TextGridScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -167,7 +167,7 @@ bool TextGridScene::SetElement(int column, int row, const Text& text) {
 	return false;
 }
 //Update method
-void TextGridScene::Update(double dt)
+void TextGridScene::Update(const double &dt)
 {
 	// store current
 	int currWatch = current;
