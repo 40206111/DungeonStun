@@ -1,6 +1,6 @@
 #include "homeScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -19,7 +19,7 @@ void HomeScene::Load()
 	text.setString("Press Any Button To Continue");
 }
 
-void HomeScene::Update(double dt)
+void HomeScene::Update(const double &dt)
 {
 	//check if controller disconnected
 	if (!sf::Joystick::isConnected(player1->controlerid) && player1->activeControls.controlType == "PS4")

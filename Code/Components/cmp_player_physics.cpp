@@ -29,7 +29,7 @@ bool PlayerPhysicsComponent::isGrounded() const {
   return false;
 }
 
-void PlayerPhysicsComponent::update(double dt) {
+void PlayerPhysicsComponent::Update(const double &dt) {
 
   const auto pos = _parent->getPosition();
 
@@ -79,7 +79,7 @@ void PlayerPhysicsComponent::update(double dt) {
   v.y = copysign(min(abs(v.y), _maxVelocity.y), v.y);
   setVelocity(v);
 
-  PhysicsComponent::update(dt);
+  PhysicsComponent::Update(dt);
 }
 
 PlayerPhysicsComponent::PlayerPhysicsComponent(Entity* p,

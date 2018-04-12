@@ -53,7 +53,7 @@ public:
 	bool mMoved = false;
 
 	//methods
-	void Update(double dt);
+	void Update(const double &dt);
 	void Remap(Action action, bool primary, int key);
 	bool GetDpadDir(unsigned int jid, Dir dir);
 	bool GetDigiAnalogue(unsigned int jid, Dir dir);

@@ -7,7 +7,7 @@ protected:
   sf::Vector2f _direction;
 
 public:
-  void update(double dt) override;
+  void Update(const double &dt) override;
 
   explicit EnemyAIComponent(Entity* p);
 

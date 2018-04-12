@@ -1,6 +1,6 @@
 #include "settingsScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -26,7 +26,7 @@ void SettingsScene::Load()
 }
 
 //Update method
-void SettingsScene::Update(double dt)
+void SettingsScene::Update(const double &dt)
 {
 	TextScene::Update(dt);
 

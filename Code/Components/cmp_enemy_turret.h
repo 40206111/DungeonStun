@@ -8,7 +8,7 @@ protected:
   float _firetime;
 
 public:
-  void update(double dt) override;
+  void Update(const double &dt) override;
   void render() override {}
   explicit EnemyTurretComponent(Entity* p);
   EnemyTurretComponent() = delete;

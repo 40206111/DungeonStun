@@ -6,7 +6,7 @@
 using namespace std;
 using namespace sf;
 
-void EnemyTurretComponent::update(double dt) {
+void EnemyTurretComponent::Update(const double &dt) {
   _firetime -= dt;
   if (_firetime <= 0.f) {
     fire();

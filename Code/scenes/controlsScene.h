@@ -7,7 +7,7 @@ class ControlsScene : public TextGridScene
 private:
 public:
 	ControlsScene() = default;
-	void Update(double dt) override;
+	void Update(const double &dt) override;
 	void Render() override;
 	void Load() override;
 	void Reset() override;

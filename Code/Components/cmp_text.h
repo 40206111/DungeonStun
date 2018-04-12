@@ -7,7 +7,7 @@ class TextComponent : public Component {
 public:
   TextComponent() = delete;
   explicit TextComponent(Entity* p, const std::string& str = "");
-  void update(double dt) override;
+  void Update(const double &dt) override;
 
   void render() override;
 

@@ -1,6 +1,6 @@
 #include "controlsScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 using namespace sf;
@@ -35,7 +35,7 @@ void ControlsScene::Load()
 
 
 //Update method
-void ControlsScene::Update(double dt)
+void ControlsScene::Update(const double &dt)
 {
 	if (text[0].getString() == "CONTROLS")
 	{
@@ -65,13 +65,13 @@ void ControlsScene::Reset()
 	text[0].setString(player1->keyMaps[player1->activeControls.mapKey].controlType + " " + to_string(player1->activeControls.mapKey));
 	for (int i = 1; i < player1->ACTIONSIZE; i++)
 	{
-		GetElement(0, i).setString(player1->Actions[i] + ": ");
+		GetElement(0, i).setString(player1->Actions[i] + ":");
 		if (player1->keyMaps[player1->activeControls.mapKey].controlType == "keyboard")
 		{
 			int xPos = 1;
 			if (player1->keyboardControls.find((sf::Keyboard::Key)(player1->activeControls.controls[i].first)) == player1->keyboardControls.end())
 			{
-				GetElement(xPos, i).setString(" ");
+				GetElement(xPos, i).setString("<EMPTY>");
 			}
 			else if ((player1->activeControls.controls[i].first) != -1)
 			{
@@ -84,7 +84,7 @@ void ControlsScene::Reset()
 			xPos = 2;
 			if (player1->keyboardControls.find((sf::Keyboard::Key)(player1->activeControls.controls[i].second)) == player1->keyboardControls.end())
 			{
-				GetElement(xPos, i).setString(" ");
+				GetElement(xPos, i).setString("<EMPTY>");
 			}
 			else if ((player1->activeControls.controls[i].second) != -1)
 			{

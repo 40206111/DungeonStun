@@ -7,7 +7,7 @@ class SettingsScene : public TextScene
 private:
 public:
 	SettingsScene() = default;
-	void Update(double dt) override;
+	void Update(const double &dt) override;
 	void Render() override;
 	void Load() override;
 };

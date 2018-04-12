@@ -3,7 +3,7 @@
 using namespace std;
 using namespace sf;
 
-void EnemyAIComponent::update(double dt) {
+void EnemyAIComponent::Update(const double &dt) {
   auto mov = _direction * (float)(dt * _speed);
   mov.x += _direction.x * 16.f;
   if (!validMove(_parent->getPosition() + mov)) {
@@ -11,7 +11,7 @@ void EnemyAIComponent::update(double dt) {
   }
 
   move(_direction * (float)(dt * _speed));
-  ActorMovementComponent::update(dt);
+  ActorMovementComponent::Update(dt);
 }
 
 EnemyAIComponent::EnemyAIComponent(Entity* p) : ActorMovementComponent(p) {

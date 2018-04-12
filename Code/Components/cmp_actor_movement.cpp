@@ -5,7 +5,7 @@
 using namespace sf;
 using namespace std;
 
-void ActorMovementComponent::update(double dt) {}
+void ActorMovementComponent::Update(const double &dt) {}
 
 ActorMovementComponent::ActorMovementComponent(Entity* p)
     : _speed(100.0f), Component(p) {}

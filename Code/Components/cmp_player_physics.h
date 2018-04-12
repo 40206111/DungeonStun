@@ -12,7 +12,7 @@ protected:
   bool isGrounded() const;
 
 public:
-  void update(double dt) override;
+  void Update(const double &dt) override;
 
   explicit PlayerPhysicsComponent(Entity* p, const sf::Vector2f& size);
 

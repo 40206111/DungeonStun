@@ -1,6 +1,6 @@
 #include "graphicsScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 using namespace sf;
@@ -36,7 +36,7 @@ void GraphicsScene::Load()
 }
 
 //Update method
-void GraphicsScene::Update(double dt)
+void GraphicsScene::Update(const double &dt)
 {
 	TextScene::Update(dt);
 	//Fullscreen window

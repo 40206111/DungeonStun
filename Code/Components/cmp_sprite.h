@@ -12,7 +12,7 @@ public:
   SpriteComponent() = delete;
 
   explicit SpriteComponent(Entity* p);
-  void update(double dt) override;
+  void Update(const double &dt) override;
   void render() override;
 
   sf::Sprite& getSprite() const;
@@ -32,7 +32,7 @@ public:
 
   explicit ShapeComponent(Entity* p);
 
-  void update(double dt) override;
+  void Update(const double &dt) override;
   void render() override;
   sf::Shape& getShape() const;
   template <typename T, typename... Targs> void setShape(Targs... params) {

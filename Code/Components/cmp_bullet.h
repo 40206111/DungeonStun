@@ -7,7 +7,7 @@ protected:
   float _lifetime;
 
 public:
-  void update(double dt) override;
+  void Update(const double &dt) override;
   void render() override {}
   explicit BulletComponent(Entity* p, float lifetime = 3.f);
   BulletComponent() = delete;
