@@ -106,7 +106,7 @@ void ControlsScene::Update(double dt)
 			{
 				action = current;
 				primary = currentX;
-				if (controlScheme == 0 || controlScheme == 1)
+				if ((controlScheme == 0 || controlScheme == 1) && action != player1->AIM)
 				{
 					if (player1->keyMaps[controlScheme]->controlType == player1->activeControls->controlType)
 						newSys = true;
