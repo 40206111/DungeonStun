@@ -1,6 +1,6 @@
 #include "controlsScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 using namespace sf;
@@ -35,7 +35,7 @@ void ControlsScene::Load()
 
 
 //Update method
-void ControlsScene::Update(double dt)
+void ControlsScene::Update(const double &dt)
 {
 	if (remap)
 	{	

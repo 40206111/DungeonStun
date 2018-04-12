@@ -1,5 +1,5 @@
 #include "InputManager.h"
-#include "SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
@@ -418,7 +418,7 @@ bool InputManager::Remap(Action action, int primary, int key)
 }
 
 //Update method
-void InputManager::Update(double dt)
+void InputManager::Update(const double &dt)
 {
 	//loop through actions
 	for (int i = 0; i < ACTIONSIZE; ++i)
