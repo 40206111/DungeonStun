@@ -1,7 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-	extern unsigned int currentRes;
 //namespace Renderer
 //{
 //

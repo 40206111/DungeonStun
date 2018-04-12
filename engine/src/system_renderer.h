@@ -8,7 +8,7 @@ namespace Renderer {
 		std::make_pair(1280,720),  std::make_pair(1366,768),  std::make_pair(1600,900),
 		std::make_pair(1920,1080)
 	};
-	static unsigned int currentRes = 3;
+	extern unsigned int currentRes;
 
 	void Initialise(sf::RenderWindow&);
 	sf::RenderWindow &GetWindow();

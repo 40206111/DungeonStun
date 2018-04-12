@@ -1,5 +1,4 @@
 
-unsigned int Renderer::currentRes = 3;
 
 //#include "system_renderer.h"
 //#include "Game.h"
