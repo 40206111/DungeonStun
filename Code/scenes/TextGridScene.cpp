@@ -139,14 +139,14 @@ void TextGridScene::SetColumnCount(int value) {
 	else if (columns < value) {
 		Text basic = Text();
 		basic.setFont(font);
-		basic.setString("-");
+		basic.setString("");
 		int shortfall = value - columns;
 		for (int i = 0; i < shortfall; ++i) {
 			vector<Text>* column = new vector<Text>();
 			for (int i = 0; i < rows; ++i) {
 				Text* copy = new Text();
 				copy->setFont(font);
-				copy->setString("-");
+				copy->setString("");
 				column->push_back(*copy);
 			}
 			texts.push_back(column);
@@ -174,6 +174,17 @@ void TextGridScene::Update(double dt)
 	TextScene::Update(dt);
 	//check current
 	if (currWatch != current && currentX != 0) {
+		while (GetElement(currentX, current).getString() == "")
+		{
+			int value = currentX - 1;
+			if (value < 0) {
+				currentX = columns + (value % columns);
+			}
+			else
+			{
+				currentX = value;
+			}
+		}
 		// respond to change
 		GetElement(currentX, current).setColor(Color::White);
 		int newCurr = current;
@@ -182,7 +193,7 @@ void TextGridScene::Update(double dt)
 	}
 
 	//if keyboard controls allow mouse input
-	if (player1->activeControls.controlType == "keyboard")
+	if (player1->activeControls->controlType == "keyboard")
 	{
 		for (int i = 0; i < columns; ++i) {
 			for (int j = 0; j < rows; ++j)
@@ -224,13 +235,13 @@ void TextGridScene::Render()
 			//float yMid = yPos + ySpace / 2.0f;
 			float yMid = yPos + border.y;
 			if (x == 0) {
-				xMid = xPos + xSpace - GetElement(x,y).getGlobalBounds().width - border.x;
+				xMid = xPos + xSpace - GetElement(x, y).getGlobalBounds().width - border.x;
 			}
 
 			Vector2f localpos = Vector2f(texts[x]->at(y).getLocalBounds().left, texts[x]->at(y).getLocalBounds().top);
 
 			texts[x]->at(y).setPosition(Vector2f(xMid, yMid) - localpos);
-			texts[x]->at(y).setCharacterSize(Renderer::GetWindow().getSize().x / (rows>10 ? rows : 10));
+			texts[x]->at(y).setCharacterSize(Renderer::GetWindow().getSize().x / (rows > 10 ? rows : 10));
 			Renderer::Queue(&texts[x]->at(y));
 
 
@@ -292,6 +303,10 @@ void TextGridScene::ChangeCurrentX(int value)
 	}
 	else {
 		currentX = value;
+	}
+	if (texts[currentX]->at(current).getString() == "")
+	{
+		ChangeCurrentX(currentX + 1);
 	}
 	if (currentX != lastX)
 	{

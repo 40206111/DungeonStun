@@ -5,6 +5,11 @@
 class ControlsScene : public TextGridScene
 {
 private:
+	int controlScheme;
+	bool remap = false;
+	int action = -1;
+	int primary = 1;
+	bool newSys = false;
 public:
 	ControlsScene() = default;
 	void Update(double dt) override;
