@@ -94,7 +94,7 @@ set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE) #stop this happening on non-rel
 INCLUDE(InstallRequiredSystemLibraries)
 install(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION "bin/" CONFIGURATIONS Release COMPONENT SYSTEM_CMPT)
 #Install component for resources
-install(DIRECTORY "${PROJECT_SOURCE_DIR}/res" DESTINATION "bin/" CONFIGURATIONS Release COMPONENT RESOURCES_CMPT)
+install(DIRECTORY "${CMAKE_BINARY_DIR}/Assets" DESTINATION "bin/" CONFIGURATIONS Release COMPONENT RESOURCES_CMPT)
 #We disabled SFML's INSTALL component as it brings along junk, so we gotta make one ourselves
 install(DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/" DESTINATION "bin" CONFIGURATIONS Release COMPONENT SFML_CMPT FILES_MATCHING PATTERN "*.dll" )
 #Main Install target
@@ -114,7 +114,7 @@ IF(WIN32)
   set(CPACK_NSIS_HELP_LINK "https://github.com/40206111/DungeonStun")
   set(CPACK_NSIS_URL_INFO_ABOUT "https://github.com/40206111/DungeonStun")
   set(CPACK_NSIS_CONTACT "https://github.com/40206111/")
-  #set(CPACK_NSIS_MUI_ICON "${PROJECT_SOURCE_DIR}/Assets/imgs/icon.ico")
+  set(CPACK_NSIS_MUI_ICON "${CMAKE_BINARY_DIR}/Assets/imgs/icon.ico")
 ELSE()
   set(CPACK_GENERATOR ZIP)
 ENDIF(WIN32)
