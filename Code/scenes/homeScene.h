@@ -10,7 +10,7 @@ private:
 	sf::Text text;
 public:
 	HomeScene() = default;
-	void Update(double dt) override;
+	void Update(const double &dt) override;
 	void Render() override;
 	void Load() override;
 };

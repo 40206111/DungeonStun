@@ -19,7 +19,7 @@ void initialise() {
 
 void shutdown() { world.reset(); }
 
-void update(const double& dt) {
+void Update(const double& dt) {
   world->Step((float)dt, velocityIterations, positionIterations);
 }
 

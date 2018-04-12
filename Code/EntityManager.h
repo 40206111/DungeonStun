@@ -1,9 +1,9 @@
 #pragma once
-#include "Entity.h"
+#include "engine.h"
 
-struct EntityManager
-{
-	std::vector<std::shared_ptr<Entity>> list;
-	void Update(double dt);
-	void Render();
-};
+//struct EntityManager
+//{
+//	std::vector<std::shared_ptr<Entity>> list;
+//	void Update(const double &dt);
+//	void Render();
+//};

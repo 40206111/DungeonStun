@@ -18,7 +18,7 @@ static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
 
-void Loading_update(float dt, const Scene* const scn) {
+void Loading_Update(float dt, const Scene* const scn) {
 	//  cout << "Eng: Loading Screen\n";
 	if (scn->isLoaded()) {
 		cout << "Eng: Exiting Loading Screen\n";
@@ -39,8 +39,8 @@ void Loading_render() {
 	static Text t("Loading", *Resources::get<sf::Font>("RobotoMono-Regular.ttf"));
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f*loadingTime)));
 	t.setPosition(Vcast<float>(Engine::getWindowSize()) * Vector2f(0.4f, 0.3f));
-	Renderer::queue(&t);
-	Renderer::queue(&octagon);
+	Renderer::Queue(&t);
+	Renderer::Queue(&octagon);
 }
 
 float frametimes[256] = {};
@@ -63,10 +63,10 @@ void Engine::Update() {
 	}
 
 	if (loading) {
-		Loading_update(dt, _activeScene);
+		Loading_Update(dt, _activeScene);
 	}
 	else if (_activeScene != nullptr) {
-		Physics::update(dt);
+		Physics::Update(dt);
 		_activeScene->Update(dt);
 	}
 }
@@ -79,7 +79,7 @@ void Engine::Render(RenderWindow& window) {
 		_activeScene->Render();
 	}
 
-	Renderer::render();
+	Renderer::Render();
 }
 
 void Engine::Start(unsigned int width, unsigned int height,
@@ -87,7 +87,7 @@ void Engine::Start(unsigned int width, unsigned int height,
 	RenderWindow window(VideoMode(width, height), gameName);
 	_gameName = gameName;
 	_window = &window;
-	Renderer::initialise(window);
+	Renderer::Initialise(window);
 	Physics::initialise();
 	ChangeScene(scn);
 	while (window.isOpen()) {
@@ -140,7 +140,7 @@ void Engine::ChangeScene(Scene* s) {
 	}
 }
 
-void Scene::Update(const double& dt) { ents.update(dt); }
+void Scene::Update(const double& dt) { ents.Update(dt); }
 
 void Scene::Render() { ents.render(); }
 

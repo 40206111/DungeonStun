@@ -71,18 +71,17 @@ target_link_libraries(lib_ecm PRIVATE lib_maths)
 ### Main Project ###
 file(GLOB_RECURSE SOURCES Code/*.cpp Code/*.h)
 file(GLOB_RECURSE SCENES Code/scenes/*.cpp Code/scenes/*.h)
+file(GLOB_RECURSE CMPNTS Code/Components/*.cpp Code/Components/*.h)
 add_executable(NINE_TO_DIE ${SOURCES})
 source_group("Scenes" FILES ${SCENES})
+source_group("Components" FILES ${CMPNTS})
 target_include_directories(NINE_TO_DIE PRIVATE ${SFML_INCS})
-target_link_libraries(NINE_TO_DIE sfml-graphics)
+target_link_libraries(NINE_TO_DIE sfml-graphics lib_ecm lib_engine lib_tile_level_loader)
 
 #set working directory to build directory
 set_target_properties(${exe} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY
 	${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$(Configuration)
 )
-
-
-
 
 #####EXE STUFF#######
 #Install directory within build folder, so it doesn't go into /lib or program-files
@@ -119,7 +118,6 @@ ELSE()
   set(CPACK_GENERATOR ZIP)
 ENDIF(WIN32)
 
-
 set(CPACK_PACKAGE_FILE_NAME ${CMAKE_PROJECT_NAME})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Games eng coursework game")
 set(CPACK_PACKAGE_VENDOR "Groupie")
@@ -130,3 +128,4 @@ set(CPACK_PACKAGE_VERSION_MINOR "1")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 
 INCLUDE(CPack)
+
