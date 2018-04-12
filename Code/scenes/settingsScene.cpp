@@ -42,6 +42,7 @@ void SettingsScene::Update(const double &dt)
 			break;
 		case 1:
 			ChangeCurrent(0);
+			controlsScene->Reset();
 			activeScene = controlsScene;
 			break;
 		case 2:

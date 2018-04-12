@@ -2,6 +2,7 @@
 #include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <string>
 using namespace sf;
 using namespace std;
 
@@ -214,8 +215,18 @@ void InputManager::CreateControlers()
 		{BACK, NONE}, {ACCEPT, NONE},
 		{FULLSCREEN, NONE}
 	};
-	keyMaps.push_back(pscontroller);
-	keyMaps[keyMaps.size() - 1].mapKey = keyMaps.size() - 1;
+	pscontroller.controlWords = {
+		{ LEFT, std::make_pair("DPAD LEFT", "-") },{ RIGHT, std::make_pair("DPAD RIGHT", "-") },
+		{ SVM, std::make_pair("R1", "-") },{ JUMP, std::make_pair("L1", "CIRCLE") },
+		{ FIRE, std::make_pair("R2", "-") },{ SHIELD, std::make_pair("L2", "-") },
+		{ ACTIVE, std::make_pair("X", "-") },{ AIM, std::make_pair("-", "-") },
+		{ MENUUP, std::make_pair("DPAD UP", "-") },{ MENUDOWN, std::make_pair("DPAD DOWN", "-") },
+		{ MENULEFT, std::make_pair("DPAD LEFT", "-") },{ MENURIGHT, std::make_pair("DPAD RIGHT", "-") },
+		{ BACK, std::make_pair("CIRCLE", "-") },{ ACCEPT, std::make_pair("X", "-") },
+		{ FULLSCREEN, std::make_pair("START", "-") }
+	};
+	keyMaps.push_back(new ControlSystem(pscontroller));
+	keyMaps[keyMaps.size() - 1]->mapKey = keyMaps.size() - 1;
 
 	//create keyboard control system
 	ControlSystem keyboard;
@@ -227,7 +238,7 @@ void InputManager::CreateControlers()
 		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
 		{MENUUP, std::make_pair(sf::Keyboard::W, sf::Keyboard::Up)},{MENUDOWN, std::make_pair(sf::Keyboard::S, sf::Keyboard::Down)},
 		{MENULEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Left)},{MENURIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Right)},
-		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Return)},
+		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
 		{FULLSCREEN, std::make_pair(sf::Keyboard::F, sf::Keyboard::Unknown)}
 	};
 	keyboard.controlType = "keyboard";
@@ -242,63 +253,155 @@ void InputManager::CreateControlers()
 		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Mouse::Left},
 		{FULLSCREEN, sf::Keyboard::Unknown}
 	};
-	keyMaps.push_back(keyboard);
-	keyMaps[keyMaps.size() - 1].mapKey = keyMaps.size() - 1;
+	keyboard.controlWords = {
+		{ LEFT, std::make_pair("A", "-") },{ RIGHT, std::make_pair("D", "-") },
+		{ SVM, std::make_pair("W", "-") },{ JUMP, std::make_pair("SPACE", "-") },
+		{ FIRE, std::make_pair("LEFT MOUSE", "-") },{ SHIELD, std::make_pair("RIGHT MOUSE", "-") },
+		{ ACTIVE, std::make_pair("E", "-") },{ AIM, std::make_pair("-", "-") },
+		{ MENUUP, std::make_pair("W", "UP ARROW") },{ MENUDOWN, std::make_pair("S", "DOWN ARROW") },
+		{ MENULEFT, std::make_pair("A", "LEFT ARROW") },{ MENURIGHT, std::make_pair("D", "RIGHT ARROW") },
+		{ BACK, std::make_pair("ESC", "-") },{ ACCEPT, std::make_pair("SPACE", "LEFT MOUSE") },
+		{ FULLSCREEN, std::make_pair("F", "-") }
+	};
+	keyMaps.push_back(new ControlSystem(keyboard));
+	keyMaps[keyMaps.size() - 1]->mapKey = keyMaps.size() - 1;
 
 }
 
 // method to remap controls
-void InputManager::Remap(Action action, bool primary, int key)
+bool InputManager::Remap(Action action, int primary, int key)
 {
 	Event event;
+	//intitialise codes
+	int code = -1;
+	std::string pressed = "";
+	bool kPressed = false;
+
 	//poll events
 	while (Renderer::GetWindow().pollEvent(event))
 	{
-		//intitialise codes
-		int code = -1;
-		std::string pressed = "";
-
 		//check controller type
-		if (keyMaps[key].controlType == "keyboard")
+		if (keyMaps[key]->controlType == "keyboard")
 		{
 			//check if key pressed
 			if (event.type == sf::Event::KeyPressed)
 			{
 				code = event.key.code;
+				kPressed = true;
 			}
 
 			//check if text entered
 			if (event.type == sf::Event::TextEntered)
 			{
-				key = (char)(event.text.unicode);
+				int unic = event.text.unicode;
+				//make character capital
+				if (unic >= 97 || unic <= 122)
+				{
+					unic -= 32;
+				}
+				pressed = (char)(unic);
 			}
 
-			//set text if nothing in key entered
-			if (pressed.find_first_not_of(" \t\n\v\f\r") != std::string::npos)
+			if (!kPressed && event.type == sf::Event::MouseButtonPressed)
 			{
-				//set key sting to be that in keyboard map
-				pressed = keyboardControls.at((sf::Keyboard::Key)code);
+				code = event.mouseButton.button;
+				if (code == sf::Mouse::Left)
+				{
+					pressed = "LEFT MOUSE";
+				}
+				else if (code == sf::Mouse::Middle)
+				{
+					pressed = "MIDDLE MOUSE";
+				}
+				else if (code == sf::Mouse::Right)
+				{
+					pressed = "RIGHT MOUSE";
+				}
+				else
+				{
+					pressed = "MOUSE " + to_string(code);
+				}
 			}
 		}
-		else if (keyMaps[key].controlType == "PS4")
+		if (keyMaps[key]->controlType == "PS4")
 		{
 			//check if joystick button pressed
 			if (event.type == sf::Event::JoystickButtonPressed)
 			{
 				code = event.joystickButton.button;
 				pressed = ps4Controls.at((PS4)code);
+				kPressed = true;
 			}
 		}
-
-		//set action to code
-		if (code != -1)
-		{
-			if (primary)
-				keyMaps[key].controls[action].first = code;
-			else
-				keyMaps[key].controls[action].second = code;
-		}
 	}
+	//set text if nothing in key entered
+	if (kPressed && (pressed.find_first_not_of(" \t\n\v\f\r") == std::string::npos || pressed == ""))
+	{
+		//set key sting to be that in keyboard map
+		pressed = keyboardControls.at((sf::Keyboard::Key)code);
+	}
+	if (!kPressed)
+	{
+		if (GetDpadDir(controlerid, U))
+		{
+			code = U;
+			pressed = "DPAD UP";
+		}
+		else if (GetDpadDir(controlerid, D))
+		{
+			code = D;
+			pressed = "DPAD DOWN";
+		}
+		else if (GetDpadDir(controlerid, L))
+		{
+			code = L;
+			pressed = "DPAD LEFT";
+		}
+		else if (GetDpadDir(controlerid, R))
+		{
+			code = R;
+			pressed = "DPAD RIGHT";
+		}
+
+	}
+	//set action to code
+	if (kPressed)
+	{
+		if (primary == 1)
+		{
+			keyMaps[key]->controls[action].first = code;
+			keyMaps[key]->controlWords[action].first = pressed;
+		}
+		else
+		{
+			keyMaps[key]->controls[action].second = code;
+			keyMaps[key]->controlWords[action].second = pressed;
+		}
+		return true;
+	}
+	else if (code != -1)
+	{
+		if (primary == 1)
+		{
+			keyMaps[key]->mouseControls[action]= code;
+			keyMaps[key]->controlWords[action].first = pressed;
+			if (keyMaps[key]->controls[action].first != -1)
+			{
+				keyMaps[key]->controls[action].first = -1;
+			}
+		}
+		else
+		{
+			keyMaps[key]->controls[action].second = code;
+			keyMaps[key]->controlWords[action].second = pressed;
+			if (keyMaps[key]->controls[action].second != -1)
+			{
+				keyMaps[key]->controls[action].second = -1;
+			}
+		}
+		return true;
+	}
+	return false;
 }
 
 //Update method
@@ -308,9 +411,9 @@ void InputManager::Update(const double &dt)
 	for (int i = 0; i < ACTIONSIZE; ++i)
 	{
 		//primary control
-		int first = activeControls.controls[i].first;
+		int first = activeControls->controls[i].first;
 		//secondary control
-		int second = activeControls.controls[i].second;
+		int second = activeControls->controls[i].second;
 		//check if button down
 		if (buttonDown.test(i)) {
 			buttonDown.reset(i);
@@ -320,8 +423,8 @@ void InputManager::Update(const double &dt)
 			buttonReleased.reset();
 		}
 		// check if primary button pressed
-		if (first != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, first) ||
-			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)first)))
+		if (first != -1 && (activeControls->controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, first) ||
+			activeControls->controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)first)))
 		{
 			// if action not held
 			if (!buttonHeld.test(i)) {
@@ -330,8 +433,8 @@ void InputManager::Update(const double &dt)
 			}
 		}
 		// check if secondary button pressed
-		else if (second != -1 && (activeControls.controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, second) ||
-			activeControls.controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)second)))
+		else if (second != -1 && (activeControls->controlType == "PS4" && sf::Joystick::isButtonPressed(controlerid, second) ||
+			activeControls->controlType == "keyboard" && sf::Keyboard::isKeyPressed((sf::Keyboard::Key)second)))
 		{
 			//check if action not held
 			if (!buttonHeld.test(i)) {
@@ -340,9 +443,9 @@ void InputManager::Update(const double &dt)
 			}
 		}
 		//check if mouse controls are down
-		else if (activeControls.mouseControls[i] != -1 &&
-			(activeControls.controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls.mouseControls[i]) ||
-				activeControls.controlType == "PS4" && GetDpadDir(controlerid, (Dir)activeControls.mouseControls[i])))
+		else if (activeControls->mouseControls[i] != -1 &&
+			(activeControls->controlType == "keyboard" && sf::Mouse::isButtonPressed((sf::Mouse::Button)activeControls->mouseControls[i]) ||
+				activeControls->controlType == "PS4" && GetDpadDir(controlerid, (Dir)activeControls->mouseControls[i])))
 		{
 			//if aaction not held
 			if (!buttonHeld.test(i)) {
@@ -487,7 +590,7 @@ bool InputManager::GetAnaReleased(Dir dir)
 
 //method to chek if button is down
 bool InputManager::GetButtonDown(unsigned int action) {
-	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1 && activeControls.mouseControls[action] == -1) &&
+	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1 && activeControls->mouseControls[action] == -1) &&
 		buttonDown.test(action))
 		return true;
 	return false;
@@ -495,7 +598,7 @@ bool InputManager::GetButtonDown(unsigned int action) {
 
 //method to check if button is held
 bool InputManager::GetButtonHeld(unsigned int action) {
-	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
+	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1) &&
 		buttonHeld.test(action))
 		return true;
 	return false;
@@ -503,7 +606,7 @@ bool InputManager::GetButtonHeld(unsigned int action) {
 
 //method to check if button is released
 bool InputManager::GetButtonReleased(unsigned int action) {
-	if (!(activeControls.controls[action].first == -1 && activeControls.controls[action].second == -1) &&
+	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1) &&
 		buttonReleased.test(action))
 		return true;
 	return false;
@@ -518,7 +621,6 @@ bool InputManager::onText(sf::Text t)
 	//check if in bounds
 	if (t.getGlobalBounds().contains(Vector2f(mousePos)))
 	{
-		printf("%d : %d\n", mousePos.x, mousePos.y);
 		return true;
 	}
 
@@ -535,4 +637,18 @@ bool InputManager::mouseMoved()
 		return true;
 	}
 	return false;
+}
+
+void InputManager::ChangeActive(int controlScheme)
+{
+	ControlSystem *newCont = keyMaps[controlScheme];
+	activeControls = newCont;
+	if (activeControls->controlType == "PS4")
+	{
+		primaryPS4 = newCont->mapKey;
+	}
+	else
+	{
+		primaryKeyboard = newCont->mapKey;
+	}
 }
