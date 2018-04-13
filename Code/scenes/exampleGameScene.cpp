@@ -10,6 +10,7 @@ using namespace std;
 using namespace sf;
 
 void ExampleGameScene::Load() {
+	GameScene::Load();
 	showBehind = true;
 	// load level
 	float tileSize = 40.0f;
@@ -27,6 +28,7 @@ void ExampleGameScene::Load() {
 	s->getShape().setOrigin(playerSize);
 	player->addComponent<PlayerPhysicsComponent>(playerSize);
 	ents.list.push_back(player);
+
 }
 
 void ExampleGameScene::UnLoad() {
