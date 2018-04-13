@@ -6,7 +6,7 @@
 #include "scenes\settingsScene.h"
 #include "scenes\graphicsScene.h"
 #include "scenes\controlsScene.h"
-#include "scenes\gameScene.h"
+#include "scenes\gameWorkshop.h"
 #include <iostream>
 #include "Serializer.h"
 using namespace sf;
@@ -20,7 +20,7 @@ shared_ptr<Scene> settingsScene;
 shared_ptr<Scene> graphicsScene;
 shared_ptr<Scene> activeScene;
 shared_ptr<Scene> controlsScene;
-GameScene gameScene;
+GameWorkshop gameScene;
 
 void Render()
 {
