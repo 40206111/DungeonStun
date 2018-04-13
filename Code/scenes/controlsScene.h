@@ -15,5 +15,6 @@ public:
 	void Update(const double &dt) override;
 	void Render() override;
 	void Load() override;
+	void UnLoad() override;
 	void Reset() override;
 };
