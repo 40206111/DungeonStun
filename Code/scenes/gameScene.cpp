@@ -9,6 +9,8 @@
 using namespace std;
 using namespace sf;
 
+GameScene::GameScene(bool _showBehind) : showBehind(_showBehind) {}
+
 void GameScene::Load() {
 	// load level
 	float tileSize = 40.0f;
@@ -39,11 +41,21 @@ void GameScene::Reset() {
 }
 
 void GameScene::Update(const double &dt) {
-	// run EM update
-	Scene::Update(dt);
+	if (menuUp) {
+		menuScene->Update(dt);
+	}
+	else {
+		// run EM update
+		Scene::Update(dt);
+	}
 }
 
 void GameScene::Render() {
-	// Run EM render
-	Scene::Render();
+	if (!menuUp || showBehind) {
+		// Run EM render
+		Scene::Render();
+	}
+	if (menuUp) {
+		menuScene->Render();
+	}
 }
