@@ -1,5 +1,5 @@
 #include "InputManager.h"
-#include "SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
@@ -46,6 +46,7 @@ const std::map<sf::Keyboard::Key, std::string> InputManager::keyboardControls = 
 { sf::Keyboard::Tab, "TAB" },
 { sf::Keyboard::Return, "ENTER" },
 { sf::Keyboard::BackSpace, "BACKSPACE" },
+{ sf::Keyboard::Space, "SPACE" },
 { sf::Keyboard::F1, "F1" },
 { sf::Keyboard::F2, "F2" },
 { sf::Keyboard::F3, "F3" },
@@ -103,8 +104,8 @@ const std::map<InputManager::PS4, std::string> InputManager::ps4Controls = {
 	{ InputManager::R2, "R2" },
 	{ InputManager::SELECT, "SELECT" },
 	{ InputManager::START, "START" },
-	{ InputManager::LEFTA, "LEFT ANALOGUE" },
-	{ InputManager::RIGHTA, "RIGHT ANOLOGUE" },
+	{ InputManager::LEFTA, "LEFT ANALOGUE IN" },
+	{ InputManager::RIGHTA, "RIGHT ANOLOGUE IN" },
 	{ InputManager::PS, "PLAY STATION" },
 	{ InputManager::TOUCH, "TOUCH PAD" },
 };
@@ -114,13 +115,11 @@ const std::vector<string> InputManager::Actions{ "Left", "Right", "SVM", "Jump",
 									"Aim", "Fire", "Sheild", "Active",
 									"Menu Up", "Menu Down", "Menu Left",
 									"MenuRight", "Back", "Accept",
-									"Fullscreen"};
+									"Fullscreen", "Menu"};
 
 //Input manager constructor
 InputManager::InputManager()
 {
-	InputManager::CreateControlers();
-
 	/// DEBUG///
 	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
 	cout << "\nVendor ID: " << id.vendorId << "\nProduct ID: " << id.productId << endl;
@@ -188,86 +187,6 @@ void InputManager::ButtonDebug()
 
 }
 
-//method to create default controls
-void InputManager::CreateControlers()
-{
-	//create playstation control system
-	ControlSystem pscontroller;
-	//set basic ps4 controls
-	pscontroller.controls = {
-		{LEFT, std::make_pair(NONE, NONE)},{RIGHT, std::make_pair(NONE, NONE)},
-		{SVM, std::make_pair(R1, NONE)},{JUMP, std::make_pair(L1, O)},
-		{FIRE, std::make_pair(R2, NONE)},{SHIELD, std::make_pair(L2, NONE)},
-		{ACTIVE, std::make_pair(X, NONE)},{AIM, std::make_pair(NONE, NONE)},
-		{MENUUP, std::make_pair(NONE, NONE)},{MENUDOWN, std::make_pair(NONE, NONE)},
-		{MENULEFT, std::make_pair(NONE, NONE)},{MENURIGHT, std::make_pair(NONE, NONE)},
-		{BACK, std::make_pair(O, NONE)},{ACCEPT, std::make_pair(X, NONE)},
-		{FULLSCREEN, std::make_pair(START, NONE)}
-	};
-	pscontroller.controlType = "PS4";
-	pscontroller.mouseControls = {
-		{LEFT, L},{RIGHT, R},
-		{SVM, U},{JUMP, NONE},
-		{FIRE, NONE},{SHIELD, NONE},
-		{ACTIVE, NONE},{AIM, NONE},
-		{MENUUP, U}, {MENUDOWN, D},
-		{MENULEFT, L}, {MENURIGHT, R},
-		{BACK, NONE}, {ACCEPT, NONE},
-		{FULLSCREEN, NONE}
-	};
-	pscontroller.controlWords = {
-		{ LEFT, std::make_pair("DPAD LEFT", "-") },{ RIGHT, std::make_pair("DPAD RIGHT", "-") },
-		{ SVM, std::make_pair("R1", "-") },{ JUMP, std::make_pair("L1", "CIRCLE") },
-		{ FIRE, std::make_pair("R2", "-") },{ SHIELD, std::make_pair("L2", "-") },
-		{ ACTIVE, std::make_pair("X", "-") },{ AIM, std::make_pair("-", "-") },
-		{ MENUUP, std::make_pair("DPAD UP", "-") },{ MENUDOWN, std::make_pair("DPAD DOWN", "-") },
-		{ MENULEFT, std::make_pair("DPAD LEFT", "-") },{ MENURIGHT, std::make_pair("DPAD RIGHT", "-") },
-		{ BACK, std::make_pair("CIRCLE", "-") },{ ACCEPT, std::make_pair("X", "-") },
-		{ FULLSCREEN, std::make_pair("START", "-") }
-	};
-	keyMaps.push_back(new ControlSystem(pscontroller));
-	keyMaps[keyMaps.size() - 1]->mapKey = keyMaps.size() - 1;
-
-	//create keyboard control system
-	ControlSystem keyboard;
-	//set basic keyboard controls
-	keyboard.controls = {
-		{LEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Unknown)},{RIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Unknown)},
-		{SVM, std::make_pair(sf::Keyboard::W, sf::Keyboard::Unknown)},{JUMP, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
-		{FIRE, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},{SHIELD, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
-		{ACTIVE, std::make_pair(sf::Keyboard::E, sf::Keyboard::Unknown)},{AIM, std::make_pair(sf::Keyboard::Unknown, sf::Keyboard::Unknown)},
-		{MENUUP, std::make_pair(sf::Keyboard::W, sf::Keyboard::Up)},{MENUDOWN, std::make_pair(sf::Keyboard::S, sf::Keyboard::Down)},
-		{MENULEFT, std::make_pair(sf::Keyboard::A, sf::Keyboard::Left)},{MENURIGHT, std::make_pair(sf::Keyboard::D, sf::Keyboard::Right)},
-		{BACK, std::make_pair(sf::Keyboard::Escape, sf::Keyboard::Unknown)},{ACCEPT, std::make_pair(sf::Keyboard::Space, sf::Keyboard::Unknown)},
-		{FULLSCREEN, std::make_pair(sf::Keyboard::F, sf::Keyboard::Unknown)}
-	};
-	keyboard.controlType = "keyboard";
-
-	keyboard.mouseControls = {
-		{LEFT, sf::Keyboard::Unknown},{RIGHT, sf::Keyboard::Unknown},
-		{SVM, sf::Keyboard::Unknown},{JUMP, sf::Keyboard::Unknown},
-		{FIRE, sf::Mouse::Left},{SHIELD, sf::Mouse::Right},
-		{ACTIVE, sf::Keyboard::Unknown},{AIM, sf::Keyboard::Unknown},
-		{MENUUP, sf::Keyboard::Unknown},{MENUDOWN, sf::Keyboard::Unknown },
-		{MENULEFT, sf::Keyboard::Unknown},{MENURIGHT, sf::Keyboard::Unknown},
-		{BACK, sf::Keyboard::Unknown},{ACCEPT, sf::Mouse::Left},
-		{FULLSCREEN, sf::Keyboard::Unknown}
-	};
-	keyboard.controlWords = {
-		{ LEFT, std::make_pair("A", "-") },{ RIGHT, std::make_pair("D", "-") },
-		{ SVM, std::make_pair("W", "-") },{ JUMP, std::make_pair("SPACE", "-") },
-		{ FIRE, std::make_pair("LEFT MOUSE", "-") },{ SHIELD, std::make_pair("RIGHT MOUSE", "-") },
-		{ ACTIVE, std::make_pair("E", "-") },{ AIM, std::make_pair("-", "-") },
-		{ MENUUP, std::make_pair("W", "UP ARROW") },{ MENUDOWN, std::make_pair("S", "DOWN ARROW") },
-		{ MENULEFT, std::make_pair("A", "LEFT ARROW") },{ MENURIGHT, std::make_pair("D", "RIGHT ARROW") },
-		{ BACK, std::make_pair("ESC", "-") },{ ACCEPT, std::make_pair("SPACE", "LEFT MOUSE") },
-		{ FULLSCREEN, std::make_pair("F", "-") }
-	};
-	keyMaps.push_back(new ControlSystem(keyboard));
-	keyMaps[keyMaps.size() - 1]->mapKey = keyMaps.size() - 1;
-
-}
-
 // method to remap controls
 bool InputManager::Remap(Action action, int primary, int key)
 {
@@ -288,20 +207,29 @@ bool InputManager::Remap(Action action, int primary, int key)
 			{
 				code = event.key.code;
 				kPressed = true;
+				printf("%d\n", event.key.control);
 			}
 
 			//check if text entered
 			if (event.type == sf::Event::TextEntered)
 			{
-				int unic = event.text.unicode;
-				//make character capital
-				if (unic >= 97 || unic <= 122)
+				if (event.text.unicode > 32 && event.text.unicode < 127)
 				{
-					unic -= 32;
+					int unic = event.text.unicode;
+					//make character capital
+					if (unic >= 97 && unic <= 122)
+					{
+						unic -= 32;
+					}
+					//exclude numbers
+					if (unic < 48 || unic > 57)
+					{
+						pressed = static_cast<char>(unic);
+					}
 				}
-				pressed = (char)(unic);
 			}
 
+			//get mouse press
 			if (!kPressed && event.type == sf::Event::MouseButtonPressed)
 			{
 				code = event.mouseButton.button;
@@ -335,7 +263,7 @@ bool InputManager::Remap(Action action, int primary, int key)
 		}
 	}
 	//set text if nothing in key entered
-	if (kPressed && (pressed.find_first_not_of(" \t\n\v\f\r") == std::string::npos || pressed == ""))
+	if ((code != -1 && kPressed) && (pressed.find_first_not_of(" \t\n\v\f\r") == std::string::npos || pressed == ""))
 	{
 		//set key sting to be that in keyboard map
 		pressed = keyboardControls.at((sf::Keyboard::Key)code);
@@ -364,48 +292,51 @@ bool InputManager::Remap(Action action, int primary, int key)
 		}
 
 	}
-	//set action to code
-	if (kPressed)
+	if (code != -1)
 	{
-		if (primary == 1)
+		//set action to code
+		if (kPressed)
 		{
-			keyMaps[key]->controls[action].first = code;
-			keyMaps[key]->controlWords[action].first = pressed;
+			if (primary == 1)
+			{
+				keyMaps[key]->controls[action].first = code;
+				keyMaps[key]->controlWords[action].first = pressed;
+			}
+			else
+			{
+				keyMaps[key]->controls[action].second = code;
+				keyMaps[key]->controlWords[action].second = pressed;
+			}
+			return true;
 		}
 		else
 		{
-			keyMaps[key]->controls[action].second = code;
-			keyMaps[key]->controlWords[action].second = pressed;
-		}
-		return true;
-	}
-	else if (code != -1)
-	{
-		if (primary == 1)
-		{
-			keyMaps[key]->mouseControls[action]= code;
-			keyMaps[key]->controlWords[action].first = pressed;
-			if (keyMaps[key]->controls[action].first != -1)
+			if (primary == 1)
 			{
-				keyMaps[key]->controls[action].first = -1;
+				keyMaps[key]->mouseControls[action] = code;
+				keyMaps[key]->controlWords[action].first = pressed;
+				if (keyMaps[key]->controls[action].first != -1)
+				{
+					keyMaps[key]->controls[action].first = -1;
+				}
 			}
-		}
-		else
-		{
-			keyMaps[key]->controls[action].second = code;
-			keyMaps[key]->controlWords[action].second = pressed;
-			if (keyMaps[key]->controls[action].second != -1)
+			else
 			{
-				keyMaps[key]->controls[action].second = -1;
+				keyMaps[key]->controls[action].second = code;
+				keyMaps[key]->controlWords[action].second = pressed;
+				if (keyMaps[key]->controls[action].second != -1)
+				{
+					keyMaps[key]->controls[action].second = -1;
+				}
 			}
+			return true;
 		}
-		return true;
 	}
 	return false;
 }
 
 //Update method
-void InputManager::Update(double dt)
+void InputManager::Update(const double &dt)
 {
 	//loop through actions
 	for (int i = 0; i < ACTIONSIZE; ++i)

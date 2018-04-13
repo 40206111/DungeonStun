@@ -15,6 +15,7 @@ public:
   virtual void UnLoad();
   virtual void Update(const double& dt);
   virtual void Render();
+  virtual void Reset(){}
   bool isLoaded() const;
   std::shared_ptr<Entity> makeEntity();
 

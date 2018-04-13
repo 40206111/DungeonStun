@@ -1,6 +1,7 @@
 #include "controlsScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
+#include "../Serializer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 using namespace sf;
@@ -35,7 +36,7 @@ void ControlsScene::Load()
 
 
 //Update method
-void ControlsScene::Update(double dt)
+void ControlsScene::Update(const double &dt)
 {
 	if (remap)
 	{	
@@ -51,6 +52,7 @@ void ControlsScene::Update(double dt)
 		}
 		if (!remap)
 		{
+			wait = true;
 			if (primary == 1)
 			{
 				GetElement(primary, action ).setString(player1->keyMaps[controlScheme]->controlWords[action].first);
@@ -66,6 +68,9 @@ void ControlsScene::Update(double dt)
 			}
 		}
 	}
+	else if (wait) {
+		wait = false;
+	}
 	else
 	{
 		TextGridScene::Update(dt);
@@ -79,12 +84,12 @@ void ControlsScene::Update(double dt)
 			GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 			for (int i = 1; i < player1->ACTIONSIZE; i++)
 			{
-				GetElement(0, i).setString(player1->Actions[i] + ": ");
+				GetElement(0, i).setString(player1->Actions[i] + ":");
 				GetElement(1, i).setString(player1->keyMaps[controlScheme]->controlWords[i].first);
 				GetElement(2, i).setString(player1->keyMaps[controlScheme]->controlWords[i].second);
 			}
 		}
-		if (current == 0 && (player1->GetButtonDown(player1->MENULEFT) || player1->GetAnaDown(player1->R)))
+		if (current == 0 && (player1->GetButtonDown(player1->MENULEFT) || player1->GetAnaDown(player1->L)))
 		{
 			controlScheme -= 1;
 			if (controlScheme < 0)
@@ -94,7 +99,7 @@ void ControlsScene::Update(double dt)
 			GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 			for (int i = 1; i < player1->ACTIONSIZE; i++)
 			{
-				GetElement(0, i).setString(player1->Actions[i] + ": ");
+				GetElement(0, i).setString(player1->Actions[i] + ":");
 				GetElement(1, i).setString(player1->keyMaps[controlScheme]->controlWords[i].first);
 				GetElement(2, i).setString(player1->keyMaps[controlScheme]->controlWords[i].second);
 			}
@@ -158,8 +163,13 @@ void ControlsScene::Reset()
 	GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 	for (int i = 1; i < player1->ACTIONSIZE; i++)
 	{
-		GetElement(0, i).setString(player1->Actions[i] + ": ");
+		GetElement(0, i).setString(player1->Actions[i] + ":");
 		GetElement(1, i).setString(player1->activeControls->controlWords[i].first);
 		GetElement(2, i).setString(player1->activeControls->controlWords[i].second);
 	}
+}
+
+void ControlsScene::UnLoad()
+{
+	Serializer::Serialize("Assets/save/player1.txt", *player1);
 }

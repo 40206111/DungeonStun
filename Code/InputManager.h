@@ -21,15 +21,15 @@ class InputManager
 {
 public:
 	//PS4 Enum
-	static enum PS4 { SQUARE, X, O, TRIANGLE, L1, R1, L2, R2, SELECT, START, LEFTA, RIGHTA, PS, TOUCH, NONE = -1};
+	enum PS4 { SQUARE, X, O, TRIANGLE, L1, R1, L2, R2, SELECT, START, LEFTA, RIGHTA, PS, TOUCH, NONE = -1};
 	//Dpad Enum
-	static enum Dir{ U, D, L, R};
+	enum Dir{ U, D, L, R};
 	//Enum for actions
-	static enum Action { LEFT, RIGHT, SVM, JUMP,
+	enum Action { LEFT, RIGHT, SVM, JUMP,
 						AIM, FIRE, SHIELD, ACTIVE,
 						MENUUP, MENUDOWN, MENULEFT, 
 						MENURIGHT, BACK, ACCEPT,
-						FULLSCREEN, ACTIONSIZE}; //action size shows how many actions there are in the enum
+						FULLSCREEN, MENU, ACTIONSIZE}; //action size shows how many actions there are in the enum
 
 	static const std::vector<std::string> Actions;
 
@@ -54,8 +54,8 @@ public:
 	bool mMoved = false;
 
 	//methods
-	void Update(double dt);
 	bool Remap(Action action, int primary, int key);
+	void Update(const double &dt);
 	bool GetDpadDir(unsigned int jid, Dir dir);
 	bool GetDigiAnalogue(unsigned int jid, Dir dir);
 	bool GetAnaDown(Dir dir);

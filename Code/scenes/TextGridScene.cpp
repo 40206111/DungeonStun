@@ -1,6 +1,6 @@
 #include "TextGridScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -110,7 +110,7 @@ void TextGridScene::SetRowCount(int value) {
 	else if (rows < value) {
 		Text basic = Text();
 		basic.setFont(font);
-		basic.setString("-");
+		basic.setString("<UNEXPECTED>");
 		int shortfall = value - rows;
 		for (vector<Text>* vec : texts) {
 			for (int i = 0; i < shortfall; ++i) {
@@ -167,7 +167,7 @@ bool TextGridScene::SetElement(int column, int row, const Text& text) {
 	return false;
 }
 //Update method
-void TextGridScene::Update(double dt)
+void TextGridScene::Update(const double &dt)
 {
 	// store current
 	int currWatch = current;

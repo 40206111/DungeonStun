@@ -1,6 +1,6 @@
 #include "homeScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -19,7 +19,7 @@ void HomeScene::Load()
 	text.setString("Press Any Button To Continue");
 }
 
-void HomeScene::Update(double dt)
+void HomeScene::Update(const double &dt)
 {
 	if (player1->activeControls != nullptr)
 	{
@@ -29,8 +29,6 @@ void HomeScene::Update(double dt)
 			text.setString("Controller Disconnected...");
 			text.setColor(sf::Color::Red);
 		}
-		//update input
-		player1->Update(dt);
 
 		//check if fullscreen
 		if (player1->GetButtonDown(player1->FULLSCREEN))

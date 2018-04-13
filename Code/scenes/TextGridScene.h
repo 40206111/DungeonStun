@@ -42,6 +42,6 @@ public:
 
 	TextGridScene() = default;
 	void Load() override;
-	void Update(double dt) override;
+	void Update(const double &dt) override;
 	void Render() override;
 };

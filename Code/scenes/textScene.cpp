@@ -1,6 +1,6 @@
 #include "textScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -8,11 +8,8 @@ using namespace std;
 ///ABSTRACT TEXT SCENE///
 
 //Update method
-void TextScene::Update(double dt)
+void TextScene::Update(const double &dt)
 {
-	//update input
-	player1->Update(dt);
-
 	//if keyboard controls allow mouse input
 	if (player1->activeControls->controlType == "keyboard")
 	{
