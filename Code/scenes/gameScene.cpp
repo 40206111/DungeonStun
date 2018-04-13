@@ -9,30 +9,10 @@
 using namespace std;
 using namespace sf;
 
-GameScene::GameScene(bool _showBehind) : showBehind(_showBehind) {}
-
 void GameScene::Load() {
-	// load level
-	float tileSize = 40.0f;
-	ls::loadLevelFile("./Assets/level_1.txt", tileSize);
-	float off = Engine::getWindowSize().y - (ls::getHeight() * tileSize);
-	ls::setOffset(Vector2f(0.0f, off));
-	// make level physics
-	// load player
-	player = makeEntity();
-	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
-	auto s = player->addComponent<ShapeComponent>();
-	Vector2f playerSize = Vector2f(20.0f, 30.0f);
-	s->setShape<RectangleShape>(playerSize);
-	s->getShape().setFillColor(Color::Blue);
-	s->getShape().setOrigin(playerSize);
-	player->addComponent<PlayerPhysicsComponent>(playerSize);
-	ents.list.push_back(player);
 }
 
 void GameScene::UnLoad() {
-	player.reset();
-	ls::unload();
 	Scene::UnLoad();
 }
 
@@ -40,22 +20,42 @@ void GameScene::Reset() {
 	// reset player position
 }
 
+void GameScene::ShowMenu() {
+	menuUp = true;
+	activeMenu = menuScene;
+}
+
+void GameScene::HideMenu() {
+	menuUp = false;
+	activeMenu = menuScene;
+}
+
 void GameScene::Update(const double &dt) {
 	if (menuUp) {
-		menuScene->Update(dt);
+		// menu update
+		if (player1->GetButtonDown(InputManager::MENU)) {
+			HideMenu();
+		}
+		else {
+			menuScene->Update(dt);
+		}
 	}
 	else {
 		// run EM update
 		Scene::Update(dt);
+		if (player1->GetButtonDown(InputManager::MENU)) {
+			ShowMenu();
+		}
 	}
 }
 
 void GameScene::Render() {
 	if (!menuUp || showBehind) {
-		// Run EM render
+		// render game if not paused, or boolean set
 		Scene::Render();
 	}
 	if (menuUp) {
+		// render menu on top
 		menuScene->Render();
 	}
 }

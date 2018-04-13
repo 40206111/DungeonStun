@@ -9,12 +9,14 @@ protected:
 	std::vector<Entity*> projectiles;
 	std::shared_ptr<Scene> activeMenu;
 	bool menuUp = false;
-	const bool showBehind = false;
+	bool showBehind = false;
 
 public:
 	GameScene() = default;
-	GameScene(bool);
 	~GameScene() = default;
+
+	void ShowMenu();
+	void HideMenu();
 
 	void Update(const double &dt) override;
 	void Render() override;
