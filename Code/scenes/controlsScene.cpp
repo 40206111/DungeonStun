@@ -65,7 +65,6 @@ void ControlsScene::Update(const double &dt)
 				player1->ChangeActive(controlScheme);
 				GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 			}
-			Serializer::Serialize("Assets/save/player1.txt", *player1);
 		}
 	}
 	else
@@ -141,7 +140,6 @@ void ControlsScene::Update(const double &dt)
 				else
 				{
 					player1->ChangeActive(controlScheme);
-					Serializer::Serialize("Assets/save/player1.txt", *player1);
 					GetElement(2, textAmount - 1).setColor(sf::Color::Green);
 				}
 			}
@@ -165,4 +163,9 @@ void ControlsScene::Reset()
 		GetElement(1, i).setString(player1->activeControls->controlWords[i].first);
 		GetElement(2, i).setString(player1->activeControls->controlWords[i].second);
 	}
+}
+
+void ControlsScene::UnLoad()
+{
+	Serializer::Serialize("Assets/save/player1.txt", *player1);
 }
