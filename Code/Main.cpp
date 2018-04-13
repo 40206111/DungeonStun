@@ -53,7 +53,6 @@ void Update()
 
 int main()
 {
-	Engine::Start(1920, 1080, "Dungeon Stun", &gameScene);
 	RenderWindow window(VideoMode(Renderer::resolutions[Renderer::currentRes].first, Renderer::resolutions[Renderer::currentRes].second), "Workin' 9 to Die");
 	Renderer::Initialise(window);
 	Load();
@@ -65,5 +64,6 @@ int main()
 		Render();
 		window.display();
 	}
+	Engine::Start(1920, 1080, "Dungeon Stun", &gameScene);
 	return 0;
 }

@@ -7,6 +7,7 @@
 #include <future>
 #include <iostream>
 #include <stdexcept>
+#include "../Code/Game.h"
 
 using namespace sf;
 using namespace std;
@@ -66,6 +67,7 @@ void Engine::Update() {
 		Loading_Update(dt, _activeScene);
 	}
 	else if (_activeScene != nullptr) {
+		player1->Update(dt);
 		Physics::Update(dt);
 		_activeScene->Update(dt);
 	}
