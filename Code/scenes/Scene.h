@@ -1,6 +1,6 @@
 #pragma once
 #include "engine.h"
-#include "../InputManager.h"
+#include "InputManager.h"
 #include <vector>
 #include <memory>
 
