@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "scenes\exampleGameScene.h"
 #include <memory>
+#include "scenes\gameScene.h"
 
 extern sf::Font font;
 extern std::shared_ptr<InputManager> player1;
@@ -13,3 +14,5 @@ extern std::shared_ptr<Scene> graphicsScene;
 extern std::shared_ptr<Scene> controlsScene;
 extern std::shared_ptr<Scene> activeScene;
 extern ExampleGameScene egScene;
+
+extern bool menuUp;

@@ -68,7 +68,9 @@ void Engine::Update() {
 	}
 	else if (_activeScene != nullptr) {
 		player1->Update(dt);
-		Physics::Update(dt);
+		if (!menuUp) {
+			Physics::Update(dt);
+		}
 		_activeScene->Update(dt);
 	}
 }

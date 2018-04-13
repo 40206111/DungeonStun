@@ -11,7 +11,7 @@ using namespace std;
 using namespace sf;
 
 void GameScene::Load() {
-
+	menuUp = false;
 	screen = makeEntity();
 	screen->setPosition(Vector2f(0, 0));
 	auto s = screen->addComponent<ShapeComponent>();

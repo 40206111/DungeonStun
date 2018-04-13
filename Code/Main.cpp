@@ -22,6 +22,7 @@ shared_ptr<Scene> graphicsScene;
 shared_ptr<Scene> activeScene;
 shared_ptr<Scene> controlsScene;
 ExampleGameScene egScene;
+bool menuUp = false;
 
 void Render()
 {
