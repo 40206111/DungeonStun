@@ -29,7 +29,7 @@ public:
 						AIM, FIRE, SHIELD, ACTIVE,
 						MENUUP, MENUDOWN, MENULEFT, 
 						MENURIGHT, BACK, ACCEPT,
-						FULLSCREEN, ACTIONSIZE}; //action size shows how many actions there are in the enum
+						FULLSCREEN, MENU, ACTIONSIZE}; //action size shows how many actions there are in the enum
 
 	static const std::vector<std::string> Actions;
 
