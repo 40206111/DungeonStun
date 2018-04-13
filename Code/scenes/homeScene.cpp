@@ -29,8 +29,6 @@ void HomeScene::Update(const double &dt)
 			text.setString("Controller Disconnected...");
 			text.setColor(sf::Color::Red);
 		}
-		//update input
-		player1->Update(dt);
 
 		//check if fullscreen
 		if (player1->GetButtonDown(player1->FULLSCREEN))

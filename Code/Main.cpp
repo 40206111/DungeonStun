@@ -48,6 +48,9 @@ void Update()
 {
 	static Clock clock;
 	float dt = clock.restart().asSeconds();
+	if (activeScene != homeScene) {
+		player1->Update(dt);
+	}
 	activeScene->Update(dt);
 }
 

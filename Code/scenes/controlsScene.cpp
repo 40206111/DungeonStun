@@ -52,6 +52,7 @@ void ControlsScene::Update(const double &dt)
 		}
 		if (!remap)
 		{
+			wait = true;
 			if (primary == 1)
 			{
 				GetElement(primary, action ).setString(player1->keyMaps[controlScheme]->controlWords[action].first);
@@ -66,6 +67,9 @@ void ControlsScene::Update(const double &dt)
 				GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 			}
 		}
+	}
+	else if (wait) {
+		wait = false;
 	}
 	else
 	{
@@ -85,7 +89,7 @@ void ControlsScene::Update(const double &dt)
 				GetElement(2, i).setString(player1->keyMaps[controlScheme]->controlWords[i].second);
 			}
 		}
-		if (current == 0 && (player1->GetButtonDown(player1->MENULEFT) || player1->GetAnaDown(player1->R)))
+		if (current == 0 && (player1->GetButtonDown(player1->MENULEFT) || player1->GetAnaDown(player1->L)))
 		{
 			controlScheme -= 1;
 			if (controlScheme < 0)

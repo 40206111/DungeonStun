@@ -10,9 +10,6 @@ using namespace std;
 //Update method
 void TextScene::Update(const double &dt)
 {
-	//update input
-	player1->Update(dt);
-
 	//if keyboard controls allow mouse input
 	if (player1->activeControls->controlType == "keyboard")
 	{

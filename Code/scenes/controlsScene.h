@@ -7,6 +7,7 @@ class ControlsScene : public TextGridScene
 private:
 	int controlScheme;
 	bool remap = false;
+	bool wait = false;
 	int action = -1;
 	int primary = 1;
 	bool newSys = false;
