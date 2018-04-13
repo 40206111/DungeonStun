@@ -21,11 +21,11 @@ class InputManager
 {
 public:
 	//PS4 Enum
-	static enum PS4 { SQUARE, X, O, TRIANGLE, L1, R1, L2, R2, SELECT, START, LEFTA, RIGHTA, PS, TOUCH, NONE = -1};
+	enum PS4 { SQUARE, X, O, TRIANGLE, L1, R1, L2, R2, SELECT, START, LEFTA, RIGHTA, PS, TOUCH, NONE = -1};
 	//Dpad Enum
-	static enum Dir{ U, D, L, R};
+	enum Dir{ U, D, L, R};
 	//Enum for actions
-	static enum Action { LEFT, RIGHT, SVM, JUMP,
+	enum Action { LEFT, RIGHT, SVM, JUMP,
 						AIM, FIRE, SHIELD, ACTIVE,
 						MENUUP, MENUDOWN, MENULEFT, 
 						MENURIGHT, BACK, ACCEPT,
