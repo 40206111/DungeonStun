@@ -7,6 +7,7 @@
 #include <future>
 #include <iostream>
 #include <stdexcept>
+#include "../Code/Game.h"
 
 using namespace sf;
 using namespace std;
@@ -36,7 +37,7 @@ void Loading_render() {
 	octagon.setRotation(loadingspinner);
 	octagon.setPosition(Vcast<float>(Engine::getWindowSize()) * .5f);
 	octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f*loadingTime)));
-	static Text t("Loading", *Resources::get<sf::Font>("RobotoMono-Regular.ttf"));
+	static Text t("Loading", *Resources::get<sf::Font>("rm_typerighter_old.ttf"));
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f*loadingTime)));
 	t.setPosition(Vcast<float>(Engine::getWindowSize()) * Vector2f(0.4f, 0.3f));
 	Renderer::Queue(&t);
@@ -66,6 +67,7 @@ void Engine::Update() {
 		Loading_Update(dt, _activeScene);
 	}
 	else if (_activeScene != nullptr) {
+		player1->Update(dt);
 		Physics::Update(dt);
 		_activeScene->Update(dt);
 	}
