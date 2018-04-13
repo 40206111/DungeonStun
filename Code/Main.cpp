@@ -69,6 +69,6 @@ int main()
 		Render();
 		window.display();
 	}
-	Engine::Start(1920, 1080, "Dungeon Stun", &gameScene);
+	Engine::Start(Renderer::resolutions[Renderer::currentRes].first, Renderer::resolutions[Renderer::currentRes].second, "Dungeon Stun", &gameScene);
 	return 0;
 }
