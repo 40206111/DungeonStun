@@ -5,6 +5,7 @@
 #include <sstream>
 using namespace std;
 
+//Convert string to int
 int ConvertToInt(string s)
 {
 	stringstream ss(s);
@@ -13,6 +14,7 @@ int ConvertToInt(string s)
 	return output;
 }
 
+//Serialize file
 void Serializer::Serialize(string file, InputManager im)
 {
 	ofstream ofs(file);
@@ -62,16 +64,19 @@ void Serializer::Serialize(string file, InputManager im)
 	ofs.close();
 }
 
+//DeSerialize file
 void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 {
 	string line;
 	ifstream ifs(file);
 	int counter = 0;
+	//Get file line
 	getline(ifs, line);
 	if (line == "{")
 	{
 		counter += 1;
 	}
+	//KEYMAPS
 	while (counter > 0)
 	{
 		getline(ifs, line);
@@ -86,6 +91,7 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 		if (counter > 1)
 		{
 			im->keyMaps.push_back(new ControlSystem());
+			//CONTROLS
 			while (counter > 1)
 			{
 				getline(ifs, line);
@@ -99,6 +105,7 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 				}
 				else
 				{
+					//seperate by comma
 					stringstream ss(line);
 					string action;
 					getline(ss, action, ',');
@@ -106,12 +113,14 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 					getline(ss, first, ',');
 					string second;
 					getline(ss, second, ',');
-
+					//map controls
 					im->keyMaps[im->keyMaps.size() - 1]->controls[ConvertToInt(action)] = std::make_pair(ConvertToInt(first), ConvertToInt(second));
 				}
 			}
+			//CONTROL TYPE
 			getline(ifs, line);
 			im->keyMaps[im->keyMaps.size() - 1]->controlType = line;
+			//MAP KEY
 			getline(ifs, line);
 			im->keyMaps[im->keyMaps.size() - 1]->mapKey = ConvertToInt(line);
 			getline(ifs, line);
@@ -123,6 +132,7 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 			{
 				counter -= 1;
 			}
+			//MOUSE CONTROLS
 			while (counter > 1)
 			{
 				getline(ifs, line);
@@ -136,12 +146,13 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 				}
 				else
 				{
+					//Seperate by comma
 					stringstream ss(line);
 					string action;
 					getline(ss, action, ',');
 					string con;
 					getline(ss, con, ',');
-
+					//Map mouse controls
 					im->keyMaps[im->keyMaps.size() - 1]->mouseControls[(unsigned int)ConvertToInt(action)] = ConvertToInt(con);
 				}
 			}
@@ -154,6 +165,7 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 			{
 				counter -= 1;
 			}
+			//CONTROL WORDS
 			while (counter > 1)
 			{
 				getline(ifs, line);
@@ -167,6 +179,7 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 				}
 				else
 				{
+					//seperate by comma
 					stringstream ss(line);
 					string action;
 					getline(ss, action, ',');
@@ -174,15 +187,17 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 					getline(ss, first, ',');
 					string second;
 					getline(ss, second, ',');
-
+					//map control words
 					im->keyMaps[im->keyMaps.size() - 1]->controlWords[(unsigned int)ConvertToInt(action)] = std::make_pair(first, second);
 				}
 			}
 		}
 
 	}
+	//PRIMARY PS4
 	getline(ifs, line);
 	im->primaryPS4 = ConvertToInt(line);
+	//PRIMARY KEYBOARD
 	getline(ifs, line);
 	im->primaryKeyboard = ConvertToInt(line);
 }

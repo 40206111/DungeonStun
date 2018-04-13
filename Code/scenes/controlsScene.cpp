@@ -141,6 +141,7 @@ void ControlsScene::Update(const double &dt)
 				else
 				{
 					player1->ChangeActive(controlScheme);
+					Serializer::Serialize("Assets/save/player1.txt", *player1);
 					GetElement(2, textAmount - 1).setColor(sf::Color::Green);
 				}
 			}
