@@ -1,6 +1,7 @@
 #include "controlsScene.h"
 #include "../Game.h"
 #include "system_renderer.h"
+#include "../Serializer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 using namespace sf;
@@ -64,6 +65,7 @@ void ControlsScene::Update(const double &dt)
 				player1->ChangeActive(controlScheme);
 				GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 			}
+			Serializer::Serialize("Assets/save/player1.txt", *player1);
 		}
 	}
 	else

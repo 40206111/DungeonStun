@@ -7,6 +7,7 @@
 #include "scenes\graphicsScene.h"
 #include "scenes\controlsScene.h"
 #include <iostream>
+#include "Serializer.h"
 using namespace sf;
 using namespace std;
 
@@ -29,6 +30,7 @@ void Load()
 {	
 	font.loadFromFile("Assets/font/rm_typerighter_old.ttf");
 	player1.reset(new InputManager());
+	Serializer::DeSerialize("Assets/save/player1.txt", player1);
 	homeScene.reset(new HomeScene());
 	menuScene.reset(new MenuScene());
 	settingsScene.reset(new SettingsScene());

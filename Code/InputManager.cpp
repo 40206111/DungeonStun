@@ -120,7 +120,7 @@ const std::vector<string> InputManager::Actions{ "Left", "Right", "SVM", "Jump",
 //Input manager constructor
 InputManager::InputManager()
 {
-	InputManager::CreateControlers();
+	//InputManager::CreateControlers();
 
 	/// DEBUG///
 	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
