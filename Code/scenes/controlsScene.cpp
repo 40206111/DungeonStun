@@ -1,7 +1,7 @@
 #include "controlsScene.h"
 #include "../Game.h"
 #include "system_renderer.h"
-#include "../Serializer.h"
+#include "Serializer.h"
 #include <SFML/Graphics.hpp>
 #include <string>
 using namespace sf;

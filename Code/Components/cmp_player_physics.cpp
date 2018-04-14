@@ -3,7 +3,7 @@
 #include <LevelSystem.h>
 #include <SFML/Window/Keyboard.hpp>
 #include "../game.h"
-#include "../InputManager.h"
+#include "InputManager.h"
 
 using namespace std;
 using namespace sf;

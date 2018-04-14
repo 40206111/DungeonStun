@@ -200,4 +200,6 @@ void Serializer::DeSerialize(string file, std::shared_ptr<InputManager> im)
 	//PRIMARY KEYBOARD
 	getline(ifs, line);
 	im->primaryKeyboard = ConvertToInt(line);
+
+	ifs.close();
 }
