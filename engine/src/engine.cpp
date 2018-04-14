@@ -181,6 +181,14 @@ void Engine::ChangeMenu(shared_ptr<Scene> m) {
 	}
 }
 
+void Engine::Resize()
+{
+	_activeMenu->ReSize();
+	_activeScene->ReSize();
+}
+
+
+///SCENE///
 void Scene::Update(const double& dt) { ents.Update(dt); }
 
 void Scene::Render() { 

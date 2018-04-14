@@ -19,11 +19,11 @@ void GraphicsScene::Load()
 			text.push_back(sf::Text());
 			text[i].setFont(font);
 		}
-		text[2].setString("Back");
 		textAmount = text.size();
 		previousScene = settingsScene;
 		loaded = true;
 	}
+	ReSize();
 	fullscreen = Renderer::GetFullscreen();
 	shownRes = Renderer::currentRes;
 	text[0].setString("Resolution: " + to_string(Renderer::resolutions[Renderer::currentRes].first) + "x" + to_string(Renderer::resolutions[Renderer::currentRes].second));
@@ -37,6 +37,7 @@ void GraphicsScene::Load()
 	{
 		text[1].setString("Fullscreen: false");
 	}
+	text[2].setString("Back");
 }
 
 //Update method
@@ -90,6 +91,7 @@ void GraphicsScene::Update(const double &dt)
 		{
 		case 0:
 			Renderer::setResolution(shownRes);
+			Engine::Resize();
 			break;
 		case 1:
 			Renderer::ToggleFullscreen();

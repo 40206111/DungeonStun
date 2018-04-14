@@ -41,7 +41,7 @@ public:
   static sf::Vector2u getWindowSize();
   static void setVsync(bool b);
   static bool ShowingMenu() { return menuUp; }
-
+  static void Resize();
 private:
   static std::shared_ptr<Scene> _activeScene;
   static std::shared_ptr<Scene> _activeMenu;
