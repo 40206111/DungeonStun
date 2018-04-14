@@ -1,5 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#ifdef SOUND
+#include <SFML/Audio/Sound.hpp>
+
+#endif // SOUND
 
 class AssetLoader
 {
@@ -19,6 +23,19 @@ public:
 		DOUBLE_P_LONG, DOUBLE_P_lEFT, DOUBLE_P_MIDDLE, DOUBLE_P_RIGHT,
 		MECHANICAL_PLATFORM, BRICKS
 	};
+
+	enum sfx {
+		COLLECT, COLLECT2,
+		DAMAGE, GAME_OVER, HEAL,
+		JUMP, JUMP2, JUMP3, 
+		TASER, TASER2,
+		UPGRADE,
+		WOOSH
+	};
 	static std::vector<sf::Sprite> sprites;
+#ifdef SOUND
+	static std::vector<sf::SoundBuffer> sounds;
+#endif // SOUND
+
 	static void LoadAssets();
 };

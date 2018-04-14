@@ -184,4 +184,18 @@ void AssetLoader::LoadAssets()
 	//bricks
 	rect = IntRect(8, 344, 117, 46);
 	sprites.push_back(Sprite(*enviroment, rect));
+#ifdef SOUND
+	sounds.push_back(Resources::get<SoundBuffer>("collection.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("collect2.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("damage.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("game over.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("Heal.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("jump.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("jump2.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("jump3.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("taser.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("taser2.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("upgrade.wav"));
+	sounds.push_back(Resources::get<SoundBuffer>("woosh.wav"));
+#endif // SOUND
 }
