@@ -12,7 +12,7 @@ class LevelSystem {
 public:
   static void loadLevelFile(const std::string&, float tileSize = 100.0f);
   static void unload();
-  static void render(sf::RenderWindow& window);
+  static void render();
 
   typedef unsigned char Tile;
 
@@ -55,9 +55,11 @@ protected:
   static size_t _height;
   static sf::Vector2f _offset;
 
-  static std::vector<std::unique_ptr<sf::RectangleShape>> _sprites;
+  static std::vector<std::shared_ptr<sf::Sprite>> _sprites;
 
-  static void buildSprites(bool optimise = true);
+  //static void buildSprites(bool optimise = true);
+
+  static void buildTextureSprites();
 
   static float _tileSize; // for rendering
   static std::map<Tile, sf::Color> _colours;
