@@ -14,5 +14,3 @@ extern std::shared_ptr<Scene> graphicsScene;
 extern std::shared_ptr<Scene> controlsScene;
 extern std::shared_ptr<Scene> activeScene;
 extern ExampleGameScene egScene;
-
-extern bool menuUp;

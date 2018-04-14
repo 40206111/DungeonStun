@@ -15,8 +15,7 @@ public:
 	GameScene() = default;
 	~GameScene() = default;
 
-	void ShowMenu();
-	void HideMenu();
+	bool RenderBehind() { return showBehind; }
 
 	void Update(const double &dt) override;
 	void Render() override;

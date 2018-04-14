@@ -35,13 +35,17 @@ public:
   static void Start(unsigned int width, unsigned int height,
                     const std::string& gameName, Scene* scn);
   static void ChangeScene(Scene*);
+  static void ChangeMenu(Scene*);
   static sf::RenderWindow& GetWindow();
   static sf::Vector2u getWindowSize();
   static void setVsync(bool b);
+  static bool ShowingMenu() { return menuUp; }
 
 private:
   static Scene* _activeScene;
+  static Scene* _activeMenu;
   static std::string _gameName;
+  static bool menuUp;
   static void Update();
   static void Render(sf::RenderWindow& window);
 };

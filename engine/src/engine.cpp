@@ -12,7 +12,9 @@
 using namespace sf;
 using namespace std;
 Scene* Engine::_activeScene = nullptr;
+Scene* Engine::_activeMenu = nullptr;
 std::string Engine::_gameName;
+bool Engine::menuUp = false;
 
 static bool loading = false;
 static float loadingspinner = 0.f;
@@ -67,11 +69,23 @@ void Engine::Update() {
 		Loading_Update(dt, _activeScene);
 	}
 	else if (_activeScene != nullptr) {
+		// Update the inputs for player 1
 		player1->Update(dt);
+		// If no menu is open
 		if (!menuUp) {
+			// Update physics engine
 			Physics::Update(dt);
+			// Update active scene
+			_activeScene->Update(dt);
 		}
-		_activeScene->Update(dt);
+		else {
+			// Update active menu screen
+			_activeMenu->Update(dt);
+		}
+		// If the player pauses open the menu
+		if (player1->GetButtonDown(InputManager::MENU) && !menuUp) {
+			ChangeMenu(&(*menuScene));
+		}
 	}
 }
 
@@ -81,6 +95,9 @@ void Engine::Render(RenderWindow& window) {
 	}
 	else if (_activeScene != nullptr) {
 		_activeScene->Render();
+		if (menuUp) {
+			_activeMenu->Render();
+		}
 	}
 
 	Renderer::Render();
@@ -138,6 +155,25 @@ void Engine::ChangeScene(Scene* s) {
 		loadingTime = 0;
 		_activeScene->LoadAsync();
 		loading = true;
+	}
+}
+
+void Engine::ChangeMenu(Scene* m) {
+	cout << "Eng: changing scene: " << m << endl;
+	Scene* old = _activeMenu;
+	_activeMenu = m;
+
+	if (old != nullptr) {
+		old->UnLoad();
+	}
+	else {
+		menuUp = true;
+	}
+	if (m != nullptr) {
+		_activeMenu->Load();
+	}
+	else {
+		menuUp = false;
 	}
 }
 
