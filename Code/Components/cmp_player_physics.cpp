@@ -42,7 +42,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 	}
 	// If svm button toggle svm state
 	if (player1->GetButtonDown(InputManager::SVM)) {
-		_inSVM = !_inSVM;
+		_inSVM = true;
 		if (_inSVM) {
 			// in svm -> no gravity
 			this->_body->SetGravityScale(0);
@@ -68,7 +68,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		}
 		else {
 			// Dampen X axis movement
-			dampen({ 0.9f, 0.90f });
+			dampen({ 0.9f, 0.999f });
 		}
 	}
 	// If in svm behave differently
@@ -79,7 +79,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		}
 		if (player1->GetButtonDown(InputManager::RIGHT)) {
 			impulse({ (float)(dt * _groundspeed), 0 });
-			_inSVM = false;
+			//_inSVM = false;
 		}
 		if (player1->GetButtonDown(InputManager::MENUUP)) {
 			impulse({ 0, -(float)(dt * _groundspeed) });
