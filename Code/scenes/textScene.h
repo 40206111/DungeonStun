@@ -17,7 +17,9 @@ protected:
 	virtual void ChangeCurrent(int);
 public:
 	TextScene() = default;
+	void Load() override;
 	void Update(const double &dt) override;
 	void Render() override;
 	void UnLoad() override;
+	void ReSize() override;
 };

@@ -11,8 +11,8 @@
 
 using namespace sf;
 using namespace std;
-Scene* Engine::_activeScene = nullptr;
-Scene* Engine::_activeMenu = nullptr;
+shared_ptr<Scene> Engine::_activeScene = nullptr;
+shared_ptr<Scene> Engine::_activeMenu = nullptr;
 std::string Engine::_gameName;
 bool Engine::menuUp = false;
 
@@ -21,7 +21,7 @@ static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
 
-void Loading_Update(float dt, const Scene* const scn) {
+void Loading_Update(float dt, const shared_ptr<Scene> const scn) {
 	//  cout << "Eng: Loading Screen\n";
 	if (scn->isLoaded()) {
 		cout << "Eng: Exiting Loading Screen\n";
@@ -69,8 +69,11 @@ void Engine::Update() {
 		Loading_Update(dt, _activeScene);
 	}
 	else if (_activeScene != nullptr) {
-		// Update the inputs for player 1
-		player1->Update(dt);
+		if (player1->activeControls != nullptr)
+		{
+			// Update the inputs for player 1
+			player1->Update(dt);
+		}
 		// If no menu is open
 		if (!menuUp) {
 			// Update physics engine
@@ -78,13 +81,21 @@ void Engine::Update() {
 			// Update active scene
 			_activeScene->Update(dt);
 			// If the player pauses open the menu
-			if (player1->GetButtonDown(InputManager::MENU)) {
-				ChangeMenu(&(*menuScene));
+			if (player1->activeControls != nullptr && player1->GetButtonDown(InputManager::MENU)) {
+				ChangeMenu(menuScene);
 			}
 		}
 		else {
 			// Update active menu screen
 			_activeMenu->Update(dt);
+		}
+		//check if fullscreen
+		if (player1->activeControls != nullptr && player1->GetButtonDown(player1->FULLSCREEN))
+		{
+			Renderer::ToggleFullscreen();
+			if (_activeMenu != nullptr)
+				_activeMenu->ReSize();
+			_activeScene->ReSize();
 		}
 	}
 }
@@ -104,7 +115,7 @@ void Engine::Render(RenderWindow& window) {
 }
 
 void Engine::Start(unsigned int width, unsigned int height,
-	const std::string& gameName, Scene* scn) {
+	const std::string& gameName, shared_ptr<Scene> scn) {
 	RenderWindow window(VideoMode(width, height), gameName);
 	_gameName = gameName;
 	_window = &window;
@@ -112,13 +123,6 @@ void Engine::Start(unsigned int width, unsigned int height,
 	Physics::initialise();
 	ChangeScene(scn);
 	while (window.isOpen()) {
-		Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == Event::Closed) {
-				window.close();
-			}
-		}
-
 		window.clear();
 		Update();
 		Render(window);
@@ -141,7 +145,7 @@ std::shared_ptr<Entity> Scene::makeEntity() {
 
 void Engine::setVsync(bool b) { _window->setVerticalSyncEnabled(b); }
 
-void Engine::ChangeScene(Scene* s) {
+void Engine::ChangeScene(shared_ptr<Scene> s) {
 	cout << "Eng: changing scene: " << s << endl;
 	auto old = _activeScene;
 	_activeScene = s;
@@ -158,9 +162,9 @@ void Engine::ChangeScene(Scene* s) {
 	}
 }
 
-void Engine::ChangeMenu(Scene* m) {
+void Engine::ChangeMenu(shared_ptr<Scene> m) {
 	cout << "Eng: changing scene: " << m << endl;
-	Scene* old = _activeMenu;
+	shared_ptr<Scene> old = _activeMenu;
 	_activeMenu = m;
 
 	if (old != nullptr) {
@@ -179,7 +183,8 @@ void Engine::ChangeMenu(Scene* m) {
 
 void Scene::Update(const double& dt) { ents.Update(dt); }
 
-void Scene::Render() { ents.render(); }
+void Scene::Render() { 
+	ents.render(); }
 
 bool Scene::isLoaded() const {
 	{

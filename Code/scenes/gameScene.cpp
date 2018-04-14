@@ -13,6 +13,7 @@ using namespace sf;
 void GameScene::Load() {
 	screen = makeEntity();
 	screen->setPosition(Vector2f(0, 0));
+	screen->setVisible(false);
 	auto s = screen->addComponent<ShapeComponent>();
 	s->setShape<RectangleShape>(Vector2f(Renderer::GetWindow().getSize()));
 	s->getShape().setFillColor(Color(0, 0, 0, 200));
@@ -33,10 +34,11 @@ void GameScene::Update(const double &dt) {
 
 void GameScene::Render() {
 	if (!Engine::ShowingMenu()) {
+		screen->setVisible(false);
 		Scene::Render();
 	}
 	else if (showBehind) {
+		screen->setVisible(true);
 		Scene::Render();
-		screen->render();
 	}
 }

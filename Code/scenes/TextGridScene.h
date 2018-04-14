@@ -45,4 +45,5 @@ public:
 	void Update(const double &dt) override;
 	void Render() override;
 	void UnLoad() override;
+	void ReSize() override;
 };

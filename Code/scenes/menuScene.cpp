@@ -10,18 +10,23 @@ using namespace std;
 //Load method
 void MenuScene::Load()
 {
-	//Load Text
-	for (int i = 0; i < 3; i++)
+	if (!loaded)
 	{
-		text.push_back(sf::Text());
-		text[i].setFont(font);
+		//Load Text
+		for (int i = 0; i < 3; i++)
+		{
+			text.push_back(sf::Text());
+			text[i].setFont(font);
+		}
+		text[0].setString("Play");
+		text[1].setString("Settings");
+		text[2].setString("Exit");
+		textAmount = text.size();
+		previousScene = nullptr;
 	}
-	text[0].setString("Play");
 	text[0].setColor(sf::Color::Yellow);
-	text[1].setString("Settings");
-	text[2].setString("Exit");
-	textAmount = text.size();
-	previousScene = nullptr;
+	TextScene::Load();
+	loaded = true;
 }
 
 void MenuScene::Update(const double &dt)
@@ -37,8 +42,7 @@ void MenuScene::Update(const double &dt)
 			break;
 		case 1:
 			ChangeCurrent(0);
-			activeScene = settingsScene;
-			Engine::ChangeMenu(&(*settingsScene));
+			Engine::ChangeMenu(settingsScene);
 			break;
 		case 2:
 			Renderer::Shutdown();
