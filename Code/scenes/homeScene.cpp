@@ -1,6 +1,7 @@
 #include "homeScene.h"
 #include "../Game.h"
 #include "system_renderer.h"
+#include "..\Components\cmp_sprite.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
@@ -10,6 +11,13 @@ using namespace std;
 //Load method
 void HomeScene::Load()
 {
+	//Make screen
+	screen = makeEntity();
+	screen->setVisible(false);
+	screen->setPosition(Vector2f(0, 0));
+	auto s = screen->addComponent<ShapeComponent>();
+	s->setShape<RectangleShape>(Vector2f(Renderer::GetWindow().getSize()));
+	s->getShape().setFillColor(Color(0, 0, 0, 200));
 	//load background
 	if (!homescreen.loadFromFile("Assets/imgs/9 to die home.png")) {}
 	background = sf::Sprite(homescreen);
@@ -17,24 +25,16 @@ void HomeScene::Load()
 	text = sf::Text();
 	text.setFont(font);
 	text.setString("Press Any Button To Continue");
+
+	ReSize();
+
+	showBehind = true;
 }
 
 void HomeScene::Update(const double &dt)
 {
 	if (player1->activeControls != nullptr)
 	{
-		//check if controller disconnected
-		if (!sf::Joystick::isConnected(player1->controlerid) && player1->activeControls->controlType == "PS4")
-		{
-			text.setString("Controller Disconnected...");
-			text.setColor(sf::Color::Red);
-		}
-
-		//check if fullscreen
-		if (player1->GetButtonDown(player1->FULLSCREEN))
-		{
-			Renderer::ToggleFullscreen();
-		}
 		//Exit
 		if (player1->GetButtonDown(player1->BACK))
 		{
@@ -47,12 +47,6 @@ void HomeScene::Update(const double &dt)
 	Event event;
 	while (Renderer::GetWindow().pollEvent(event))
 	{
-		//if Controller connected
-		if (event.type == sf::Event::JoystickConnected)
-		{
-			text.setString("Press Any Button To Continue");
-			text.setColor(sf::Color::White);
-		}
 		//if window closed
 		if (event.type == Event::Closed)
 		{
@@ -94,7 +88,7 @@ void HomeScene::Update(const double &dt)
 			if (testVal != player1->activeControls->controls[player1->FULLSCREEN].first
 				|| testVal != player1->activeControls->controls[player1->FULLSCREEN].second)
 			{
-				activeScene = menuScene;
+				Engine::ChangeMenu(menuScene);
 			}
 		}
 	}
@@ -103,17 +97,39 @@ void HomeScene::Update(const double &dt)
 //Render method
 void HomeScene::Render()
 {
+	//Render Background
+	Renderer::Queue(&background);
+
+	if (!Engine::ShowingMenu()) {
+		//render text
+		Renderer::Queue(&text);
+		screen->setVisible(false);
+		Scene::Render();
+	}
+	else if (showBehind) {
+		screen->setVisible(true);
+		Scene::Render();
+	}
+}
+
+void HomeScene::UnLoad()
+{
+
+}
+
+void HomeScene::ReSize()
+{
 	//make background fit screen
 	background.setScale(
 		Renderer::GetWindow().getSize().x / background.getLocalBounds().width,
 		Renderer::GetWindow().getSize().y / background.getLocalBounds().height);
-	//Render Background
-	Renderer::Queue(&background);
 
 	//make text fit screen
 	text.setCharacterSize(Renderer::GetWindow().getSize().x / 10);
 	text.setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text.getLocalBounds().width * 0.5f),
 		Renderer::GetWindow().getSize().y - (text.getLocalBounds().height * 4));
-	//render text
-	Renderer::Queue(&text);
+
+	auto s = screen->get_components<ShapeComponent>()[0];
+	s->setShape<RectangleShape>(Vector2f(Renderer::GetWindow().getSize()));
+	s->getShape().setFillColor(Color(0, 0, 0, 200));
 }
