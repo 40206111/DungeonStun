@@ -95,6 +95,7 @@ void GraphicsScene::Update(const double &dt)
 			break;
 		case 1:
 			Renderer::ToggleFullscreen();
+			Engine::Resize();
 			break;
 		case 2:
 			ChangeCurrent(0);
