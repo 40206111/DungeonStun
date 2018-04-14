@@ -9,6 +9,7 @@
 #include "scenes\gameWorkshop.h"
 #include <iostream>
 #include "Serializer.h"
+#include "AssetLoader.h"
 using namespace sf;
 using namespace std;
 
@@ -30,6 +31,7 @@ void Render()
 
 void Load()
 {	
+	AssetLoader::LoadAssets();
 	font.loadFromFile("Assets/font/rm_typerighter_old.ttf");
 	player1.reset(new InputManager());
 	Serializer::DeSerialize("Assets/save/player1.txt", player1);
