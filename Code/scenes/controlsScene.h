@@ -17,5 +17,4 @@ public:
 	void Render() override;
 	void Load() override;
 	void UnLoad() override;
-	void Reset() override;
 };

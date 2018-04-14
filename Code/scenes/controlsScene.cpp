@@ -12,26 +12,38 @@ using namespace std;
 //Load method
 void ControlsScene::Load()
 {
-	//Load Text
-
-	text.push_back(sf::Text());
-	text[0].setFont(font);
+	if (!loaded)
+	{
+		//Load Text
+		text.push_back(sf::Text());
+		text[0].setFont(font);
+		for (int i = 1; i < player1->ACTIONSIZE; i++)
+		{
+			text.push_back(sf::Text());
+			text[i].setFont(font);
+		}
+		text.push_back(sf::Text());
+		textAmount = text.size();
+		text[textAmount - 1].setFont(font);
+		previousScene = settingsScene;
+		TextGridScene::Load();
+		SetColumnCount(3);
+		SpreadRatios(columns, columnRatios);
+		SpreadRatios(rows, rowRatios);
+		GetElement(0, textAmount - 1).setString("Back");
+		GetElement(2, textAmount - 1).setString("Use");
+		loaded = true;
+	}
 	text[0].setColor(sf::Color::Yellow);
+	controlScheme = player1->activeControls->mapKey;
+	GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
 	for (int i = 1; i < player1->ACTIONSIZE; i++)
 	{
-		text.push_back(sf::Text());
-		text[i].setFont(font);
+		GetElement(0, i).setString(player1->Actions[i] + ":");
+		GetElement(1, i).setString(player1->activeControls->controlWords[i].first);
+		GetElement(2, i).setString(player1->activeControls->controlWords[i].second);
 	}
-	text.push_back(sf::Text());
-	textAmount = text.size();
-	text[textAmount - 1].setFont(font);
-	previousScene = settingsScene;
-	TextGridScene::Load();
-	SetColumnCount(3);
-	SpreadRatios(columns, columnRatios);
-	SpreadRatios(rows, rowRatios);
-	GetElement(0, textAmount - 1).setString("Back");
-	GetElement(2, textAmount - 1).setString("Use");
+	TextGridScene::ReSize();
 }
 
 
@@ -132,7 +144,7 @@ void ControlsScene::Update(const double &dt)
 			{
 				ChangeCurrent(0);
 				Reset();
-				activeScene = previousScene;
+			Engine::ChangeMenu(previousScene);
 			}
 			if ((current == textAmount - 1 && currentX == 2))
 			{
@@ -157,19 +169,8 @@ void ControlsScene::Render()
 	TextGridScene::Render();
 }
 
-void ControlsScene::Reset()
-{
-	controlScheme = player1->activeControls->mapKey;
-	GetElement(0, 0).setString(player1->keyMaps[controlScheme]->controlType + " " + to_string(controlScheme));
-	for (int i = 1; i < player1->ACTIONSIZE; i++)
-	{
-		GetElement(0, i).setString(player1->Actions[i] + ":");
-		GetElement(1, i).setString(player1->activeControls->controlWords[i].first);
-		GetElement(2, i).setString(player1->activeControls->controlWords[i].second);
-	}
-}
-
 void ControlsScene::UnLoad()
 {
+	TextGridScene::UnLoad();
 	Serializer::Serialize("Assets/save/player1.txt", *player1);
 }
