@@ -32,7 +32,7 @@ bool PlayerPhysicsComponent::isGrounded() const {
 }
 
 void PlayerPhysicsComponent::Update(const double &dt) {
-
+	svmCD.Update(dt);
 	const auto pos = _parent->getPosition();
 
 	//Teleport to start if we fall off map.
@@ -41,16 +41,17 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		teleport(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	}
 	// If svm button toggle svm state
-	if (player1->GetButtonDown(InputManager::SVM)) {
-		_inSVM = true;
-		if (_inSVM) {
-			// in svm -> no gravity
-			this->_body->SetGravityScale(0);
-		}
-		else {
-			// regular times -> need gravity
-			this->_body->SetGravityScale(1.0f);
-		}
+	if (player1->GetButtonDown(InputManager::SVM) && svmCD.Ready()) {
+		svmCD.Reset();
+		_inSVM = !_inSVM;
+	}
+	if (_inSVM) {
+		// in svm -> no gravity
+		this->_body->SetGravityScale(0);
+	}
+	else {
+		// regular times -> need gravity
+		this->_body->SetGravityScale(1.0f);
 	}
 	// if not in SVM do regular movement
 	if (!_inSVM) {
@@ -68,7 +69,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		}
 		else {
 			// Dampen X axis movement
-			dampen({ 0.9f, 0.999f });
+			dampen({ 0.9f, 0.90f });
 		}
 	}
 	// If in svm behave differently
@@ -79,7 +80,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		}
 		if (player1->GetButtonDown(InputManager::RIGHT)) {
 			impulse({ (float)(dt * _groundspeed), 0 });
-			//_inSVM = false;
+			_inSVM = false;
 		}
 		if (player1->GetButtonDown(InputManager::MENUUP)) {
 			impulse({ 0, -(float)(dt * _groundspeed) });
