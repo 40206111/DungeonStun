@@ -22,7 +22,7 @@ shared_ptr<Scene> settingsScene;
 shared_ptr<Scene> graphicsScene;
 shared_ptr<Scene> controlsScene;
 shared_ptr<Scene> disconnected;
-ExampleGameScene egScene;
+shared_ptr<Scene> egScene;
 
 void Load()
 {	
@@ -35,6 +35,7 @@ void Load()
 	graphicsScene.reset(new GraphicsScene());
 	controlsScene.reset(new ControlsScene());
 	disconnected.reset(new Disconnected());
+	egScene.reset(new ExampleGameScene());
 }
 
 int main()

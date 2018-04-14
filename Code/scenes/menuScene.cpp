@@ -39,6 +39,8 @@ void MenuScene::Update(const double &dt)
 		switch (current)
 		{
 		case 0:
+			Engine::ChangeMenu(nullptr);
+			Engine::ChangeScene(egScene);
 			break;
 		case 1:
 			ChangeCurrent(0);

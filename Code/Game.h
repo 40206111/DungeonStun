@@ -13,4 +13,4 @@ extern std::shared_ptr<Scene> settingsScene;
 extern std::shared_ptr<Scene> graphicsScene;
 extern std::shared_ptr<Scene> controlsScene;
 extern std::shared_ptr<Scene> disconnected;
-extern ExampleGameScene egScene;
+extern std::shared_ptr<Scene> egScene;

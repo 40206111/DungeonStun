@@ -191,8 +191,9 @@ void Engine::Resize()
 ///SCENE///
 void Scene::Update(const double& dt) { ents.Update(dt); }
 
-void Scene::Render() { 
-	ents.render(); }
+void Scene::Render() {
+	ents.render();
+}
 
 bool Scene::isLoaded() const {
 	{
