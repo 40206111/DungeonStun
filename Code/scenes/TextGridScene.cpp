@@ -38,7 +38,7 @@ void TextGridScene::ChangeOtherRatios(bool increase, int index, int value, std::
 	int total = 0;
 	int loopCount = 0;
 	while (total < value && loopCount < 4) {
-		int change = (value - total) / (ratios.size() - (index >= 0 ? 1 : 0));
+		int change = max((int)((value - total) / (ratios.size() - (index >= 0 ? 1 : 0))), 1);
 		for (int i = 0; i < ratios.size() && total < value; ++i) {
 			if (i != index) {
 				total += k * ChangeRatio(ratios[i], k * change);
