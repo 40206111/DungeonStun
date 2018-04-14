@@ -296,27 +296,37 @@ void TextGridScene::ReSize()
 	float xPos = 0.0f;
 	Vector2f border = Vector2f((float)screenSize.x / 100.0f, (float)screenSize.y / 100.0f);
 	for (int x = 0; x < columns; ++x) {
+		// Column width
 		float xSpace = (float)screenSize.x * (float)columnRatios[x] / 100.0f;
-		//float xMid = xPos + xSpace / 2.0f;
-		float xMid = xPos + border.x;
+		// Column horizontal centre
+		///float xMid = xPos + xSpace / 2.0f;	// align centre
+		float xMid = xPos + border.x;	// align left
 		for (int y = 0; y < rows; ++y) {
-			float ySpace = (float)screenSize.y * (float)rowRatios[y] / 100.0f;
-			//float yMid = yPos + ySpace / 2.0f;
-			float yMid = yPos + border.y;
-			if (x == 0) {
-				xMid = xPos + xSpace - GetElement(x, y).getGlobalBounds().width - border.x;
-			}
-
-			Vector2f localpos = Vector2f(texts[x]->at(y).getLocalBounds().left, texts[x]->at(y).getLocalBounds().top);
-
-			texts[x]->at(y).setPosition(Vector2f(xMid, yMid) - localpos);
+			// Font weight
 			texts[x]->at(y).setCharacterSize(Renderer::GetWindow().getSize().x / (rows > 10 ? rows : 10));
-			Renderer::Queue(&texts[x]->at(y));
+			// Get bounds after font resize !!important!!
+			FloatRect thisText = GetElement(x, y).getGlobalBounds();
+			// row height
+			float ySpace = (float)screenSize.y * (float)rowRatios[y] / 100.0f;
+			// row vertical centre
+			///float yMid = yPos + ySpace / 2.0f - thisText.height / 2.0f; // Align vertical centre
+			float yMid = yPos + border.y;	// Top align
+			// If the first column (action list)
+			if (x == 0) {
+				// Right align text
+				xMid = xPos + xSpace - thisText.width - border.x;
+			}
+			// Find local pos - because text has weird local pos
+			Vector2f localpos = Vector2f(texts[x]->at(y).getLocalBounds().left, texts[x]->at(y).getLocalBounds().top);
+			// Set the position
+			texts[x]->at(y).setPosition(Vector2f(xMid, yMid) - localpos);
 
-
+			// Use to track top of next row
 			yPos += ySpace; // At end of loop only
 		}
+		// Reset row height
 		yPos = 0.0f;
+		// Use to track left of next column
 		xPos += xSpace; // At end of loop only
 	}
 }
