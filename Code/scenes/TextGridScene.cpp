@@ -21,8 +21,6 @@ void TextGridScene::Load() {
 		SpreadRatios(columns, columnRatios);
 		SpreadRatios(rows, rowRatios);
 	}
-	TextScene::Load();
-	ReSize();
 }
 // Equally spread out ratios in list
 void TextGridScene::SpreadRatios(int count, std::vector<int>& ratios) {

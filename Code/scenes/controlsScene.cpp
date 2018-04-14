@@ -43,6 +43,7 @@ void ControlsScene::Load()
 		GetElement(1, i).setString(player1->activeControls->controlWords[i].first);
 		GetElement(2, i).setString(player1->activeControls->controlWords[i].second);
 	}
+	TextGridScene::ReSize();
 }
 
 
@@ -166,11 +167,6 @@ void ControlsScene::Update(const double &dt)
 void ControlsScene::Render()
 {
 	TextGridScene::Render();
-}
-
-void ControlsScene::Reset()
-{
-
 }
 
 void ControlsScene::UnLoad()
