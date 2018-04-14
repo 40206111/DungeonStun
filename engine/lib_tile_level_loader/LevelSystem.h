@@ -21,7 +21,10 @@ public:
     START = 's',
     END = 'e',
     WALL = 'w',
+	THICK = 'm',
+	THIN = 'l',
     ENEMY = 'n',
+	CHEST = 'c',
     WAYPOINT = '+'
   };
 

@@ -78,7 +78,7 @@ void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
 	_height = h;
 	std::copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
 	cout << "Level " << path << " Loaded. " << w << "x" << h << std::endl;
-	buildSprites();
+	buildTextureSprites();
 }
 
 //void LevelSystem::buildSprites(bool optimise) {
@@ -268,7 +268,7 @@ bool LevelSystem::isOnGrid(sf::Vector2f v) {
 
 void LevelSystem::setOffset(const Vector2f& _offset) {
 	LevelSystem::_offset = _offset;
-	buildSprites();
+	buildTextureSprites();
 }
 
 void LevelSystem::unload() {
