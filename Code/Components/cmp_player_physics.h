@@ -8,6 +8,8 @@ protected:
   sf::Vector2f _maxVelocity;
   bool _grounded;
   float _groundspeed;
+  bool _inSVM = false;
+  int _antiMoves = 0;
 
   bool isGrounded() const;
 

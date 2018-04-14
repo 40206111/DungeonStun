@@ -40,30 +40,62 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		//if (false){
 		teleport(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	}
-	if (player1->GetButtonHeld(InputManager::LEFT) ||
-		player1->GetButtonHeld(InputManager::RIGHT)) {
-		// Moving Either Left or Right
-		if (player1->GetButtonHeld(InputManager::RIGHT)) {
-			if (getVelocity().x < _maxVelocity.x)
-				impulse({ (float)(dt * _groundspeed), 0 });
+	// If svm button toggle svm state
+	if (player1->GetButtonDown(InputManager::SVM)) {
+		_inSVM = !_inSVM;
+		if (_inSVM) {
+			// in svm -> no gravity
+			this->_body->SetGravityScale(0);
 		}
 		else {
-			if (getVelocity().x > -_maxVelocity.x)
-				impulse({ -(float)(dt * _groundspeed), 0 });
+			// regular times -> need gravity
+			this->_body->SetGravityScale(1.0f);
 		}
 	}
+	// if not in SVM do regular movement
+	if (!_inSVM) {
+		if (player1->GetButtonHeld(InputManager::LEFT) ||
+			player1->GetButtonHeld(InputManager::RIGHT)) {
+			// Moving Either Left or Right
+			if (player1->GetButtonHeld(InputManager::RIGHT)) {
+				if (getVelocity().x < _maxVelocity.x)
+					impulse({ (float)(dt * _groundspeed), 0 });
+			}
+			else {
+				if (getVelocity().x > -_maxVelocity.x)
+					impulse({ -(float)(dt * _groundspeed), 0 });
+			}
+		}
+		else {
+			// Dampen X axis movement
+			dampen({ 0.9f, 0.90f });
+		}
+	}
+	// If in svm behave differently
 	else {
-		// Dampen X axis movement
-		dampen({ 0.9f, 1.0f });
+		if (player1->GetButtonDown(InputManager::LEFT)) {
+			impulse({ -(float)(dt * _groundspeed), 0 });
+			_inSVM = false;
+		}
+		if (player1->GetButtonDown(InputManager::RIGHT)) {
+			impulse({ (float)(dt * _groundspeed), 0 });
+			_inSVM = false;
+		}
+		if (player1->GetButtonDown(InputManager::MENUUP)) {
+			impulse({ 0, -(float)(dt * _groundspeed) });
+		}
+		if (player1->GetButtonDown(InputManager::MENUDOWN)) {
+			impulse({ 0, (float)(dt * _groundspeed) });
+		}
 	}
 
 	// Handle Jump
 	if (player1->GetButtonDown(InputManager::JUMP)) {
 		_grounded = isGrounded();
 		if (_grounded) {
-			setVelocity(Vector2f(getVelocity().x, 0.f));
+			setVelocity(Vector2f(getVelocity().x, 0.0f));
 			teleport(Vector2f(pos.x, pos.y - 2.0f));
-			impulse(Vector2f(0, -6.f));
+			impulse(Vector2f(0, -6.0f));
 		}
 	}
 
