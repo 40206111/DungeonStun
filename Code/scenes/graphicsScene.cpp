@@ -112,3 +112,7 @@ void GraphicsScene::Reset()
 	shownRes = Renderer::currentRes;
 	text[0].setString("Resolution: " + to_string(Renderer::resolutions[shownRes].first) + "x" + to_string(Renderer::resolutions[shownRes].second));
 }
+
+void GraphicsScene::UnLoad() {
+	TextScene::UnLoad();
+}

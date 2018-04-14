@@ -5,6 +5,7 @@
 class TextScene : public Scene
 {
 protected:
+	bool loaded = false;
 	std::vector<sf::Text> text;
 	int textAmount;
 	float space;
@@ -18,4 +19,5 @@ public:
 	TextScene() = default;
 	void Update(const double &dt) override;
 	void Render() override;
+	void UnLoad() override;
 };

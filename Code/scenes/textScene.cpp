@@ -42,10 +42,9 @@ void TextScene::Update(const double &dt)
 	//Back
 	if (player1->GetButtonDown(player1->BACK))
 	{
-		//set current to 0
-		ChangeCurrent(0);
 		//set active screen
 		activeScene = previousScene;
+		Engine::ChangeMenu(&(*previousScene));
 	}
 
 	//poll events
@@ -123,4 +122,9 @@ void TextScene::ChangeCurrent(int value)
 		text[lastCurrent].setColor(sf::Color::White);
 		text[current].setColor(sf::Color::Yellow);
 	}
+}
+
+void TextScene::UnLoad() {
+	//set current to 0
+	ChangeCurrent(0);
 }

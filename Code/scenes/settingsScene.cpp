@@ -60,3 +60,7 @@ void SettingsScene::Render()
 {
 	TextScene::Render();
 }
+
+void SettingsScene::UnLoad() {
+	TextScene::UnLoad();
+}

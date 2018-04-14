@@ -8,17 +8,19 @@ using namespace std;
 ///ABSTRACT TEXT GRID SCENE///
 
 void TextGridScene::Load() {
-	texts.push_back(&text);
-	columns = texts.size();
-	rows = texts[0]->size();
-	for (int i = 0; i < columns; ++i) {
-		columnRatios.push_back(0);
+	if (!loaded) {
+		texts.push_back(&text);
+		columns = texts.size();
+		rows = texts[0]->size();
+		for (int i = 0; i < columns; ++i) {
+			columnRatios.push_back(0);
+		}
+		for (int i = 0; i < rows; ++i) {
+			rowRatios.push_back(0);
+		}
+		SpreadRatios(columns, columnRatios);
+		SpreadRatios(rows, rowRatios);
 	}
-	for (int i = 0; i < rows; ++i) {
-		rowRatios.push_back(0);
-	}
-	SpreadRatios(columns, columnRatios);
-	SpreadRatios(rows, rowRatios);
 }
 // Equally spread out ratios in list
 void TextGridScene::SpreadRatios(int count, std::vector<int>& ratios) {
@@ -266,6 +268,11 @@ void TextGridScene::Render()
 
 	//	Renderer::Queue(&text[i]);
 	//}
+}
+// Unload
+void TextGridScene::UnLoad() {
+	// Reset indices
+	ChangeCurrentBoth(0, 0);
 }
 
 void TextGridScene::CalculateSpaceX() {

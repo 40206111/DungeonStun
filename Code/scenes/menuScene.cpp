@@ -21,7 +21,7 @@ void MenuScene::Load()
 	text[1].setString("Settings");
 	text[2].setString("Exit");
 	textAmount = text.size();
-	previousScene = homeScene;
+	previousScene = nullptr;
 }
 
 void MenuScene::Update(const double &dt)
@@ -38,6 +38,7 @@ void MenuScene::Update(const double &dt)
 		case 1:
 			ChangeCurrent(0);
 			activeScene = settingsScene;
+			Engine::ChangeMenu(&(*settingsScene));
 			break;
 		case 2:
 			Renderer::Shutdown();
@@ -53,4 +54,8 @@ void MenuScene::Update(const double &dt)
 void MenuScene::Render()
 {
 	TextScene::Render();
+}
+
+void MenuScene::UnLoad() {
+	TextScene::UnLoad();
 }

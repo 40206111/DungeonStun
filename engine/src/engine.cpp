@@ -77,14 +77,14 @@ void Engine::Update() {
 			Physics::Update(dt);
 			// Update active scene
 			_activeScene->Update(dt);
+			// If the player pauses open the menu
+			if (player1->GetButtonDown(InputManager::MENU)) {
+				ChangeMenu(&(*menuScene));
+			}
 		}
 		else {
 			// Update active menu screen
 			_activeMenu->Update(dt);
-		}
-		// If the player pauses open the menu
-		if (player1->GetButtonDown(InputManager::MENU) && !menuUp) {
-			ChangeMenu(&(*menuScene));
 		}
 	}
 }

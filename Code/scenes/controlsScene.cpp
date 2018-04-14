@@ -171,5 +171,6 @@ void ControlsScene::Reset()
 
 void ControlsScene::UnLoad()
 {
+	TextGridScene::UnLoad();
 	Serializer::Serialize("Assets/save/player1.txt", *player1);
 }
