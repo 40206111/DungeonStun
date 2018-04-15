@@ -23,7 +23,6 @@ void GraphicsScene::Load()
 		previousScene = settingsScene;
 		loaded = true;
 	}
-	ReSize();
 	fullscreen = Renderer::GetFullscreen();
 	shownRes = Renderer::currentRes;
 	text[0].setString("Resolution: " + to_string(Renderer::resolutions[Renderer::currentRes].first) + "x" + to_string(Renderer::resolutions[Renderer::currentRes].second));
@@ -38,6 +37,7 @@ void GraphicsScene::Load()
 		text[1].setString("Fullscreen: false");
 	}
 	text[2].setString("Back");
+	ReSize();
 }
 
 //Update method
