@@ -8,17 +8,19 @@ using namespace std;
 ///ABSTRACT TEXT GRID SCENE///
 
 void TextGridScene::Load() {
-	texts.push_back(&text);
-	columns = texts.size();
-	rows = texts[0]->size();
-	for (int i = 0; i < columns; ++i) {
-		columnRatios.push_back(0);
+	if (!loaded) {
+		texts.push_back(&text);
+		columns = texts.size();
+		rows = texts[0]->size();
+		for (int i = 0; i < columns; ++i) {
+			columnRatios.push_back(0);
+		}
+		for (int i = 0; i < rows; ++i) {
+			rowRatios.push_back(0);
+		}
+		SpreadRatios(columns, columnRatios);
+		SpreadRatios(rows, rowRatios);
 	}
-	for (int i = 0; i < rows; ++i) {
-		rowRatios.push_back(0);
-	}
-	SpreadRatios(columns, columnRatios);
-	SpreadRatios(rows, rowRatios);
 }
 // Equally spread out ratios in list
 void TextGridScene::SpreadRatios(int count, std::vector<int>& ratios) {
@@ -36,7 +38,7 @@ void TextGridScene::ChangeOtherRatios(bool increase, int index, int value, std::
 	int total = 0;
 	int loopCount = 0;
 	while (total < value && loopCount < 4) {
-		int change = (value - total) / (ratios.size() - (index >= 0 ? 1 : 0));
+		int change = max((int)((value - total) / (ratios.size() - (index >= 0 ? 1 : 0))), 1);
 		for (int i = 0; i < ratios.size() && total < value; ++i) {
 			if (i != index) {
 				total += k * ChangeRatio(ratios[i], k * change);
@@ -222,50 +224,17 @@ void TextGridScene::Update(const double &dt)
 //render Method
 void TextGridScene::Render()
 {
-	Vector2u screenSize = Renderer::GetWindow().getSize();
-	float yPos = 0.0f;
-	float xPos = 0.0f;
-	Vector2f border = Vector2f((float)screenSize.x / 100.0f, (float)screenSize.y / 100.0f);
 	for (int x = 0; x < columns; ++x) {
-		float xSpace = (float)screenSize.x * (float)columnRatios[x] / 100.0f;
-		//float xMid = xPos + xSpace / 2.0f;
-		float xMid = xPos + border.x;
 		for (int y = 0; y < rows; ++y) {
-			float ySpace = (float)screenSize.y * (float)rowRatios[y] / 100.0f;
-			//float yMid = yPos + ySpace / 2.0f;
-			float yMid = yPos + border.y;
-			if (x == 0) {
-				xMid = xPos + xSpace - GetElement(x, y).getGlobalBounds().width - border.x;
-			}
-
-			Vector2f localpos = Vector2f(texts[x]->at(y).getLocalBounds().left, texts[x]->at(y).getLocalBounds().top);
-
-			texts[x]->at(y).setPosition(Vector2f(xMid, yMid) - localpos);
-			texts[x]->at(y).setCharacterSize(Renderer::GetWindow().getSize().x / (rows > 10 ? rows : 10));
 			Renderer::Queue(&texts[x]->at(y));
-
-
-			yPos += ySpace; // At end of loop only
 		}
-		yPos = 0.0f;
-		xPos += xSpace; // At end of loop only
 	}
+}
 
-
-	//render text
-	//for (int i = 0; i < textAmount; ++i)
-	//{
-	//	text[i].setCharacterSize(Renderer::GetWindow().getSize().x / 10);
-
-	//	float xval = (Renderer::GetWindow().getSize().x * 0.25);
-	//	int co = i - textAmount / 2;
-	//	float yval = Renderer::GetWindow().getSize().y * 0.5f;
-	//	yval = yval + (co * space);
-	//	//set text positions to fit screen
-	//	text[i].setPosition(Vector2f(xval, yval) - Vector2f(text[i].getLocalBounds().left, text[i].getLocalBounds().top));
-
-	//	Renderer::Queue(&text[i]);
-	//}
+// Unload
+void TextGridScene::UnLoad() {
+	// Reset indices
+	ChangeCurrentBoth(0, 0);
 }
 
 void TextGridScene::CalculateSpaceX() {
@@ -318,4 +287,46 @@ void TextGridScene::ChangeCurrentX(int value)
 void TextGridScene::ChangeCurrentBoth(int valX, int valY) {
 	ChangeCurrent(valY);
 	ChangeCurrentX(valX);
+}
+
+void TextGridScene::ReSize()
+{
+	Vector2u screenSize = Renderer::GetWindow().getSize();
+	float yPos = 0.0f;
+	float xPos = 0.0f;
+	Vector2f border = Vector2f((float)screenSize.x / 100.0f, (float)screenSize.y / 100.0f);
+	for (int x = 0; x < columns; ++x) {
+		// Column width
+		float xSpace = (float)screenSize.x * (float)columnRatios[x] / 100.0f;
+		// Column horizontal centre
+		///float xMid = xPos + xSpace / 2.0f;	// align centre
+		float xMid = xPos + border.x;	// align left
+		for (int y = 0; y < rows; ++y) {
+			// Font weight
+			texts[x]->at(y).setCharacterSize(Renderer::GetWindow().getSize().x / (rows > 10 ? rows : 10));
+			// Get bounds after font resize !!important!!
+			FloatRect thisText = GetElement(x, y).getGlobalBounds();
+			// row height
+			float ySpace = (float)screenSize.y * (float)rowRatios[y] / 100.0f;
+			// row vertical centre
+			///float yMid = yPos + ySpace / 2.0f - thisText.height / 2.0f; // Align vertical centre
+			float yMid = yPos + border.y;	// Top align
+			// If the first column (action list)
+			if (x == 0) {
+				// Right align text
+				xMid = xPos + xSpace - thisText.width - border.x;
+			}
+			// Find local pos - because text has weird local pos
+			Vector2f localpos = Vector2f(texts[x]->at(y).getLocalBounds().left, texts[x]->at(y).getLocalBounds().top);
+			// Set the position
+			texts[x]->at(y).setPosition(Vector2f(xMid, yMid) - localpos);
+
+			// Use to track top of next row
+			yPos += ySpace; // At end of loop only
+		}
+		// Reset row height
+		yPos = 0.0f;
+		// Use to track left of next column
+		xPos += xSpace; // At end of loop only
+	}
 }

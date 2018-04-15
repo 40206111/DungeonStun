@@ -3,6 +3,7 @@
 #include "ecm.h"
 #include "engine.h"
 #include "system_resources.h"
+#include "system_renderer.h"
 #include "..\Game.h"
 #include "..\Components\cmp_sprite.h"
 #include "..\Components\cmp_player_physics.h"
@@ -11,27 +12,15 @@ using namespace std;
 using namespace sf;
 
 void GameScene::Load() {
-	// load level
-	float tileSize = 40.0f;
-	ls::loadLevelFile("Assets/level_1.txt", tileSize);
-	float off = Engine::getWindowSize().y - (ls::getHeight() * tileSize);
-	ls::setOffset(Vector2f(0.0f, off));
-	// make level physics
-	// load player
-	player = makeEntity();
-	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
-	auto s = player->addComponent<ShapeComponent>();
-	Vector2f playerSize = Vector2f(20.0f, 30.0f);
-	s->setShape<RectangleShape>(playerSize);
-	s->getShape().setFillColor(Color::Blue);
-	s->getShape().setOrigin(playerSize);
-	player->addComponent<PlayerPhysicsComponent>(playerSize);
-	ents.list.push_back(player);
+	screen = makeEntity();
+	screen->setPosition(Vector2f(0, 0));
+	screen->setVisible(false);
+	auto s = screen->addComponent<ShapeComponent>();
+	s->setShape<RectangleShape>(Vector2f(Renderer::GetWindow().getSize()));
+	s->getShape().setFillColor(Color(0, 0, 0, 200));
 }
 
 void GameScene::UnLoad() {
-	player.reset();
-	ls::unload();
 	Scene::UnLoad();
 }
 
@@ -45,6 +34,12 @@ void GameScene::Update(const double &dt) {
 }
 
 void GameScene::Render() {
-	// Run EM render
-	Scene::Render();
+	if (!Engine::ShowingMenu()) {
+		screen->setVisible(false);
+		Scene::Render();
+	}
+	else if (showBehind) {
+		screen->setVisible(true);
+		Scene::Render();
+	}
 }
