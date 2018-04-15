@@ -226,7 +226,7 @@ void TextGridScene::Render()
 {
 	for (int x = 0; x < columns; ++x) {
 		for (int y = 0; y < rows; ++y) {
-			Renderer::Queue(&texts[x]->at(y));
+			Renderer::Queue(Renderer::Layer::UIMID, &texts[x]->at(y));
 		}
 	}
 }

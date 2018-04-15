@@ -77,7 +77,7 @@ void TextScene::Render()
 	for (int i = 0; i < textAmount; ++i)
 	{
 		//render text
-		Renderer::Queue(&text[i]);
+		Renderer::Queue(Renderer::Layer::UIMID, &text[i]);
 	}
 }
 

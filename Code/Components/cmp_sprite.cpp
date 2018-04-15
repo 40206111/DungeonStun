@@ -12,7 +12,7 @@ void SpriteComponent::Update(const double &dt) {
   _sprite->setRotation(_parent->getRotation());
 }
 
-void SpriteComponent::render() { Renderer::Queue(_sprite.get()); }
+void SpriteComponent::render() { Renderer::Queue(renderLayer, _sprite.get()); }
 
 sf::Sprite& SpriteComponent::getSprite() const { return *_sprite; }
 
@@ -21,7 +21,7 @@ void ShapeComponent::Update(const double &dt) {
   _shape->setRotation(_parent->getRotation());
 }
 
-void ShapeComponent::render() { Renderer::Queue(_shape.get()); }
+void ShapeComponent::render() { Renderer::Queue(renderLayer, _shape.get()); }
 
 sf::Shape& ShapeComponent::getShape() const { return *_shape; }
 
