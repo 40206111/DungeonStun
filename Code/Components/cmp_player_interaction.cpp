@@ -6,6 +6,10 @@ using namespace sf;
 
 PlayerInteraction::PlayerInteraction(Entity* _parent) : Component(_parent){}
 
+void PlayerInteraction::SetSvmState(bool state) {
+	inSVM = state;
+}
+
 void PlayerInteraction::Update(const double &dt) {
 	//  Update aim directin
 	Vector2f dir = (Vector2f)sf::Mouse::getPosition() - _parent->getPosition();
@@ -28,6 +32,12 @@ void PlayerInteraction::Update(const double &dt) {
 	}
 	if (player1->GetButtonDown(InputManager::ACTIVE)) {
 		// Active item
+		if (CanMove()) {
+			PreventMoving();
+		}
+		else {
+			AllowMoving();
+		}
 	}
 
 	// player collides with chest

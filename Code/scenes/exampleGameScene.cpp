@@ -5,6 +5,7 @@
 #include "..\Game.h"
 #include "..\Components\cmp_sprite.h"
 #include "..\Components\cmp_player_physics.h"
+#include "..\Components\cmp_player_interaction.h"
 
 using namespace std;
 using namespace sf;
@@ -26,7 +27,9 @@ void ExampleGameScene::Load() {
 	s->setShape<RectangleShape>(playerSize);
 	s->getShape().setFillColor(Color::Blue);
 	s->getShape().setOrigin(playerSize);
-	player->addComponent<PlayerPhysicsComponent>(playerSize);
+	auto pPhys = player->addComponent<PlayerPhysicsComponent>(playerSize);
+	pPhys->SetPlayerInteraction(player->addComponent<PlayerInteraction>());
+
 }
 
 void ExampleGameScene::UnLoad() {

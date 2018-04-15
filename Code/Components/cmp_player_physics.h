@@ -14,9 +14,9 @@ protected:
 
 	bool inSVM = false;
 	Cooldown svmCD = Cooldown(3.0);
-	int antiMoves = 0;
 	std::shared_ptr<PlayerInteraction> playerInt;
 
+	void Jump(const sf::Vector2f &pos);
 	void SetSvmState(bool);
 	bool isGrounded() const;
 public:
