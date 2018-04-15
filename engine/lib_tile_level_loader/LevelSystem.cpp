@@ -201,7 +201,9 @@ void LevelSystem::buildTextureSprites() {
 	const auto nonempty = tiles.size();
 
 	for (auto& t : tiles) {
-		auto s = make_shared<sf::Sprite>(t.tex);
+		getTileAt(Vector2f(t.pos.x, t.pos.y));
+
+		auto s = make_shared<sf::Sprite>(*t.tex);
 		s->setPosition(t.pos);
 		// Something with t.size
 		// Reference proper sprite
