@@ -3,24 +3,27 @@
 #include "cmp_physics.h"
 #include "../Cooldown.h"
 
+class PlayerInteraction;
+
 class PlayerPhysicsComponent : public PhysicsComponent {
 protected:
-	b2Vec2 _size;
-	sf::Vector2f _maxVelocity;
-	bool _grounded;
-	float _groundspeed;
-	bool _inSVM = false;
-	Cooldown svmCD = Cooldown(10.0);
-	int _antiMoves = 0;
+	b2Vec2 size;
+	sf::Vector2f maxVelocity;
+	bool grounded;
+	float groundspeed;
+
+	bool inSVM = false;
+	Cooldown svmCD = Cooldown(3.0);
+	int antiMoves = 0;
+	std::shared_ptr<PlayerInteraction> playerInt;
 
 	void SetSvmState(bool);
-
 	bool isGrounded() const;
-
 public:
+	void SetPlayerInteraction(std::shared_ptr<PlayerInteraction> pi) { playerInt = pi; }
+
 	void Update(const double &dt) override;
 
 	explicit PlayerPhysicsComponent(Entity* p, const sf::Vector2f& size);
-
 	PlayerPhysicsComponent() = delete;
 };

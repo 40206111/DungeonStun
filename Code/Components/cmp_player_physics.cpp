@@ -12,8 +12,8 @@ using namespace Physics;
 bool PlayerPhysicsComponent::isGrounded() const {
 	auto touch = getTouching();
 	const auto& pos = _body->GetPosition();
-	const float halfPlrHeigt = _size.y * .5f;
-	const float halfPlrWidth = _size.x * .5f;
+	const float halfPlrHeigt = size.y * .5f;
+	const float halfPlrWidth = size.x * .5f;
 	b2WorldManifold manifold;
 	for (const auto& contact : touch) {
 		contact->GetWorldManifold(&manifold);
@@ -33,7 +33,7 @@ bool PlayerPhysicsComponent::isGrounded() const {
 
 void PlayerPhysicsComponent::SetSvmState(bool state) {
 	if (state) {
-		_inSVM = true;
+		inSVM = true;
 		this->_body->SetGravityScale(0.0f);
 		this->_body->SetLinearVelocity({ 0.0f,0.0f });
 		teleport(Vector2f(_parent->getPosition().x, _parent->getPosition().y - 2.0f));
@@ -41,7 +41,7 @@ void PlayerPhysicsComponent::SetSvmState(bool state) {
 	}
 	else {
 		svmCD.Reset();
-		_inSVM = false;
+		inSVM = false;
 		this->_body->SetGravityScale(1.0f);
 		// Let player know this inhibition is removed for shooting
 	}
@@ -58,21 +58,21 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 	}
 	// If svm button toggle svm state
 	if (player1->GetButtonDown(InputManager::SVM) &&
-		svmCD.Ready() && !_inSVM /*-------&& isGrounded()----------*/) {
+		svmCD.Ready() && !inSVM /*-------&& isGrounded()----------*/) {
 		SetSvmState(true);
 	}
 	// if not in SVM do regular movement
-	if (!_inSVM) {
+	if (!inSVM) {
 		if (player1->GetButtonHeld(InputManager::LEFT) ||
 			player1->GetButtonHeld(InputManager::RIGHT)) {
 			// Moving Either Left or Right
 			if (player1->GetButtonHeld(InputManager::RIGHT)) {
-				if (getVelocity().x < _maxVelocity.x)
-					impulse({ (float)(dt * _groundspeed), 0 });
+				if (getVelocity().x < maxVelocity.x)
+					impulse({ (float)(dt * groundspeed), 0 });
 			}
 			else {
-				if (getVelocity().x > -_maxVelocity.x)
-					impulse({ -(float)(dt * _groundspeed), 0 });
+				if (getVelocity().x > -maxVelocity.x)
+					impulse({ -(float)(dt * groundspeed), 0 });
 			}
 		}
 		else {
@@ -83,21 +83,21 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 	// If in svm behave differently
 	else {
 		if (player1->GetButtonDown(InputManager::LEFT)) {
-			impulse({ -(float)(dt * _groundspeed), 0 });
+			impulse({ -(float)(dt * groundspeed), 0 });
 			SetSvmState(false);
 		}
 		if (player1->GetButtonDown(InputManager::RIGHT)) {
-			impulse({ (float)(dt * _groundspeed), 0 });
+			impulse({ (float)(dt * groundspeed), 0 });
 			SetSvmState(false);
 		}
 		if (player1->GetButtonHeld(InputManager::MENUUP) ||
 			player1->GetButtonHeld(InputManager::MENUDOWN)) {
 			// Move either up or down
 			if (player1->GetButtonHeld(InputManager::MENUUP)) {
-				impulse({ 0, -(float)(dt * _groundspeed) });
+				impulse({ 0, -(float)(dt * groundspeed) });
 			}
 			else {
-				impulse({ 0, (float)(dt * _groundspeed) });
+				impulse({ 0, (float)(dt * groundspeed) });
 			}
 		}
 		else {
@@ -107,8 +107,8 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 
 	// Handle Jump
 	if (player1->GetButtonDown(InputManager::JUMP)) {
-		_grounded = isGrounded();
-		if (_grounded) {
+		grounded = isGrounded();
+		if (grounded) {
 			setVelocity(Vector2f(getVelocity().x, 0.0f));
 			teleport(Vector2f(pos.x, pos.y - 2.0f));
 			impulse(Vector2f(0, -6.0f));
@@ -116,9 +116,9 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 	}
 
 	//Are we in air?
-	if (!_grounded) {
+	if (!grounded) {
 		// Check to see if we have landed yet
-		_grounded = isGrounded();
+		grounded = isGrounded();
 		// disable friction while jumping
 		setFriction(0.f);
 	}
@@ -128,8 +128,8 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 
 	// Clamp velocity.
 	auto v = getVelocity();
-	v.x = copysign(min(abs(v.x), _maxVelocity.x), v.x);
-	v.y = copysign(min(abs(v.y), _maxVelocity.y), v.y);
+	v.x = copysign(min(abs(v.x), maxVelocity.x), v.x);
+	v.y = copysign(min(abs(v.y), maxVelocity.y), v.y);
 	setVelocity(v);
 
 	PhysicsComponent::Update(dt);
@@ -138,10 +138,10 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 PlayerPhysicsComponent::PlayerPhysicsComponent(Entity* p,
 	const Vector2f& size)
 	: PhysicsComponent(p, true, size) {
-	_size = sv2_to_bv2(size, true);
-	_maxVelocity = Vector2f(200.f, 400.f);
-	_groundspeed = 30.f;
-	_grounded = false;
+	this->size = sv2_to_bv2(size, true);
+	maxVelocity = Vector2f(200.f, 400.f);
+	groundspeed = 30.f;
+	grounded = false;
 	_body->SetSleepingAllowed(false);
 	_body->SetFixedRotation(true);
 	//Bullet items have higher-res collision detection
