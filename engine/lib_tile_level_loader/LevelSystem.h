@@ -52,6 +52,8 @@ public:
 
   static float getTileSize();
 
+  static void ReSize();
+
 protected:
   static std::unique_ptr<Tile[]> _tiles;
   static size_t _width;

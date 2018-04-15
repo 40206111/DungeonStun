@@ -45,3 +45,8 @@ void GameScene::Render() {
 		ls::render();
 	}
 }
+
+void GameScene::ReSize()
+{
+	ls::ReSize();
+}

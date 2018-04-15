@@ -22,4 +22,5 @@ public:
 	void Load() override;
 	void UnLoad() override;
 	void Reset() override;
+	void ReSize() override;
 };
