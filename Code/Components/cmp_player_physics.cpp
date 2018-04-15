@@ -57,7 +57,8 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		teleport(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	}
 	// If svm button toggle svm state
-	if (player1->GetButtonDown(InputManager::SVM) && svmCD.Ready() && !_inSVM) {
+	if (player1->GetButtonDown(InputManager::SVM) &&
+		svmCD.Ready() && !_inSVM /*-------&& isGrounded()----------*/) {
 		SetSvmState(true);
 	}
 	// if not in SVM do regular movement

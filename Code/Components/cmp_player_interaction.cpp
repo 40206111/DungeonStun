@@ -24,6 +24,7 @@ void PlayerInteraction::Update(const double &dt) {
 	}
 	if (player1->GetButtonDown(InputManager::SVM)) {
 		//Special jump
+		// Taken care of in physics
 	}
 	if (player1->GetButtonDown(InputManager::ACTIVE)) {
 		// Active item
