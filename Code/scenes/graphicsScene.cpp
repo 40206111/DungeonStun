@@ -14,7 +14,7 @@ void GraphicsScene::Load()
 	if (!loaded)
 	{
 		//Load Text
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			text.push_back(sf::Text());
 			text[i].setFont(font);

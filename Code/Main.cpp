@@ -26,12 +26,6 @@ GameWorkshop gameScene;
 shared_ptr<Scene> disconnected;
 shared_ptr<Scene> egScene;
 
-void Render()
-{
-	activeScene->Render();
-	Renderer::Render();
-}
-
 void Load()
 {	
 	AssetLoader::LoadAssets();
