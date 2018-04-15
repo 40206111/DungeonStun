@@ -10,8 +10,10 @@ protected:
 	bool _grounded;
 	float _groundspeed;
 	bool _inSVM = false;
-	Cooldown svmCD = Cooldown(0.25);
+	Cooldown svmCD = Cooldown(10.0);
 	int _antiMoves = 0;
+
+	void SetSvmState(bool);
 
 	bool isGrounded() const;
 

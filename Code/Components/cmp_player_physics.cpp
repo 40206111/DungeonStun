@@ -31,6 +31,22 @@ bool PlayerPhysicsComponent::isGrounded() const {
 	return false;
 }
 
+void PlayerPhysicsComponent::SetSvmState(bool state) {
+	if (state) {
+		_inSVM = true;
+		this->_body->SetGravityScale(0.0f);
+		this->_body->SetLinearVelocity({ 0.0f,0.0f });
+		teleport(Vector2f(_parent->getPosition().x, _parent->getPosition().y - 2.0f));
+		// Inform player interaction about no shooting
+	}
+	else {
+		svmCD.Reset();
+		_inSVM = false;
+		this->_body->SetGravityScale(1.0f);
+		// Let player know this inhibition is removed for shooting
+	}
+}
+
 void PlayerPhysicsComponent::Update(const double &dt) {
 	svmCD.Update(dt);
 	const auto pos = _parent->getPosition();
@@ -41,17 +57,8 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		teleport(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	}
 	// If svm button toggle svm state
-	if (player1->GetButtonDown(InputManager::SVM) && svmCD.Ready()) {
-		svmCD.Reset();
-		_inSVM = !_inSVM;
-	}
-	if (_inSVM) {
-		// in svm -> no gravity
-		this->_body->SetGravityScale(0);
-	}
-	else {
-		// regular times -> need gravity
-		this->_body->SetGravityScale(1.0f);
+	if (player1->GetButtonDown(InputManager::SVM) && svmCD.Ready() && !_inSVM) {
+		SetSvmState(true);
 	}
 	// if not in SVM do regular movement
 	if (!_inSVM) {
@@ -69,24 +76,31 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		}
 		else {
 			// Dampen X axis movement
-			dampen({ 0.9f, 0.90f });
+			dampen({ 0.9f, 1.0f });
 		}
 	}
 	// If in svm behave differently
 	else {
 		if (player1->GetButtonDown(InputManager::LEFT)) {
 			impulse({ -(float)(dt * _groundspeed), 0 });
-			_inSVM = false;
+			SetSvmState(false);
 		}
 		if (player1->GetButtonDown(InputManager::RIGHT)) {
 			impulse({ (float)(dt * _groundspeed), 0 });
-			_inSVM = false;
+			SetSvmState(false);
 		}
-		if (player1->GetButtonDown(InputManager::MENUUP)) {
-			impulse({ 0, -(float)(dt * _groundspeed) });
+		if (player1->GetButtonHeld(InputManager::MENUUP) ||
+			player1->GetButtonHeld(InputManager::MENUDOWN)) {
+			// Move either up or down
+			if (player1->GetButtonHeld(InputManager::MENUUP)) {
+				impulse({ 0, -(float)(dt * _groundspeed) });
+			}
+			else {
+				impulse({ 0, (float)(dt * _groundspeed) });
+			}
 		}
-		if (player1->GetButtonDown(InputManager::MENUDOWN)) {
-			impulse({ 0, (float)(dt * _groundspeed) });
+		else {
+			dampen({ 0.0f, 0.5f });
 		}
 	}
 
