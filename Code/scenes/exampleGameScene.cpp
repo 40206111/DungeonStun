@@ -27,8 +27,6 @@ void ExampleGameScene::Load() {
 	s->getShape().setFillColor(Color::Blue);
 	s->getShape().setOrigin(playerSize);
 	player->addComponent<PlayerPhysicsComponent>(playerSize);
-	ents.list.push_back(player);
-
 }
 
 void ExampleGameScene::UnLoad() {
