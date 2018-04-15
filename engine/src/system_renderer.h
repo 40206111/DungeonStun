@@ -18,6 +18,7 @@ namespace Renderer {
 
 	void Shutdown();
 	void Update(const double&);
+	void Queue(const sf::Drawable* s);
 	void Queue(Layer, const sf::Drawable* s);
 	void Render();
 	void ToggleFullscreen();

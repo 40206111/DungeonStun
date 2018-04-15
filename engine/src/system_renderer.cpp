@@ -42,6 +42,8 @@ void Renderer::Render() {
 	}
 }
 
+void Renderer::Queue(const sf::Drawable* s) { sprites[Renderer::Layer::LEVEL].push(s); }
+
 void Renderer::Queue(Layer l, const sf::Drawable* s) { sprites[l].push(s); }
 
 void Renderer::ToggleFullscreen()
