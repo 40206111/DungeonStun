@@ -6,11 +6,12 @@
 #include "scenes\settingsScene.h"
 #include "scenes\graphicsScene.h"
 #include "scenes\controlsScene.h"
-#include "scenes\gameScene.h"
+#include "scenes\gameWorkshop.h"
 #include "scenes\exampleGameScene.h"
 #include "scenes\Disconnected.h"
 #include <iostream>
 #include "Serializer.h"
+#include "AssetLoader.h"
 using namespace sf;
 using namespace std;
 
@@ -21,11 +22,13 @@ shared_ptr<Scene> menuScene;
 shared_ptr<Scene> settingsScene;
 shared_ptr<Scene> graphicsScene;
 shared_ptr<Scene> controlsScene;
+GameWorkshop gameScene;
 shared_ptr<Scene> disconnected;
 shared_ptr<Scene> egScene;
 
 void Load()
 {	
+	AssetLoader::LoadAssets();
 	font.loadFromFile("Assets/font/rm_typerighter_old.ttf");
 	player1.reset(new InputManager());
 	Serializer::DeSerialize("Assets/save/player1.txt", player1);

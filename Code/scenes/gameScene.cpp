@@ -2,6 +2,7 @@
 #include "LevelSystem.h"
 #include "ecm.h"
 #include "engine.h"
+#include "system_resources.h"
 #include "system_renderer.h"
 #include "..\Game.h"
 #include "..\Components\cmp_sprite.h"

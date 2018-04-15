@@ -88,6 +88,7 @@ void HomeScene::Update(const double &dt)
 			if (testVal != player1->activeControls->controls[player1->FULLSCREEN].first
 				|| testVal != player1->activeControls->controls[player1->FULLSCREEN].second)
 			{
+				player1->Update(dt);
 				Engine::ChangeMenu(menuScene);
 			}
 		}
