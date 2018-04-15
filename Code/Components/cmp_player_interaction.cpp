@@ -15,6 +15,16 @@ void PlayerInteraction::SetSvmState(bool state) {
 	inSVM = state;
 }
 
+void PlayerInteraction::SetAlive(bool state) {
+	isAlive = state;
+	if (isAlive) {
+	}
+	else {
+		inSVM = false;
+		blocking = false;
+	}
+}
+
 void PlayerInteraction::Update(const double &dt) {
 	// Update all cooldowns
 	for (Cooldown* cd : cooldowns) {
