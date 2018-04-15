@@ -2,20 +2,15 @@
 
 #include "engine.h"
 
-class GameScene : public Scene {
+class GameWorkshop : public Scene {
 protected:
 	std::shared_ptr<Entity> player;
 	std::vector<Entity*> enemies;
 	std::vector<Entity*> projectiles;
-	std::shared_ptr<Scene> activeMenu;
-	std::shared_ptr<Entity> screen;
-	bool showBehind = false;
 
 public:
-	GameScene() = default;
-	~GameScene() = default;
-
-	bool RenderBehind() { return showBehind; }
+	GameWorkshop() = default;
+	~GameWorkshop() = default;
 
 	void Update(const double &dt) override;
 	void Render() override;
