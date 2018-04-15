@@ -10,6 +10,8 @@ namespace Renderer {
 	};
 	extern unsigned int currentRes;
 
+	enum Layer { BACKGROUND, LEVEL, ENTITIES, PROJECTILES, FOREGROUND, UIBACK, UIMID, UIFORE };
+
 	void Initialise(sf::RenderWindow&);
 	sf::RenderWindow &GetWindow();
 	bool GetFullscreen();
@@ -17,6 +19,7 @@ namespace Renderer {
 	void Shutdown();
 	void Update(const double&);
 	void Queue(const sf::Drawable* s);
+	void Queue(Layer, const sf::Drawable* s);
 	void Render();
 	void ToggleFullscreen();
 	void setResolution(int res);

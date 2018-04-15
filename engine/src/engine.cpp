@@ -42,8 +42,8 @@ void Loading_render() {
 	static Text t("Loading", *Resources::get<sf::Font>("rm_typerighter_old.ttf"));
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f*loadingTime)));
 	t.setPosition(Vcast<float>(Engine::getWindowSize()) * Vector2f(0.4f, 0.3f));
-	Renderer::Queue(&t);
-	Renderer::Queue(&octagon);
+	Renderer::Queue(Renderer::Layer::UIMID, &t);
+	Renderer::Queue(Renderer::Layer::UIBACK, &octagon);
 }
 
 float frametimes[256] = {};
