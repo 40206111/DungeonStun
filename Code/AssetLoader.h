@@ -11,6 +11,7 @@ public:
 	AssetLoader() = default;
 	~AssetLoader() = default;
 
+	//enum describing the images in the vector
 	enum IMAGES {
 		LIB_IDLE, LIB_JUMP, LIB_BAM, LIB_CLIMB, LIB_LADDER,
 		BLUE_CHEST, YELLOW_CHEST,
@@ -24,6 +25,7 @@ public:
 		MECHANICAL_PLATFORM, BRICKS
 	};
 
+	//enum describing the sound effects in the sounds vector
 	enum sfx {
 		COLLECT, COLLECT2,
 		DAMAGE, GAME_OVER, HEAL,
@@ -32,10 +34,14 @@ public:
 		UPGRADE,
 		WOOSH
 	};
+	//vector of sprites
 	static std::vector<sf::Sprite> sprites;
+
+	//sounds
 #ifdef SOUND
 	static std::vector<sf::SoundBuffer> sounds;
 #endif // SOUND
 
+	//load assets method
 	static void LoadAssets();
 };

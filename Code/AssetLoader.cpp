@@ -4,10 +4,15 @@
 using namespace sf;
 using namespace std;
 
+//static vectors
 std::vector<sf::Sprite> AssetLoader::sprites;
+#ifdef SOUND
+std::vector<sf::SoundBuffer> sounds;
+#endif // SOUND
 
 void AssetLoader::LoadAssets()
 {
+	//load images from file
 	static shared_ptr<Texture> librarian(Resources::get<sf::Texture>("Librarian.png"));
 	static shared_ptr<Texture> chest(Resources::get<sf::Texture>("Chests.png"));
 	static shared_ptr<Texture> enemy(Resources::get<sf::Texture>("Enemy.png"));
@@ -184,6 +189,8 @@ void AssetLoader::LoadAssets()
 	//bricks
 	rect = IntRect(8, 344, 117, 46);
 	sprites.push_back(Sprite(*enviroment, rect));
+
+	//sounds
 #ifdef SOUND
 	sounds.push_back(Resources::get<SoundBuffer>("collection.wav"));
 	sounds.push_back(Resources::get<SoundBuffer>("collect2.wav"));
