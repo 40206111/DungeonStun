@@ -12,7 +12,6 @@ protected:
 	bool grounded;
 	float groundspeed;
 
-	bool inSVM = false;
 	Cooldown svmCD = Cooldown(3.0);
 	std::shared_ptr<PlayerInteraction> playerInt;
 

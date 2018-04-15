@@ -7,6 +7,8 @@ using namespace sf;
 PlayerInteraction::PlayerInteraction(Entity* _parent) : Component(_parent){
 	cooldowns.push_back(&blockCd);
 	cooldowns.push_back(&blockDuration);
+	cooldowns.push_back(&fireCD);
+	cooldowns.push_back(&activeCD);
 }
 
 void PlayerInteraction::SetSvmState(bool state) {
@@ -18,18 +20,25 @@ void PlayerInteraction::Update(const double &dt) {
 	for (Cooldown* cd : cooldowns) {
 		cd->Update(dt);
 	}
+
+	/// Aim start---------------------
 	//  Update aim directin
 	Vector2f dir = (Vector2f)sf::Mouse::getPosition() - _parent->getPosition();
 	if (dir != Vector2f(0.0f, 0.0f)) {
 		dir = normalize(dir);
 	}
 	aimDirection = dir;
-	//---------------
+	/// Aim end-----------------------
 
-	if (player1->GetButtonHeld(InputManager::FIRE)) {
+	/// Fire start--------------------
+	if (player1->GetButtonHeld(InputManager::FIRE) && fireCD.Ready()) {
 		// Do a shoot
 		// send projectile at aimDirection
+		fireCD.Reset();
 	}
+	/// Fire end----------------------
+
+	/// Blocking start---------------------
 	// If block duration is over
 	if (blockDuration.Ready()) {
 		// Stop blocking
@@ -48,19 +57,31 @@ void PlayerInteraction::Update(const double &dt) {
 		// Start duration timer
 		blockDuration.Reset();
 	}
+	/// Blocking end-----------------------
+
 	if (player1->GetButtonDown(InputManager::SVM)) {
 		//Special jump
 		// Taken care of in physics
 	}
-	if (player1->GetButtonDown(InputManager::ACTIVE)) {
+
+	/// Active start------------------------
+	if (player1->GetButtonDown(InputManager::ACTIVE) && activeCD.Ready()) {
 		// Active item
+		// Use the active item
+		activeCD.Reset();
+
+		// To test movement impairing---
 		if (CanMove()) {
 			PreventMoving();
 		}
 		else {
 			AllowMoving();
 		}
+		// ------------------------------
+
+
 	}
+	/// Active end---------------------------
 
 	// player collides with chest
 	if (false) {

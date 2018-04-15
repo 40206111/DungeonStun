@@ -34,7 +34,6 @@ bool PlayerPhysicsComponent::isGrounded() const {
 
 void PlayerPhysicsComponent::SetSvmState(bool state) {
 	if (state) {
-		inSVM = true;
 		playerInt->SetSvmState(true);
 		this->_body->SetGravityScale(0.0f);
 		this->_body->SetLinearVelocity({ 0.0f,0.0f });
@@ -43,7 +42,6 @@ void PlayerPhysicsComponent::SetSvmState(bool state) {
 		playerInt->PreventFiring();
 	}
 	else {
-		inSVM = false;
 		svmCD.Reset();
 		playerInt->SetSvmState(false);
 		this->_body->SetGravityScale(1.0f);
@@ -71,11 +69,11 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 	if (playerInt->CanMove()) {
 		// If svm button toggle svm state
 		if (player1->GetButtonDown(InputManager::SVM) &&
-			svmCD.Ready() && !inSVM /*-------&& isGrounded()----------*/) {
+			svmCD.Ready() && !playerInt->InSvm() /*-------&& isGrounded()----------*/) {
 			SetSvmState(true);
 		}
 		// if not in SVM do regular movement
-		if (!inSVM) {
+		if (!playerInt->InSvm()) {
 			if (player1->GetButtonHeld(InputManager::LEFT) ||
 				player1->GetButtonHeld(InputManager::RIGHT)) {
 				// Moving Either Left or Right
@@ -123,9 +121,9 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		// Handle Jump
 		if (player1->GetButtonDown(InputManager::JUMP)) {
 			grounded = isGrounded();
-			if (grounded || inSVM) {
+			if (grounded || playerInt->InSvm()) {
 				Jump(pos);
-				if (inSVM) {
+				if (playerInt->InSvm()) {
 					SetSvmState(false);
 				}
 			}
@@ -133,7 +131,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 	}
 	// If player cannot move
 	else {
-		if (inSVM) {
+		if (playerInt->InSvm()) {
 			SetSvmState(false);
 		}
 		// Dampen X axis movement
