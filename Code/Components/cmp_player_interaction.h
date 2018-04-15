@@ -6,9 +6,13 @@ class PlayerInteraction : public Component {
 private:
 	sf::Vector2f aimDirection;
 	bool inSVM = false;
+	bool blocking = false;
+	Cooldown blockCd = Cooldown(4.0f);
+	Cooldown blockDuration = Cooldown(0.25);
 	bool isGrounded = false;
 	int antiMoves = 0;
 	int antiFire = 0;
+	std::vector<Cooldown*> cooldowns;
 
 public:
 	PlayerInteraction() = delete;
