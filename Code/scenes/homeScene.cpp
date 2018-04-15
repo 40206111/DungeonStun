@@ -99,11 +99,11 @@ void HomeScene::Update(const double &dt)
 void HomeScene::Render()
 {
 	//Render Background
-	Renderer::Queue(&background);
+	Renderer::Queue(Renderer::Layer::BACKGROUND, &background);
 
 	if (!Engine::ShowingMenu()) {
 		//render text
-		Renderer::Queue(&text);
+		Renderer::Queue(Renderer::Layer::UIMID, &text);
 		screen->setVisible(false);
 		Scene::Render();
 	}
