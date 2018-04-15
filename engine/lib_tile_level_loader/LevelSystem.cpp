@@ -1,6 +1,7 @@
 #include "LevelSystem.h"
 #include <fstream>
 #include "system_renderer.h"
+#include "../Code/AssetLoader.h"
 
 using namespace std;
 using namespace sf;
@@ -76,6 +77,7 @@ void LevelSystem::loadLevelFile(const std::string& path, float tileSize) {
 	_tiles = std::make_unique<Tile[]>(w * h);
 	_width = w; // set static class vars
 	_height = h;
+	_tileSize = Renderer::GetWindow().getSize().x / _width;
 	std::copy(temp_tiles.begin(), temp_tiles.end(), &_tiles[0]);
 	cout << "Level " << path << " Loaded. " << w << "x" << h << std::endl;
 	buildTextureSprites();
@@ -201,14 +203,127 @@ void LevelSystem::buildTextureSprites() {
 	const auto nonempty = tiles.size();
 
 	for (auto& t : tiles) {
-		getTileAt(Vector2f(t.pos.x, t.pos.y));
+		if (getTileAt({ t.pos.x, t.pos.y }) == WALL)
+		{
+			getTileAt(Vector2f(t.pos.x, t.pos.y));
+			int yVoid = 0;
+			int xVoid = 0;
+			int wall1 = 0;
+			int wall2 = 0;
 
-		auto s = make_shared<sf::Sprite>(*t.tex);
-		s->setPosition(t.pos);
-		// Something with t.size
-		// Reference proper sprite
-		// Some random tile choice???
-		_sprites.push_back(move(s));
+			if (t.pos.x == 0)
+			{
+				xVoid = -1;
+			}
+			else if (t.pos.x == _width)
+			{
+				xVoid = 1;
+			}
+			if (t.pos.y == 0)
+			{
+				yVoid = -1;
+			}
+			else if (t.pos.y == _height)
+			{
+				yVoid == 1;
+			}
+			if (xVoid != -1 && getTileAt({ t.pos.x - 1, t.pos.y }) == WALL)
+			{
+				if (wall1 == 0)
+					wall1 = 4;
+				else
+					wall2 = 4;
+			}
+			if (xVoid != 1 && getTileAt({ t.pos.x + 1, t.pos.y }) == WALL)
+			{
+				if (wall1 == 0)
+					wall1 = 2;
+				else
+					wall2 = 2;
+			}
+			if (yVoid != -1 && getTileAt({ t.pos.x, t.pos.y - 1 }) == WALL)
+			{
+				if (wall1 == 0)
+					wall1 = 3;
+				else
+					wall2 = 3;
+			}
+			if (yVoid != 1 && getTileAt({ t.pos.x, t.pos.y + 1 }) == WALL)
+			{
+				if (wall1 == 0)
+					wall1 = 1;
+				else
+					wall2 = 1;
+			}
+
+			if (wall1 == 1 && wall2 == 2 || wall1 == 2 && wall2 == 1)
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::TRIC];
+			}
+			if (xVoid == -1 && (wall1 == 1 && wall2 == 3 || wall1 == 3 && wall2 == 1))
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::R];
+			}
+			if (xVoid == 1 && (wall1 == 1 && wall2 == 3 || wall1 == 3 && wall2 == 1))
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::L];
+			}
+			if (wall1 == 1 && wall2 == 4 || wall1 == 4 && wall2 == 1)
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::TLIC];
+			}
+
+			if (wall1 == 2 && wall2 == 3 || wall1 == 3 && wall2 == 2)
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::BRIC];
+			}
+			if (yVoid == -1 && (wall1 == 2 && wall2 == 4 || wall1 == 4 && wall2 == 2))
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::D];
+			}
+			if (yVoid == 1 && (wall1 == 2 && wall2 == 4 || wall1 == 4 && wall2 == 2))
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::T];
+			}
+			if (wall1 == 3 && wall2 == 4 || wall1 == 4 && wall2 == 3)
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::BLIC];
+			}
+
+			//voids
+			if ((xVoid == -1 && (wall1 == 1 && wall2 == 0 || wall1 == 0 && wall2 == 1)) ||
+				(yVoid == -1 && (wall1 == 4 && wall2 == 0 || wall1 == 0 && wall2 == 4)) ||
+				(yVoid == -1 && xVoid == -1 && wall1 ==0 && wall2 == 0))
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::BROC];
+			}
+			if ((xVoid == 1 && (wall1 == 1 && wall2 == 0 || wall1 == 0 && wall2 == 1)) ||
+				(yVoid == -1 && (wall1 == 2 && wall2 == 0 || wall1 == 0 && wall2 == 2)) ||
+				(yVoid == -1 && xVoid == 1 && wall1 == 0 && wall2 == 0))
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::BLOC];
+			}
+			if (yVoid == 1 && (wall1 == 2 && wall2 == 0 || wall1 == 0 && wall2 == 2) ||
+				(xVoid == 1 && (wall1 == 3 && wall2 == 0 || wall1 == 0 && wall2 == 3)) ||
+				(yVoid == 1 && xVoid == 1 && wall1 == 0 && wall2 == 0))
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::TLOC];
+			}
+			if (xVoid == -1 && (wall1 == 3 && wall2 == 0 || wall1 == 0 && wall2 == 3) ||
+				(yVoid == 1 && (wall1 == 4 && wall2 == 0 || wall1 == 0 && wall2 == 4)) ||
+				(yVoid == 1 && xVoid == -1 && wall1 == 0 && wall2 == 0))
+			{
+				t.tex = &AssetLoader::sprites[AssetLoader::TROC];
+			}
+
+			auto s = make_shared<sf::Sprite>(*t.tex);
+			s->setPosition(t.pos);
+			s->setScale(Vector2f(_tileSize/200, _tileSize/200));
+			// Something with t.size
+			// Reference proper sprite
+			// Some random tile choice???
+			_sprites.push_back(move(s));
+		}
 	}
 
 	cout << "Level with " << (_width * _height) << " Tiles, With " << nonempty
