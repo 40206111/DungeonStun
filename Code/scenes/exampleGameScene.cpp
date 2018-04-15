@@ -6,6 +6,7 @@
 #include "..\Components\cmp_sprite.h"
 #include "..\Components\cmp_player_physics.h"
 #include "..\Components\cmp_player_interaction.h"
+#include "..\Components\cmp_enemy_ai.h"
 
 using namespace std;
 using namespace sf;
@@ -30,6 +31,15 @@ void ExampleGameScene::Load() {
 	auto pPhys = player->addComponent<PlayerPhysicsComponent>(playerSize);
 	pPhys->SetPlayerInteraction(player->addComponent<PlayerInteraction>());
 
+	auto en = makeEntity();
+	en->setPosition({ (float)(Engine::getWindowSize().x - Engine::getWindowSize().x / 10), (float)(Engine::getWindowSize().y / 10)});
+	auto eai = en->addComponent<EnemyAIComponent>();
+	eai->SetPlayer(player);
+	auto es = en->addComponent<ShapeComponent>();
+	Vector2f enemySize = Vector2f(30.0f, 20.0f);
+	es->setShape<RectangleShape>(enemySize);
+	es->getShape().setFillColor(Color::Blue);
+	es->getShape().setOrigin(enemySize);
 }
 
 void ExampleGameScene::UnLoad() {
