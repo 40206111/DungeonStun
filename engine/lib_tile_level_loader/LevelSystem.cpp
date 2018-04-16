@@ -417,6 +417,7 @@ void LevelSystem::ReSize()
 		s->setPosition(pos);
 	}
 	setOffset(Vector2f(0, off));
+	// Hacky fix for not resizing to current res.
 	if (_tileSize != tileSize) {
 		_tileSize = tileSize;
 		ReSize();
