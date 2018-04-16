@@ -31,6 +31,22 @@ void EntityMaker::MakePlayer(std::shared_ptr<Entity> e)
 	pPhys->SetPlayerInteraction(e->addComponent<PlayerInteraction>());
 }
 
+void EntityMaker::MakeProjectile(std::shared_ptr<Entity>)
+{
+}
+
+void EntityMaker::MakeWall(std::shared_ptr<Entity>)
+{
+}
+
+void EntityMaker::MakeChest(std::shared_ptr<Entity>)
+{
+}
+
+void EntityMaker::MakePlatform(std::shared_ptr<Entity>)
+{
+}
+
 void EntityMaker::MakeEntity(shared_ptr<Entity> e, EntityMaker::Prefab p) {
 	switch (p)
 	{
@@ -40,11 +56,17 @@ void EntityMaker::MakeEntity(shared_ptr<Entity> e, EntityMaker::Prefab p) {
 	case EntityMaker::PLAYER:
 		MakePlayer(e);
 		break;
+	case EntityMaker::PROJECTILE:
+		MakeProjectile(e);
+		break;
 	case EntityMaker::WALL:
+		MakeWall(e);
 		break;
 	case EntityMaker::CHEST:
+		MakeChest(e);
 		break;
 	case EntityMaker::PLATFORM:
+		MakePlatform(e);
 		break;
 	default:
 		break;
