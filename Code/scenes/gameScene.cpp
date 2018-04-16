@@ -18,6 +18,7 @@ void GameScene::Load() {
 	auto s = screen->addComponent<ShapeComponent>();
 	s->setShape<RectangleShape>(Vector2f(Renderer::GetWindow().getSize()));
 	s->getShape().setFillColor(Color(0, 0, 0, 200));
+	s->SetRenderLayer(Renderer::Layer::FOREGROUND);
 }
 
 void GameScene::UnLoad() {
