@@ -406,7 +406,7 @@ void LevelSystem::ReSize()
 {
 	float tileSize = Renderer::GetWindow().getSize().x / _width;
 	float off = Renderer::GetWindow().getSize().y - (ls::getHeight() * tileSize);
-	for each (shared_ptr<Sprite> s in _sprites)
+	for (shared_ptr<Sprite> s : _sprites)
 	{
 		Vector2f pos = s->getPosition();
 		pos -= _offset;
@@ -417,6 +417,8 @@ void LevelSystem::ReSize()
 		s->setPosition(pos);
 	}
 	setOffset(Vector2f(0, off));
-	_tileSize = tileSize;
-
+	if (_tileSize != tileSize) {
+		_tileSize = tileSize;
+		ReSize();
+	}
 }
