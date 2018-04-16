@@ -529,7 +529,7 @@ bool InputManager::GetButtonDown(unsigned int action) {
 
 //method to check if button is held
 bool InputManager::GetButtonHeld(unsigned int action) {
-	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1) &&
+	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1 && activeControls->mouseControls[action] == -1) &&
 		buttonHeld.test(action))
 		return true;
 	return false;
@@ -537,7 +537,7 @@ bool InputManager::GetButtonHeld(unsigned int action) {
 
 //method to check if button is released
 bool InputManager::GetButtonReleased(unsigned int action) {
-	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1) &&
+	if (!(activeControls->controls[action].first == -1 && activeControls->controls[action].second == -1 && activeControls->mouseControls[action] == -1) &&
 		buttonReleased.test(action))
 		return true;
 	return false;

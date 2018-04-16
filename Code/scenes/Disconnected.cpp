@@ -56,7 +56,7 @@ void Disconnected::Update(const double &dt)
 //Render Method
 void Disconnected::Render()
 {
-	Renderer::Queue(&discont);
+	Renderer::Queue(Renderer::Layer::UIMID, &discont);
 }
 
 void Disconnected::UnLoad() {

@@ -1,15 +1,24 @@
 #pragma once
 
+#include "ecm.h"
 #include "cmp_actor_movement.h"
+#include "../Cooldown.h"
 
 class EnemyAIComponent : public ActorMovementComponent {
 protected:
-  sf::Vector2f _direction;
+	std::weak_ptr<Entity> player;
+	sf::Vector2f _direction;
+	bool idling = false;
+	std::vector<Cooldown*> cooldowns;
+	Cooldown idleTime = Cooldown(0.3);
+	Cooldown moveTime = Cooldown(0.8);
 
 public:
-  void Update(const double &dt) override;
+	explicit EnemyAIComponent(Entity* p);
+	EnemyAIComponent() = delete;
+	~EnemyAIComponent() = default;
 
-  explicit EnemyAIComponent(Entity* p);
+	void SetPlayer(std::weak_ptr<Entity> p) { player = p; }
 
-  EnemyAIComponent() = delete;
+	void Update(const double &dt) override;
 };

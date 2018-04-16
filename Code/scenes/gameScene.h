@@ -1,12 +1,13 @@
 #pragma once
 
 #include "engine.h"
+#include "..\EntityMaker.h"
 
 class GameScene : public Scene {
 protected:
 	std::shared_ptr<Entity> player;
-	std::vector<Entity*> enemies;
-	std::vector<Entity*> projectiles;
+	std::vector<std::shared_ptr<Entity>> enemies;
+	std::vector<std::shared_ptr<Entity>> projectiles;
 	std::shared_ptr<Scene> activeMenu;
 	std::shared_ptr<Entity> screen;
 	std::shared_ptr<Entity> background;
@@ -17,6 +18,7 @@ public:
 	~GameScene() = default;
 
 	bool RenderBehind() { return showBehind; }
+	std::shared_ptr<Entity> SpawnEntity(em::Prefab);
 
 	void Update(const double &dt) override;
 	void Render() override;

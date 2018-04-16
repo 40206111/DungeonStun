@@ -19,6 +19,7 @@ void GameScene::Load() {
 	auto s = screen->addComponent<ShapeComponent>();
 	s->setShape<RectangleShape>(Vector2f(Renderer::GetWindow().getSize()));
 	s->getShape().setFillColor(Color(0, 0, 0, 200));
+	s->SetRenderLayer(Renderer::Layer::FOREGROUND);
 
 	background = makeEntity();
 	background->setPosition(Vector2f(0, 0));
@@ -34,6 +35,24 @@ void GameScene::UnLoad() {
 
 void GameScene::Reset() {
 	// reset player position
+}
+
+std::shared_ptr<Entity> GameScene::SpawnEntity(em::Prefab p)
+{
+	shared_ptr<Entity> e = makeEntity();
+	switch (p)
+	{
+	case EntityMaker::ENEMY:
+		enemies.push_back(e);
+		break;
+	case EntityMaker::PROJECTILE:
+		projectiles.push_back(e);
+		break;
+	default:
+		break;
+	}
+	em::MakeEntity(e, p);
+	return e;
 }
 
 void GameScene::Update(const double &dt) {

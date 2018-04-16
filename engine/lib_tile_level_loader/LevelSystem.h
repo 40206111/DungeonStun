@@ -21,6 +21,7 @@ public:
 		START = 's',
 		END = 'e',
 		WALL = 'w',
+		FILL = 'o',
 		THICK = 'm',
 		THIN = 'l',
 		ENEMY = 'n',

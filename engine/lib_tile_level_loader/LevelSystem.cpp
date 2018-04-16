@@ -325,10 +325,116 @@ void LevelSystem::buildTextureSprites() {
 			// Some random tile choice???
 			_sprites.push_back(move(s));
 		}
-	}
+		else if (getTileAt({ t.pos.x, t.pos.y }) == THIN)
+		{
+			Vector2ul current(Vector2ul((t.pos - _offset) / (_tileSize)));
+			int counter = 0;
+			bool left = true;
+			if (current.x != 0 && getTile({ current.x - 1, current.y }) == THIN)
+			{
+				counter++;
+			}
+			if (current.x != _width - 1 && getTile({ current.x + 1, current.y }) == THIN)
+			{
+				counter++;
+				left = false;
+			}
 
-	cout << "Level with " << (_width * _height) << " Tiles, With " << nonempty
-		<< " Not Empty, using: " << _sprites.size() << " Sprites\n";
+			switch (counter)
+			{
+			case 0:
+				t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_LONG];
+				t.tex->setScale(Vector2f(_tileSize / 100, _tileSize / 100));
+				break;
+			case 1:
+				if (left)
+				{
+					t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_RIGHT];
+					t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+				}
+				else
+				{
+					t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_LEFT];
+					t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+				}
+				break;
+			case 2:
+				t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_MIDDLE];
+				t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+				break;
+			default:
+				break;
+			}
+			auto s = make_shared<sf::Sprite>(*t.tex);
+			s->setPosition(t.pos);
+			// Something with t.size
+			// Reference proper sprite
+			// Some random tile choice???
+			_sprites.push_back(move(s));
+		}
+		else if (getTileAt({ t.pos.x, t.pos.y }) == THICK)
+		{
+			Vector2ul current(Vector2ul((t.pos - _offset) / (_tileSize)));
+			int counter = 0;
+			bool left = true;
+			if (current.x != 0 && getTile({ current.x - 1, current.y }) == THICK)
+			{
+				counter++;
+			}
+			if (current.x != _width - 1 && getTile({ current.x + 1, current.y }) == THICK)
+			{
+				counter++;
+				left = false;
+			}
+
+			switch (counter)
+			{
+			case 0:
+				t.tex = &AssetLoader::sprites[AssetLoader::DOUBLE_P_LONG];
+				t.tex->setScale(Vector2f(_tileSize / 100, _tileSize / 100));
+				break;
+			case 1:
+				if (left)
+				{
+					t.tex = &AssetLoader::sprites[AssetLoader::DOUBLE_P_RIGHT];
+					t.tex->setScale(Vector2f(_tileSize / 20, _tileSize / 100));
+				}
+				else
+				{
+					t.tex = &AssetLoader::sprites[AssetLoader::DOUBLE_P_lEFT];
+					t.tex->setScale(Vector2f(_tileSize / 20, _tileSize / 100));
+				}
+				break;
+			case 2:
+				t.tex = &AssetLoader::sprites[AssetLoader::DOUBLE_P_MIDDLE];
+				t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+				break;
+			default:
+				break;
+			}
+			auto s = make_shared<sf::Sprite>(*t.tex);
+			s->setPosition(t.pos);
+			// Something with t.size
+			// Reference proper sprite
+			// Some random tile choice???
+			_sprites.push_back(move(s));
+		}
+		else if (getTileAt({ t.pos.x, t.pos.y }) == FILL)
+		{
+			t.tex = &AssetLoader::sprites[AssetLoader::TLOC];
+			auto s = make_shared<sf::Sprite>(*t.tex);
+			s->setScale(Vector2f(_tileSize / 200, _tileSize / 200));
+			s->setPosition(t.pos);
+			// Something with t.size
+			// Reference proper sprite
+			// Some random tile choice???
+			_sprites.push_back(move(s));
+		}
+
+
+		cout << "Level with " << (_width * _height) << " Tiles, With " << nonempty
+			<< " Not Empty, using: " << _sprites.size() << " Sprites\n";
+	}
 }
 
 void LevelSystem::render() {
