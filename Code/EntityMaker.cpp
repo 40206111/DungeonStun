@@ -36,21 +36,21 @@ void EntityMaker::MakeEnemy(std::shared_ptr<Entity> e) {
 
 void EntityMaker::MakePlayer(std::shared_ptr<Entity> e)
 {
-	Vector2f playerSize = Vector2f(20.0f, 30.0f);
 	player = e;
 
+	Vector2f playerSize = Vector2f(20.0f, 30.0f);
 	shared_ptr<SpriteComponent> s = e->addComponent<SpriteComponent>();
 	s->setSprite(AssetLoader::sprites[AssetLoader::LIB_IDLE]);
 	float scale = playerSize.x / s->getSprite().getLocalBounds().width;
 	s->getSprite().setScale({ scale , scale });
-	s->getSprite().setOrigin(playerSize / 2.0f);
-
+	s->getSprite().setOrigin({ s->getSprite().getLocalBounds().width / 2.0f, s->getSprite().getLocalBounds().height });
+	playerSize = { s->getSprite().getGlobalBounds().width, s->getSprite().getGlobalBounds().height };
 	/*shared_ptr<ShapeComponent> s = e->addComponent<ShapeComponent>();
 	s->setShape<RectangleShape>(playerSize);
 	s->getShape().setFillColor(Color::Blue);*/
 
 	s->SetRenderLayer(Renderer::Layer::ENTITIES);
-	shared_ptr<PlayerPhysicsComponent> pPhys = e->addComponent<PlayerPhysicsComponent>(playerSize * scale);
+	shared_ptr<PlayerPhysicsComponent> pPhys = e->addComponent<PlayerPhysicsComponent>(playerSize);
 	pPhys->SetPlayerInteraction(e->addComponent<PlayerInteraction>());
 	e->addComponent<PlayerCondition>();
 }
@@ -61,7 +61,7 @@ void EntityMaker::MakeProjectile(std::shared_ptr<Entity> e)
 	float projSize = 10.0f;
 	s->setShape<CircleShape>(projSize);
 	s->getShape().setFillColor(Color::Red);
-	s->getShape().setOrigin({ projSize / 2.0f, projSize / 2.0f });
+	s->getShape().setOrigin(Vector2f(projSize / 2.0f, projSize / 2.0f));
 	s->SetRenderLayer(Renderer::Layer::PROJECTILES);
 	shared_ptr<ProjectilePhysics> p = e->addComponent<ProjectilePhysics>(projSize);
 }

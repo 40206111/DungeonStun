@@ -27,7 +27,7 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
 		// Create the fixture shape
 		b2PolygonShape Shape;
 		// SetAsBox box takes HALF-Widths!
-		Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
+		Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f, b2Vec2(0.0f, sv2_to_bv2(size).x),0.0f);
 		b2FixtureDef FixtureDef;
 		// Fixture properties
 		// FixtureDef.density = _dynamic ? 10.f : 0.f;
@@ -82,16 +82,16 @@ PhysicsComponent::PhysicsComponent(Entity * p, bool dyn, const float size)
 	// Create the fixture shape
 	b2CircleShape circle;
 	// SetAsCircl cricle takes radius
-	circle.m_radius = (size * physics_scale_inv / 2.0f);
+	circle.m_radius = (size * physics_scale_inv);
 	circle.m_p.Set(0.0f, 0.0f);
 	b2FixtureDef FixtureDefCircle;
 	// Fixture properties
 	// FixtureDef.density = _dynamic ? 10.f : 0.f;
 	FixtureDefCircle.shape = &circle;
-	FixtureDefCircle.filter.maskBits = 6;
+	//FixtureDefCircle.filter.maskBits = 8;
 	// Add to body
 	_body->CreateFixture(&FixtureDefCircle);
-	_body->SetGravityScale(0.0f);
+	_body->SetGravityScale(1.0f);
 }
 
 void PhysicsComponent::setFriction(float r) { _fixture->SetFriction(r); }
