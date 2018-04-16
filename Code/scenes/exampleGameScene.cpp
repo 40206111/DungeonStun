@@ -7,6 +7,7 @@
 #include "..\Components\cmp_player_physics.h"
 #include "..\Components\cmp_player_interaction.h"
 #include "..\Components\cmp_enemy_ai.h"
+#include "..\EntityMaker.h"
 
 using namespace std;
 using namespace sf;
@@ -23,23 +24,25 @@ void ExampleGameScene::Load() {
 	// load player
 	player = makeEntity();
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
-	auto s = player->addComponent<ShapeComponent>();
+	em::MakeEntity(player, em::PLAYER);
+	/*auto s = player->addComponent<ShapeComponent>();
 	Vector2f playerSize = Vector2f(20.0f, 30.0f);
 	s->setShape<RectangleShape>(playerSize);
 	s->getShape().setFillColor(Color::Blue);
 	s->getShape().setOrigin(playerSize);
 	auto pPhys = player->addComponent<PlayerPhysicsComponent>(playerSize);
-	pPhys->SetPlayerInteraction(player->addComponent<PlayerInteraction>());
+	pPhys->SetPlayerInteraction(player->addComponent<PlayerInteraction>());*/
 
 	auto en = makeEntity();
-	en->setPosition({ (float)(Engine::getWindowSize().x - Engine::getWindowSize().x / 10), (float)(Engine::getWindowSize().y / 10)});
-	auto eai = en->addComponent<EnemyAIComponent>();
-	eai->SetPlayer(player);
-	auto es = en->addComponent<ShapeComponent>();
-	Vector2f enemySize = Vector2f(30.0f, 20.0f);
-	es->setShape<RectangleShape>(enemySize);
-	es->getShape().setFillColor(Color::Blue);
-	es->getShape().setOrigin(enemySize);
+	en->setPosition({ (float)(Engine::getWindowSize().x - Engine::getWindowSize().x / 10), (float)(Engine::getWindowSize().y / 10) });
+	em::MakeEntity(en, em::ENEMY);
+	//auto eai = en->addComponent<EnemyAIComponent>();
+	//eai->SetPlayer(player);
+	//auto es = en->addComponent<ShapeComponent>();
+	//Vector2f enemySize = Vector2f(30.0f, 20.0f);
+	//es->setShape<RectangleShape>(enemySize);
+	//es->getShape().setFillColor(Color::Blue);
+	//es->getShape().setOrigin(enemySize);
 }
 
 void ExampleGameScene::UnLoad() {
