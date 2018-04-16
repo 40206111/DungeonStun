@@ -1,20 +1,22 @@
 #include "textScene.h"
 #include "../Game.h"
-#include "../SystemRenderer.h"
+#include "system_renderer.h"
 #include <SFML/Graphics.hpp>
 using namespace sf;
 using namespace std;
 
 ///ABSTRACT TEXT SCENE///
 
-//Update method
-void TextScene::Update(double dt)
+void TextScene::Load()
 {
-	//update input
-	player1->Update(dt);
+	ReSize();
+}
 
+//Update method
+void TextScene::Update(const double &dt)
+{
 	//if keyboard controls allow mouse input
-	if (player1->activeControls.controlType == "keyboard")
+	if (player1->activeControls->controlType == "keyboard")
 	{
 		for (int i = 0; i < textAmount; ++i)
 		{
@@ -37,18 +39,11 @@ void TextScene::Update(double dt)
 		//loop round text
 		ChangeCurrent(current - 1);
 	}
-	//Fullscreen window
-	if (player1->GetButtonDown(player1->FULLSCREEN))
-	{
-		Renderer::ToggleFullscreen();
-	}
 	//Back
 	if (player1->GetButtonDown(player1->BACK))
 	{
-		//set current to 0
-		ChangeCurrent(0);
 		//set active screen
-		activeScene = previousScene;
+		Engine::ChangeMenu(previousScene);
 	}
 
 	//poll events
@@ -65,11 +60,11 @@ void TextScene::Update(double dt)
 		//If controller disconected
 		if (event.type == sf::Event::JoystickDisconnected)
 		{
-			if (player1->activeControls.controlType == "PS4" && player1->controlerid == event.joystickMove.joystickId)
+			if (player1->activeControls->controlType == "PS4" && player1->controlerid == event.joystickMove.joystickId)
 			{
 				ChangeCurrent(0);
 				//set active screen
-				activeScene = homeScene;
+				Engine::ChangeMenu(disconnected);
 			}
 		}
 	}
@@ -78,28 +73,11 @@ void TextScene::Update(double dt)
 //render Method
 void TextScene::Render()
 {
-	CalculateSpace();
 	//set text positions to fit screen
-	/*text[0].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[0].getLocalBounds().width), (Renderer::GetWindow().getSize().y * 0.5f) - (text[0].getLocalBounds().height * 3));
-	text[1].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[1].getLocalBounds().width), Renderer::GetWindow().getSize().y * 0.5f - (text[1].getLocalBounds().height));
-	text[2].setPosition((Renderer::GetWindow().getSize().x * 0.5f) - (text[2].getLocalBounds().width), (Renderer::GetWindow().getSize().y * 0.5f) + (text[2].getLocalBounds().height));*/
-	//render text
 	for (int i = 0; i < textAmount; ++i)
 	{
-		text[i].setCharacterSize(Renderer::GetWindow().getSize().x / 10);
-
-		float xval = (Renderer::GetWindow().getSize().x * 0.25);
-		int co = i - textAmount / 2;
-		float yval = Renderer::GetWindow().getSize().y * 0.5f;
-		yval = yval + (co * space);
-		text[i].setPosition(Vector2f(xval, yval) - Vector2f(text[i].getLocalBounds().left, text[i].getLocalBounds().top));
-		if (false) {
-			Vector2f globPos = Vector2f(text[i].getGlobalBounds().left, text[i].getGlobalBounds().top);
-			Vector2f posPos = text[i].getPosition();
-			Vector2f locPos = Vector2f(text[i].getLocalBounds().left, text[i].getLocalBounds().top);
-		}
-
-		Renderer::Queue(&text[i]);
+		//render text
+		Renderer::Queue(Renderer::Layer::UIMID, &text[i]);
 	}
 }
 
@@ -125,5 +103,29 @@ void TextScene::ChangeCurrent(int value)
 	{
 		text[lastCurrent].setColor(sf::Color::White);
 		text[current].setColor(sf::Color::Yellow);
+	}
+}
+
+void TextScene::UnLoad() {
+	//set current to 0
+	ChangeCurrent(0);
+}
+void TextScene::ReSize()
+{
+	CalculateSpace();
+	for (int i = 0; i < textAmount; ++i)
+	{
+		text[i].setCharacterSize(Renderer::GetWindow().getSize().x / 10);
+
+		float xval = (Renderer::GetWindow().getSize().x * 0.25);
+		int co = i - textAmount / 2;
+		float yval = Renderer::GetWindow().getSize().y * 0.5f;
+		yval = yval + (co * space);
+		text[i].setPosition(Vector2f(xval, yval) - Vector2f(text[i].getLocalBounds().left, text[i].getLocalBounds().top));
+		if (false) {
+			Vector2f globPos = Vector2f(text[i].getGlobalBounds().left, text[i].getGlobalBounds().top);
+			Vector2f posPos = text[i].getPosition();
+			Vector2f locPos = Vector2f(text[i].getLocalBounds().left, text[i].getLocalBounds().top);
+		}
 	}
 }

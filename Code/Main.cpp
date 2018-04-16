@@ -1,12 +1,17 @@
 #include <SFML/Graphics.hpp>
-#include "SystemRenderer.h"
+#include "system_renderer.h"
 #include "Game.h"
 #include "scenes\homeScene.h"
 #include "scenes\menuScene.h"
 #include "scenes\settingsScene.h"
 #include "scenes\graphicsScene.h"
 #include "scenes\controlsScene.h"
+#include "scenes\gameWorkshop.h"
+#include "scenes\exampleGameScene.h"
+#include "scenes\Disconnected.h"
 #include <iostream>
+#include "Serializer.h"
+#include "AssetLoader.h"
 using namespace sf;
 using namespace std;
 
@@ -16,51 +21,29 @@ shared_ptr<Scene> homeScene;
 shared_ptr<Scene> menuScene;
 shared_ptr<Scene> settingsScene;
 shared_ptr<Scene> graphicsScene;
-shared_ptr<Scene> activeScene;
 shared_ptr<Scene> controlsScene;
-
-void Render()
-{
-	activeScene->Render();
-	Renderer::Render();
-}
+GameWorkshop gameScene;
+shared_ptr<Scene> disconnected;
+shared_ptr<Scene> egScene;
 
 void Load()
 {	
+	AssetLoader::LoadAssets();
 	font.loadFromFile("Assets/font/rm_typerighter_old.ttf");
 	player1.reset(new InputManager());
+	Serializer::DeSerialize("Assets/save/player1.txt", player1);
 	homeScene.reset(new HomeScene());
 	menuScene.reset(new MenuScene());
 	settingsScene.reset(new SettingsScene());
 	graphicsScene.reset(new GraphicsScene());
 	controlsScene.reset(new ControlsScene());
-	homeScene->Load();
-	menuScene->Load();
-	settingsScene->Load();
-	graphicsScene->Load();
-	controlsScene->Load();
-	activeScene = homeScene;
-}
-
-void Update()
-{
-	static Clock clock;
-	float dt = clock.restart().asSeconds();
-	activeScene->Update(dt);
+	disconnected.reset(new Disconnected());
+	egScene.reset(new ExampleGameScene());
 }
 
 int main()
 {
-	RenderWindow window(VideoMode(Renderer::resolutions[Renderer::currentRes].first, Renderer::resolutions[Renderer::currentRes].second), "Workin' 9 to Die");
-	Renderer::Initialise(window);
 	Load();
-
-	while (window.isOpen())
-	{
-		window.clear();
-		Update();
-		Render();
-		window.display();
-	}
+	Engine::Start(Renderer::resolutions[Renderer::currentRes].first, Renderer::resolutions[Renderer::currentRes].second, "Working 9 to Die", homeScene);
 	return 0;
 }

@@ -13,6 +13,7 @@ struct ControlSystem {
 	std::string controlType;
 	int mapKey;
 	std::map<unsigned int, int> mouseControls;
+	std::map<unsigned int, std::pair<std::string, std::string>> controlWords;
 };
 
 //Input Manager Class
@@ -20,15 +21,15 @@ class InputManager
 {
 public:
 	//PS4 Enum
-	static enum PS4 { SQUARE, X, O, TRIANGLE, L1, R1, L2, R2, SELECT, START, LEFTA, RIGHTA, PS, TOUCH, NONE = -1};
+	enum PS4 { SQUARE, X, O, TRIANGLE, L1, R1, L2, R2, SELECT, START, LEFTA, RIGHTA, PS, TOUCH, NONE = -1};
 	//Dpad Enum
-	static enum Dir{ U, D, L, R};
+	enum Dir{ U, D, L, R};
 	//Enum for actions
-	static enum Action { LEFT, RIGHT, SVM, JUMP,
+	enum Action { LEFT, RIGHT, SVM, JUMP,
 						AIM, FIRE, SHIELD, ACTIVE,
 						MENUUP, MENUDOWN, MENULEFT, 
 						MENURIGHT, BACK, ACCEPT,
-						FULLSCREEN, ACTIONSIZE}; //action size shows how many actions there are in the enum
+						FULLSCREEN, MENU, ACTIONSIZE}; //action size shows how many actions there are in the enum
 
 	static const std::vector<std::string> Actions;
 
@@ -37,8 +38,8 @@ public:
 	static const std::map<sf::Keyboard::Key, std::string> keyboardControls;
 
 	//Control Systems
-	std::vector<ControlSystem> keyMaps;
-	ControlSystem activeControls;
+	std::vector<ControlSystem*> keyMaps;
+	ControlSystem *activeControls = nullptr;
 
 	//controller ID
 	unsigned int controlerid = 0;
@@ -53,8 +54,8 @@ public:
 	bool mMoved = false;
 
 	//methods
-	void Update(double dt);
-	void Remap(Action action, bool primary, int key);
+	bool Remap(Action action, int primary, int key);
+	void Update(const double &dt);
 	bool GetDpadDir(unsigned int jid, Dir dir);
 	bool GetDigiAnalogue(unsigned int jid, Dir dir);
 	bool GetAnaDown(Dir dir);
@@ -64,6 +65,7 @@ public:
 	bool GetButtonHeld(unsigned int button);
 	bool GetButtonReleased(unsigned int button);
 	bool onText(sf::Text t);
+	void ChangeActive(int controlScheme);
 protected:
 	//bools for button presses
 	std::bitset<ACTIONSIZE> buttonDown;

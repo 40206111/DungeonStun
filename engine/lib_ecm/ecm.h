@@ -22,7 +22,7 @@ public:
 
   bool is_fordeletion() const;
 
-  virtual void update(double dt) = 0;
+  virtual void Update(const double &dt) = 0;
 
   virtual void render() = 0;
 
@@ -31,7 +31,7 @@ public:
 
 struct EntityManager {
   std::vector<std::shared_ptr<Entity>> list;
-  void update(double dt);
+  void Update(const double &dt);
   void render();
   std::vector<std::shared_ptr<Entity>> find(const std::string& tag) const;
   std::vector<std::shared_ptr<Entity>>
@@ -58,7 +58,7 @@ public:
 
   virtual ~Entity();
 
-  virtual void update(double dt);
+  virtual void Update(const double &dt);
 
   virtual void render();
 

@@ -9,7 +9,7 @@ Entity::Entity(Scene* const s)
 void Entity::addTag(const std::string& t) { _tags.insert(t); }
 const std::set<std::string>& Entity::getTags() const { return _tags; }
 
-void Entity::update(double dt) {
+void Entity::Update(const double &dt) {
   if (!_alive) {
     return;
   }
@@ -17,8 +17,9 @@ void Entity::update(double dt) {
     if (_components[i]->is_fordeletion()) {
       _components.erase(_components.begin() + i);
       --i;
+	  continue;
     }
-    _components[i]->update(dt);
+    _components[i]->Update(dt);
   }
 }
 
@@ -84,7 +85,7 @@ Component::~Component() {}
 
 bool Component::is_fordeletion() const { return _fordeletion; }
 
-void EntityManager::update(double dt) {
+void EntityManager::Update(const double &dt) {
   for (size_t i = 0; i < list.size(); i++) {
     if (list[i]->is_fordeletion()) {
       list.erase(list.begin() + i);
@@ -92,7 +93,7 @@ void EntityManager::update(double dt) {
       continue;
     }
     if (list[i]->_alive) {
-      list[i]->update(dt);
+      list[i]->Update(dt);
     }
   }
 }

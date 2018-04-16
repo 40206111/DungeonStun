@@ -1,10 +1,11 @@
 #pragma once
-#include "Scene.h"
+#include "engine.h"
 #include <SFML/Graphics.hpp>
 
 class TextScene : public Scene
 {
 protected:
+	bool loaded = false;
 	std::vector<sf::Text> text;
 	int textAmount;
 	float space;
@@ -16,6 +17,9 @@ protected:
 	virtual void ChangeCurrent(int);
 public:
 	TextScene() = default;
-	void Update(double dt) override;
+	void Load() override;
+	void Update(const double &dt) override;
 	void Render() override;
+	void UnLoad() override;
+	void ReSize() override;
 };

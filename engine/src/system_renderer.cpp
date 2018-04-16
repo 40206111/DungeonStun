@@ -4,26 +4,68 @@
 using namespace std;
 using namespace sf;
 
-static queue<const Drawable*> sprites;
+static vector<queue<const Drawable*>> sprites;
 static RenderWindow* rw;
+static bool fullscreen = false;
 
-void Renderer::initialise(sf::RenderWindow& r) { rw = &r; }
+unsigned int Renderer::currentRes = 3;
 
-void Renderer::shutdown() {
-  while (!sprites.empty())
-    sprites.pop();
+void Renderer::Initialise(sf::RenderWindow& r) {
+	rw = &r;
+	for (int i = 0; i <= Layer::UIFORE; ++i) {
+		sprites.push_back(move(queue<const Drawable*>()));
+	}
 }
 
-void Renderer::update(const double&) {}
+sf::RenderWindow & Renderer::GetWindow() { return *rw; }
+bool Renderer::GetFullscreen() { return fullscreen; }
 
-void Renderer::render() {
-  if (rw == nullptr) {
-    throw("No render window set! ");
-  }
-  while (!sprites.empty()) {
-    rw->draw(*sprites.front());
-    sprites.pop();
-  }
+void Renderer::Shutdown() {
+	for (int i = 0; i < sprites.size(); i++)
+	{
+		while (!sprites[i].empty())
+			sprites[i].pop();
+	}
 }
 
-void Renderer::queue(const sf::Drawable* s) { sprites.push(s); }
+void Renderer::Update(const double& dt) {}
+
+void Renderer::Render() {
+	if (rw == nullptr) {
+		throw("No render window set! ");
+	}
+	for (int i = 0; i < sprites.size(); ++i) {
+		while (!sprites[i].empty()) {
+			rw->draw(*sprites[i].front());
+			sprites[i].pop();
+		}
+	}
+}
+
+void Renderer::Queue(const sf::Drawable* s) { sprites[Renderer::Layer::LEVEL].push(s); }
+
+void Renderer::Queue(Layer l, const sf::Drawable* s) { sprites[l].push(s); }
+
+void Renderer::ToggleFullscreen()
+{
+	fullscreen = !fullscreen;
+	if (fullscreen)
+	{
+		int style = sf::Style::Default | sf::Style::Fullscreen;
+		std::vector<sf::VideoMode> VModes = sf::VideoMode::getFullscreenModes();
+		Renderer::GetWindow().create(VModes.at(0), "Workin' 9 to Die", style);
+	}
+	else
+	{
+		Renderer::GetWindow().create(VideoMode(resolutions[currentRes].first, resolutions[currentRes].second), "Workin' 9 to Die");
+	}
+}
+
+void Renderer::setResolution(int res)
+{
+	currentRes = res;
+	if (!fullscreen)
+	{
+		Renderer::GetWindow().create(VideoMode(resolutions[currentRes].first, resolutions[currentRes].second), "Workin' 9 to Die");
+	}
+}
