@@ -68,6 +68,10 @@ void ExampleGameScene::Reset() {
 
 void ExampleGameScene::Update(const double &dt) {
 	GameScene::Update(dt);
+	Event event;
+	while (Renderer::GetWindow().pollEvent(event))
+	{
+	}
 }
 
 void ExampleGameScene::Render() {

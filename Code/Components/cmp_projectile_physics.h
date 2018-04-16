@@ -16,4 +16,6 @@ public:
 
 	void Update(const double &dt) override;
 	void render()override {}
+
+	void SetDirection(sf::Vector2f);
 };

@@ -1,5 +1,8 @@
 #include "cmp_player_interaction.h"
-#include "../Game.h"
+#include "..\Game.h"
+#include "..\EntityMaker.h"
+#include "cmp_projectile_physics.h"
+#include "system_physics.h"
 
 using namespace std;
 using namespace sf;
@@ -41,9 +44,15 @@ void PlayerInteraction::Update(const double &dt) {
 	/// Aim end-----------------------
 
 	/// Fire start--------------------
+	if (player1->GetButtonDown(InputManager::FIRE)) {
+		int x = 5;
+	}
 	if (player1->GetButtonHeld(InputManager::FIRE) && fireCD.Ready()) {
 		// Do a shoot
-		// send projectile at aimDirection
+		shared_ptr<Entity> proj = dynamic_cast<GameScene*>(_parent->scene)->SpawnEntity(em::PROJECTILE);
+		shared_ptr<ProjectilePhysics> pphys = proj->get_components<ProjectilePhysics>()[0];
+		pphys->teleport(_parent->getPosition() + Vector2f(1.0f, 0.0f));
+		pphys->SetDirection({ 1.0f,0.0f });
 		fireCD.Reset();
 	}
 	/// Fire end----------------------

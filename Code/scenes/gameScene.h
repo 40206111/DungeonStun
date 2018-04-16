@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine.h"
+#include "..\EntityMaker.h"
 
 class GameScene : public Scene {
 protected:
@@ -16,6 +17,7 @@ public:
 	~GameScene() = default;
 
 	bool RenderBehind() { return showBehind; }
+	std::shared_ptr<Entity> SpawnEntity(em::Prefab);
 
 	void Update(const double &dt) override;
 	void Render() override;

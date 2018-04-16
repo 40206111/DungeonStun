@@ -39,3 +39,9 @@ void ProjectilePhysics::Update(const double & dt)
 	// Update parent pos/rot
 	PhysicsComponent::Update(dt);
 }
+
+void ProjectilePhysics::SetDirection(Vector2f dir)
+{
+	direction = dir;
+	setVelocity(direction * maxSpeed);
+}

@@ -29,6 +29,24 @@ void GameScene::Reset() {
 	// reset player position
 }
 
+std::shared_ptr<Entity> GameScene::SpawnEntity(em::Prefab p)
+{
+	shared_ptr<Entity> e = makeEntity();
+	switch (p)
+	{
+	case EntityMaker::ENEMY:
+		enemies.push_back(e);
+		break;
+	case EntityMaker::PROJECTILE:
+		projectiles.push_back(e);
+		break;
+	default:
+		break;
+	}
+	em::MakeEntity(e, p);
+	return e;
+}
+
 void GameScene::Update(const double &dt) {
 	// run EM update
 	Scene::Update(dt);
