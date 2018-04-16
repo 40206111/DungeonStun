@@ -10,40 +10,48 @@ using namespace sf;
 weak_ptr<Entity> EntityMaker::player;
 
 void EntityMaker::MakeEnemy(std::shared_ptr<Entity> e) {
-	auto eai = e->addComponent<EnemyAIComponent>();
-	eai->SetPlayer(player);
-	auto es = e->addComponent<ShapeComponent>();
+	shared_ptr<EnemyAIComponent> ai = e->addComponent<EnemyAIComponent>();
+	ai->SetPlayer(player);
+	shared_ptr<ShapeComponent> s = e->addComponent<ShapeComponent>();
 	Vector2f enemySize = Vector2f(30.0f, 20.0f);
-	es->setShape<RectangleShape>(enemySize);
-	es->getShape().setFillColor(Color::Blue);
-	es->getShape().setOrigin(enemySize);
+	s->setShape<RectangleShape>(enemySize);
+	s->getShape().setFillColor(Color::Blue);
+	s->getShape().setOrigin(enemySize/2.0f);
+	s->SetRenderLayer(Renderer::Layer::ENTITIES);
 }
 
 void EntityMaker::MakePlayer(std::shared_ptr<Entity> e)
 {
 	player = e;
-	auto s = e->addComponent<ShapeComponent>();
+	shared_ptr<ShapeComponent> s = e->addComponent<ShapeComponent>();
 	Vector2f playerSize = Vector2f(20.0f, 30.0f);
 	s->setShape<RectangleShape>(playerSize);
 	s->getShape().setFillColor(Color::Blue);
-	s->getShape().setOrigin(playerSize);
-	auto pPhys = e->addComponent<PlayerPhysicsComponent>(playerSize);
+	s->getShape().setOrigin(playerSize/2.0f);
+	s->SetRenderLayer(Renderer::Layer::ENTITIES);
+	shared_ptr<PlayerPhysicsComponent> pPhys = e->addComponent<PlayerPhysicsComponent>(playerSize);
 	pPhys->SetPlayerInteraction(e->addComponent<PlayerInteraction>());
 }
 
-void EntityMaker::MakeProjectile(std::shared_ptr<Entity>)
+void EntityMaker::MakeProjectile(std::shared_ptr<Entity> e)
+{
+	shared_ptr<ShapeComponent> s = e->addComponent<ShapeComponent>();
+	float projSize = 10.0f;
+	s->setShape<CircleShape>(projSize);
+	s->getShape().setFillColor(Color::Red);
+	s->getShape().setOrigin({ projSize / 2.0f, projSize / 2.0f });
+	s->SetRenderLayer(Renderer::Layer::PROJECTILES);
+}
+
+void EntityMaker::MakeWall(std::shared_ptr<Entity> e)
 {
 }
 
-void EntityMaker::MakeWall(std::shared_ptr<Entity>)
+void EntityMaker::MakeChest(std::shared_ptr<Entity> e)
 {
 }
 
-void EntityMaker::MakeChest(std::shared_ptr<Entity>)
-{
-}
-
-void EntityMaker::MakePlatform(std::shared_ptr<Entity>)
+void EntityMaker::MakePlatform(std::shared_ptr<Entity> e)
 {
 }
 

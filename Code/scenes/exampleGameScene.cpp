@@ -37,11 +37,6 @@ void ExampleGameScene::Load() {
 	enemies.push_back(en);
 	en->setPosition({ (float)(Engine::getWindowSize().x - Engine::getWindowSize().x / 10), (float)(Engine::getWindowSize().y / 10) });
 	em::MakeEntity(en, em::ENEMY);
-
-	shared_ptr<Entity> enemm = makeEntity();
-	enemies.push_back(enemm);
-	enemm->setPosition({ (float)(Engine::getWindowSize().x - Engine::getWindowSize().x / 10), (float)(Engine::getWindowSize().y - Engine::getWindowSize().y / 10) });
-	em::MakeEntity(enemm, em::ENEMY);
 	//auto eai = en->addComponent<EnemyAIComponent>();
 	//eai->SetPlayer(player);
 	//auto es = en->addComponent<ShapeComponent>();
@@ -49,6 +44,16 @@ void ExampleGameScene::Load() {
 	//es->setShape<RectangleShape>(enemySize);
 	//es->getShape().setFillColor(Color::Blue);
 	//es->getShape().setOrigin(enemySize);
+
+	shared_ptr<Entity> enemm = makeEntity();
+	enemies.push_back(enemm);
+	enemm->setPosition({ (float)(Engine::getWindowSize().x - Engine::getWindowSize().x / 10), (float)(Engine::getWindowSize().y - Engine::getWindowSize().y / 10) });
+	em::MakeEntity(enemm, em::ENEMY);
+
+	shared_ptr<Entity> proj = makeEntity();
+	projectiles.push_back(proj);
+	proj->setPosition({ (float)(Engine::getWindowSize().x / 2.0f), (float)(Engine::getWindowSize().y / 2.0f) });
+	em::MakeEntity(proj, em::PROJECTILE);
 }
 
 void ExampleGameScene::UnLoad() {
