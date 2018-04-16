@@ -170,4 +170,6 @@ PlayerPhysicsComponent::PlayerPhysicsComponent(Entity* p,
 	_body->SetFixedRotation(true);
 	//Bullet items have higher-res collision detection
 	_body->SetBullet(true);
+
+	_body->SetUserData("player");
 }

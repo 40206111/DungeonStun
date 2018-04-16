@@ -11,6 +11,7 @@ ProjectilePhysics::ProjectilePhysics(Entity * p, const float size)
 	maxSpeed = 300.0f;
 	_body->SetBullet(true);
 	setVelocity(direction*maxSpeed);
+	_body->SetUserData("projectile");
 }
 
 void ProjectilePhysics::Update(const double & dt)
