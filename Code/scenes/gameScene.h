@@ -5,8 +5,8 @@
 class GameScene : public Scene {
 protected:
 	std::shared_ptr<Entity> player;
-	std::vector<Entity*> enemies;
-	std::vector<Entity*> projectiles;
+	std::vector<std::shared_ptr<Entity>> enemies;
+	std::vector<std::shared_ptr<Entity>> projectiles;
 	std::shared_ptr<Scene> activeMenu;
 	std::shared_ptr<Entity> screen;
 	bool showBehind = false;

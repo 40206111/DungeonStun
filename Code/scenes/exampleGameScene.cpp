@@ -34,8 +34,14 @@ void ExampleGameScene::Load() {
 	pPhys->SetPlayerInteraction(player->addComponent<PlayerInteraction>());*/
 
 	auto en = makeEntity();
+	enemies.push_back(en);
 	en->setPosition({ (float)(Engine::getWindowSize().x - Engine::getWindowSize().x / 10), (float)(Engine::getWindowSize().y / 10) });
 	em::MakeEntity(en, em::ENEMY);
+
+	shared_ptr<Entity> enemm = makeEntity();
+	enemies.push_back(enemm);
+	enemm->setPosition({ (float)(Engine::getWindowSize().x - Engine::getWindowSize().x / 10), (float)(Engine::getWindowSize().y - Engine::getWindowSize().y / 10) });
+	em::MakeEntity(enemm, em::ENEMY);
 	//auto eai = en->addComponent<EnemyAIComponent>();
 	//eai->SetPlayer(player);
 	//auto es = en->addComponent<ShapeComponent>();
