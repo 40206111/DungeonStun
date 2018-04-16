@@ -203,6 +203,7 @@ void LevelSystem::buildTextureSprites() {
 	const auto nonempty = tiles.size();
 
 	for (auto& t : tiles) {
+		//If tile is a wall
 		if (getTileAt({ t.pos.x, t.pos.y }) == WALL)
 		{
 			Vector2ul current(Vector2ul((t.pos - _offset) / (_tileSize)));
@@ -211,6 +212,7 @@ void LevelSystem::buildTextureSprites() {
 			int wall1 = 0;
 			int wall2 = 0;
 
+			//check what side(s) the edge of the world is on
 			if (current.x == 0)
 			{
 				xVoid = -1;
@@ -228,8 +230,10 @@ void LevelSystem::buildTextureSprites() {
 				yVoid = 1;
 			}
 
+			//Find what walls are connected to it
 			if (xVoid != -1 && getTile({ current.x - 1, current.y }) == WALL)
 			{
+				// 4 = left
 				if (wall1 == 0)
 					wall1 = 4;
 				else
@@ -237,6 +241,7 @@ void LevelSystem::buildTextureSprites() {
 			}
 			if (xVoid != 1 && getTile({ current.x + 1, current.y }) == WALL)
 			{
+				//2 = right
 				if (wall1 == 0)
 					wall1 = 2;
 				else
@@ -244,6 +249,7 @@ void LevelSystem::buildTextureSprites() {
 			}
 			if (yVoid != -1 && getTile({ current.x, current.y - 1 }) == WALL)
 			{
+				//1 = up
 				if (wall1 == 0)
 					wall1 = 1;
 				else
@@ -251,12 +257,14 @@ void LevelSystem::buildTextureSprites() {
 			}
 			if (yVoid != 1 && getTile({ current.x, current.y + 1 }) == WALL)
 			{
+				//3 = down
 				if (wall1 == 0)
 					wall1 = 3;
 				else
 					wall2 = 3;
 			}
 
+			//use correct sprite
 			if (wall1 == 1 && wall2 == 2 || wall1 == 2 && wall2 == 1)
 			{
 				t.tex = &AssetLoader::sprites[AssetLoader::TRIC];
@@ -290,8 +298,6 @@ void LevelSystem::buildTextureSprites() {
 			{
 				t.tex = &AssetLoader::sprites[AssetLoader::BLIC];
 			}
-
-			//voids
 			else if ((xVoid == -1 && (wall1 == 1 && wall2 == 0 || wall1 == 0 && wall2 == 1)) ||
 				(yVoid == -1 && (wall1 == 4 && wall2 == 0 || wall1 == 0 && wall2 == 4)) ||
 				(yVoid == -1 && xVoid == -1 && wall1 == 0 && wall2 == 0))
@@ -317,29 +323,34 @@ void LevelSystem::buildTextureSprites() {
 				t.tex = &AssetLoader::sprites[AssetLoader::TROC];
 			}
 
+			//set sprite
 			auto s = make_shared<sf::Sprite>(*t.tex);
 			s->setPosition(t.pos);
 			s->setScale(Vector2f(_tileSize / 200, _tileSize / 200));
-			// Something with t.size
-			// Reference proper sprite
-			// Some random tile choice???
 			_sprites.push_back(move(s));
 		}
+		//if thin platform
 		else if (getTileAt({ t.pos.x, t.pos.y }) == THIN)
 		{
 			Vector2ul current(Vector2ul((t.pos - _offset) / (_tileSize)));
 			int counter = 0;
 			bool left = true;
-			if (current.x != 0 && getTile({ current.x - 1, current.y }) == THIN)
+			//find how many platforms are touching it
+			if (current.x != 0 && 
+				(getTile({ current.x - 1, current.y }) == THIN) ||
+				(getTile({ current.x - 1, current.y }) == TWO_THIN))
 			{
 				counter++;
 			}
-			if (current.x != _width - 1 && getTile({ current.x + 1, current.y }) == THIN)
+			if (current.x != _width - 1 && 
+				(getTile({ current.x + 1, current.y }) == THIN) ||
+				(getTile({ current.x + 1, current.y }) == TWO_THIN))
 			{
 				counter++;
 				left = false;
 			}
 
+			//use correct sprite depeending on the amount of attached walls
 			switch (counter)
 			{
 			case 0:
@@ -365,18 +376,133 @@ void LevelSystem::buildTextureSprites() {
 			default:
 				break;
 			}
+			//add sprite
 			auto s = make_shared<sf::Sprite>(*t.tex);
 			s->setPosition(t.pos);
-			// Something with t.size
-			// Reference proper sprite
-			// Some random tile choice???
 			_sprites.push_back(move(s));
 		}
+		//if there are 2 thin platforms
+		else if (getTileAt({ t.pos.x, t.pos.y }) == TWO_THIN)
+		{
+			Vector2ul current(Vector2ul((t.pos - _offset) / (_tileSize)));
+
+			//do twice
+			for (int i = 0; i < 2; ++i)
+			{
+				int counter = 0;
+				bool left = true;
+				//check how many platforms are attached
+				if (current.x != 0 && (
+					(i == 0 && getTile({ current.x - 1, current.y }) == THIN) ||
+					(getTile({ current.x - 1, current.y }) == TWO_THIN) ||
+					(i == 1 && getTile({ current.x - 1, current.y }) == LOW_THIN)
+					))
+				{
+					counter++;
+				}
+				if (current.x != _width - 1 && (
+					(i == 0 && getTile({ current.x + 1, current.y }) == THIN) ||
+					(getTile({ current.x + 1, current.y }) == TWO_THIN) ||
+					(i == 1 && getTile({ current.x + 1, current.y }) == LOW_THIN)
+					))
+				{
+					counter++;
+					left = false;
+				}
+				//choose correct asset
+				switch (counter)
+				{
+				case 0:
+					t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_LONG];
+					t.tex->setScale(Vector2f(_tileSize / 100, _tileSize / 100));
+					break;
+				case 1:
+					if (left)
+					{
+						t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_RIGHT];
+						t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+					}
+					else
+					{
+						t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_LEFT];
+						t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+					}
+					break;
+				case 2:
+					t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_MIDDLE];
+					t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+					break;
+				default:
+					break;
+				}
+				//add sprite
+				auto s = make_shared<sf::Sprite>(*t.tex);
+				if (i == 0)
+					s->setPosition(t.pos);
+				else
+					s->setPosition(t.pos + Vector2f(0, _tileSize / 2));
+				_sprites.push_back(move(s));
+			}
+		}
+		//if there is a low thin platform
+		else if (getTileAt({ t.pos.x, t.pos.y }) == LOW_THIN)
+		{
+			Vector2ul current(Vector2ul((t.pos - _offset) / (_tileSize)));
+			int counter = 0;
+			bool left = true;
+			//check how many walls are attached
+			if (current.x != 0 &&
+				(getTile({ current.x - 1, current.y }) == LOW_THIN) ||
+				(getTile({ current.x - 1, current.y }) == TWO_THIN))
+			{
+				counter++;
+			}
+			if (current.x != _width - 1 &&
+				(getTile({ current.x + 1, current.y }) == LOW_THIN) ||
+				(getTile({ current.x + 1, current.y }) == TWO_THIN))
+			{
+				counter++;
+				left = false;
+			}
+
+			//choose correct asset
+			switch (counter)
+			{
+			case 0:
+				t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_LONG];
+				t.tex->setScale(Vector2f(_tileSize / 100, _tileSize / 100));
+				break;
+			case 1:
+				if (left)
+				{
+					t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_RIGHT];
+					t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+				}
+				else
+				{
+					t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_LEFT];
+					t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+				}
+				break;
+			case 2:
+				t.tex = &AssetLoader::sprites[AssetLoader::SINGLE_P_MIDDLE];
+				t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+				break;
+			default:
+				break;
+			}
+			//add sprite
+			auto s = make_shared<sf::Sprite>(*t.tex);
+			s->setPosition(t.pos + Vector2f(0, _tileSize/2));
+			_sprites.push_back(move(s));
+		}
+		//if there is a thick platform
 		else if (getTileAt({ t.pos.x, t.pos.y }) == THICK)
 		{
 			Vector2ul current(Vector2ul((t.pos - _offset) / (_tileSize)));
 			int counter = 0;
 			bool left = true;
+			//chack how many thick platforms are attached
 			if (current.x != 0 && getTile({ current.x - 1, current.y }) == THICK)
 			{
 				counter++;
@@ -386,7 +512,7 @@ void LevelSystem::buildTextureSprites() {
 				counter++;
 				left = false;
 			}
-
+			//use apppropriate asset
 			switch (counter)
 			{
 			case 0:
@@ -412,28 +538,68 @@ void LevelSystem::buildTextureSprites() {
 			default:
 				break;
 			}
+			//add sprite
 			auto s = make_shared<sf::Sprite>(*t.tex);
 			s->setPosition(t.pos);
-			// Something with t.size
-			// Reference proper sprite
-			// Some random tile choice???
 			_sprites.push_back(move(s));
 		}
+		// if there is a low thick platform
+		else if (getTileAt({ t.pos.x, t.pos.y }) == LOW_THICK)
+		{
+			Vector2ul current(Vector2ul((t.pos - _offset) / (_tileSize)));
+			int counter = 0;
+			bool left = true;
+			//find out how many walls are attached
+			if (current.x != 0 && getTile({ current.x - 1, current.y }) == LOW_THICK)
+			{
+				counter++;
+			}
+			if (current.x != _width - 1 && getTile({ current.x + 1, current.y }) == LOW_THICK)
+			{
+				counter++;
+				left = false;
+			}
+			//use appropriate asset
+			switch (counter)
+			{
+			case 0:
+				t.tex = &AssetLoader::sprites[AssetLoader::DOUBLE_P_LONG];
+				t.tex->setScale(Vector2f(_tileSize / 100, _tileSize / 100));
+				break;
+			case 1:
+				if (left)
+				{
+					t.tex = &AssetLoader::sprites[AssetLoader::DOUBLE_P_RIGHT];
+					t.tex->setScale(Vector2f(_tileSize / 20, _tileSize / 100));
+				}
+				else
+				{
+					t.tex = &AssetLoader::sprites[AssetLoader::DOUBLE_P_lEFT];
+					t.tex->setScale(Vector2f(_tileSize / 20, _tileSize / 100));
+				}
+				break;
+			case 2:
+				t.tex = &AssetLoader::sprites[AssetLoader::DOUBLE_P_MIDDLE];
+				t.tex->setScale(Vector2f(_tileSize / 10, _tileSize / 100));
+				break;
+			default:
+				break;
+			}
+			//add sprite
+			auto s = make_shared<sf::Sprite>(*t.tex);
+			s->setPosition(t.pos + Vector2f(0, _tileSize/2));
+			_sprites.push_back(move(s));
+		}
+		//if tile is inner wall
 		else if (getTileAt({ t.pos.x, t.pos.y }) == FILL)
 		{
+			//set sprite
 			t.tex = &AssetLoader::sprites[AssetLoader::TLOC];
 			auto s = make_shared<sf::Sprite>(*t.tex);
 			s->setScale(Vector2f(_tileSize / 200, _tileSize / 200));
 			s->setPosition(t.pos);
-			// Something with t.size
-			// Reference proper sprite
-			// Some random tile choice???
 			_sprites.push_back(move(s));
 		}
-
-
-		cout << "Level with " << (_width * _height) << " Tiles, With " << nonempty
-			<< " Not Empty, using: " << _sprites.size() << " Sprites\n";
 	}
 }
 
