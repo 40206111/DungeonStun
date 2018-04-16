@@ -9,6 +9,9 @@ PlayerCondition::PlayerCondition(Entity* p) : Component(p) {
 }
 
 void PlayerCondition::TakeDamage(int value) {
+	if (playerInt->IsBlocking()) {
+		return;
+	}
 	//  If temporary health lose 1 tempHealth
 	if (tempHealth > 0) {
 		tempHealth--;

@@ -33,6 +33,7 @@ public:
 	void AllowFiring() { antiFire--; }
 	void SetSvmState(bool);
 	bool InSvm() { return inSVM; }
+	bool IsBlocking() { return blocking; }
 	void SetAlive(bool);
 
 	void Update(const double &dt) override;

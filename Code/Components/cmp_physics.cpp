@@ -88,6 +88,7 @@ PhysicsComponent::PhysicsComponent(Entity * p, bool dyn, const float size)
 	// Fixture properties
 	// FixtureDef.density = _dynamic ? 10.f : 0.f;
 	FixtureDefCircle.shape = &circle;
+	FixtureDefCircle.filter.maskBits = 6;
 	// Add to body
 	_body->CreateFixture(&FixtureDefCircle);
 	_body->SetGravityScale(0.0f);

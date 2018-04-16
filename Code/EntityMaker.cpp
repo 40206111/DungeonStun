@@ -1,5 +1,6 @@
 #include "EntityMaker.h"
 #include "Components\cmp_enemy_ai.h"
+#include "Components\cmp_enemy_condition.h"
 #include "Components\cmp_sprite.h"
 #include "Components\cmp_player_physics.h"
 #include "Components\cmp_player_interaction.h"
@@ -15,12 +16,22 @@ weak_ptr<Entity> EntityMaker::player;
 void EntityMaker::MakeEnemy(std::shared_ptr<Entity> e) {
 	shared_ptr<EnemyAIComponent> ai = e->addComponent<EnemyAIComponent>();
 	ai->SetPlayer(player);
-	shared_ptr<ShapeComponent> s = e->addComponent<ShapeComponent>();
+
+	float enemyWidth = 30.0f;
+	shared_ptr<SpriteComponent> s = e->addComponent<SpriteComponent>();
+	s->setSprite(AssetLoader::sprites[AssetLoader::ENEMY]);
+	float scale = enemyWidth / s->getSprite().getLocalBounds().width;
+	s->getSprite().setScale({ scale , scale });
+	s->getSprite().setOrigin({ s->getSprite().getLocalBounds().width, s->getSprite().getLocalBounds().height });
+
+	/*shared_ptr<ShapeComponent> s = e->addComponent<ShapeComponent>();
 	Vector2f enemySize = Vector2f(30.0f, 20.0f);
 	s->setShape<RectangleShape>(enemySize);
 	s->getShape().setFillColor(Color::Blue);
-	s->getShape().setOrigin(enemySize / 2.0f);
+	s->getShape().setOrigin(enemySize / 2.0f);*/
 	s->SetRenderLayer(Renderer::Layer::ENTITIES);
+
+	e->addComponent<EnemyCondition>();
 }
 
 void EntityMaker::MakePlayer(std::shared_ptr<Entity> e)
