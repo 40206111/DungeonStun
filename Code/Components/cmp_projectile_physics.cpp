@@ -7,13 +7,23 @@ ProjectilePhysics::ProjectilePhysics(Entity * p, const sf::Vector2f & size)
 	: PhysicsComponent(p, true, size)
 {
 	direction = { -1.0f, 0.0f };
+	_body->SetBullet(true);
 }
 
 void ProjectilePhysics::Update(const double & dt)
 {
+	// Check for death
+	death.Update(dt);
+	if (death.Ready()) {
+		is_fordeletion();
+		return;
+	}
+
+	// Apply impulse
 	Vector2f mov = (float)dt * direction * speed;
 	impulse(mov);
 
+	// Cap velocity
 	Vector2f v = getVelocity();
 	if (v != Vector2f(0, 0)) {
 		float len = length(v);
@@ -22,5 +32,6 @@ void ProjectilePhysics::Update(const double & dt)
 			setVelocity(v);
 		}
 	}
-
+	// Update parent pos/rot
+	PhysicsComponent::Update(dt);
 }
