@@ -42,6 +42,7 @@ public:
   static void setVsync(bool b);
   static bool ShowingMenu() { return menuUp; }
   static void Resize();
+  static std::shared_ptr<Scene> GetActive() { return _activeScene; }
 private:
   static std::shared_ptr<Scene> _activeScene;
   static std::shared_ptr<Scene> _activeMenu;

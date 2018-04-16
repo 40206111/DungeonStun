@@ -6,9 +6,10 @@
 #include "scenes\settingsScene.h"
 #include "scenes\graphicsScene.h"
 #include "scenes\controlsScene.h"
-#include "scenes\gameWorkshop.h"
 #include "scenes\exampleGameScene.h"
 #include "scenes\Disconnected.h"
+#include "scenes\GameOver.h"
+#include "scenes\Victory.h"
 #include <iostream>
 #include "Serializer.h"
 #include "AssetLoader.h"
@@ -22,7 +23,8 @@ shared_ptr<Scene> menuScene;
 shared_ptr<Scene> settingsScene;
 shared_ptr<Scene> graphicsScene;
 shared_ptr<Scene> controlsScene;
-GameWorkshop gameScene;
+shared_ptr<Scene> gameOverScene;
+shared_ptr<Scene> victoryScene;
 shared_ptr<Scene> disconnected;
 shared_ptr<Scene> egScene;
 
@@ -38,6 +40,8 @@ void Load()
 	graphicsScene.reset(new GraphicsScene());
 	controlsScene.reset(new ControlsScene());
 	disconnected.reset(new Disconnected());
+	gameOverScene.reset(new GameOver());
+	victoryScene.reset(new Victory());
 	egScene.reset(new ExampleGameScene());
 }
 
