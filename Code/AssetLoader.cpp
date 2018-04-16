@@ -142,22 +142,22 @@ void AssetLoader::LoadAssets()
 	rect = IntRect(403, 1008, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
 	//top
-	rect = IntRect(605, 1008, 200, 200);
+	rect = IntRect(606, 1008, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
-	//top right inner corner
-	rect = IntRect(807, 1008, 200, 200);
+	//top left inner corner
+	rect = IntRect(809, 1008, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
 	//top left outer corner
 	rect = IntRect(0, 807, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
 	//top right outer corner
-	rect = IntRect(202, 807, 200, 200);
+	rect = IntRect(203, 807, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
 	//bottom left outer corner
 	rect = IntRect(0, 1008, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
 	//borrom right outer corner
-	rect = IntRect(201, 1008, 200, 200);
+	rect = IntRect(202, 1008, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
 	//
 	//single platform 100 x 10

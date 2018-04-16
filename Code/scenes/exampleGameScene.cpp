@@ -14,7 +14,7 @@ void ExampleGameScene::Load() {
 	showBehind = true;
 	// load level
 	float tileSize = 40.0f;
-	ls::loadLevelFile("Assets/level_1.txt", tileSize);
+	ls::loadLevelFile("Assets/level.txt", tileSize);
 	float off = Engine::getWindowSize().y - (ls::getHeight() * tileSize);
 	ls::setOffset(Vector2f(0.0f, off));
 	// make level physics
