@@ -82,7 +82,7 @@ PhysicsComponent::PhysicsComponent(Entity * p, bool dyn, const float size)
 	// Create the fixture shape
 	b2CircleShape circle;
 	// SetAsCircl cricle takes radius
-	circle.m_radius = (size / 2.0f);
+	circle.m_radius = (size * physics_scale_inv / 2.0f);
 	circle.m_p.Set(0.0f, 0.0f);
 	b2FixtureDef FixtureDefCircle;
 	// Fixture properties
@@ -90,6 +90,7 @@ PhysicsComponent::PhysicsComponent(Entity * p, bool dyn, const float size)
 	FixtureDefCircle.shape = &circle;
 	// Add to body
 	_body->CreateFixture(&FixtureDefCircle);
+	_body->SetGravityScale(0.0f);
 }
 
 void PhysicsComponent::setFriction(float r) { _fixture->SetFriction(r); }

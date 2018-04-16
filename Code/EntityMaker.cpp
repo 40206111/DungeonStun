@@ -3,6 +3,7 @@
 #include "Components\cmp_sprite.h"
 #include "Components\cmp_player_physics.h"
 #include "Components\cmp_player_interaction.h"
+#include "Components\cmp_projectile_physics.h"
 
 using namespace std;
 using namespace sf;
@@ -41,6 +42,7 @@ void EntityMaker::MakeProjectile(std::shared_ptr<Entity> e)
 	s->getShape().setFillColor(Color::Red);
 	s->getShape().setOrigin({ projSize / 2.0f, projSize / 2.0f });
 	s->SetRenderLayer(Renderer::Layer::PROJECTILES);
+	shared_ptr<ProjectilePhysics> p = e->addComponent<ProjectilePhysics>(projSize);
 }
 
 void EntityMaker::MakeWall(std::shared_ptr<Entity> e)

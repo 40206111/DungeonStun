@@ -8,10 +8,10 @@ protected:
 	sf::Vector2f direction;
 	float speed;
 	float maxSpeed;
-	Cooldown death = Cooldown(2.0);
+	Cooldown death = Cooldown(1.0);
 public:
 	ProjectilePhysics() = delete;
-	explicit ProjectilePhysics(Entity* p, const sf::Vector2f& size);
+	explicit ProjectilePhysics(Entity* p, const float size);
 	~ProjectilePhysics() = default;
 
 	void Update(const double &dt) override;
