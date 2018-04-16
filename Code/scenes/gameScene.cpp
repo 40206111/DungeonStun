@@ -7,6 +7,7 @@
 #include "..\Game.h"
 #include "..\Components\cmp_sprite.h"
 #include "..\Components\cmp_player_physics.h"
+#include "../AssetLoader.h"
 
 using namespace std;
 using namespace sf;
@@ -18,6 +19,13 @@ void GameScene::Load() {
 	auto s = screen->addComponent<ShapeComponent>();
 	s->setShape<RectangleShape>(Vector2f(Renderer::GetWindow().getSize()));
 	s->getShape().setFillColor(Color(0, 0, 0, 200));
+
+	background = makeEntity();
+	background->setPosition(Vector2f(0, 0));
+	background->setVisible(true);
+	auto b = background->addComponent<SpriteComponent>();
+	b->setSprite(AssetLoader::sprites[AssetLoader::BACKGROUND]);
+	b->getSprite().setTextureRect({0, 0, (int)Renderer::GetWindow().getSize().x, (int)Renderer::GetWindow().getSize().y});
 }
 
 void GameScene::UnLoad() {

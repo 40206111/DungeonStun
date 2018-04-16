@@ -19,6 +19,7 @@ void AssetLoader::LoadAssets()
 	static shared_ptr<Texture> enviroment(Resources::get<sf::Texture>("Enviroment.png"));
 	static shared_ptr<Texture> health(Resources::get<sf::Texture>("Health.png"));
 	static shared_ptr<Texture> trap(Resources::get<sf::Texture>("Traps.png"));
+	static shared_ptr<Texture> bg(Resources::get<sf::Texture>("background.png"));
 
 	//idle
 	IntRect rect = IntRect(38, 1, 33, 60);
@@ -132,8 +133,8 @@ void AssetLoader::LoadAssets()
 	rect = IntRect(403, 807, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
 	//background
-	rect = IntRect(606, 807, 200, 200);
-	sprites.push_back(Sprite(*enviroment, rect));
+	bg->setRepeated(true);
+	sprites.push_back(Sprite(*bg));
 	//left
 	rect = IntRect(807, 807, 200, 200);
 	sprites.push_back(Sprite(*enviroment, rect));
