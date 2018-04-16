@@ -8,6 +8,7 @@ ProjectilePhysics::ProjectilePhysics(Entity * p, const sf::Vector2f & size)
 {
 	direction = { -1.0f, 0.0f };
 	_body->SetBullet(true);
+	_body->SetUserData("projectile");
 }
 
 void ProjectilePhysics::Update(const double & dt)
