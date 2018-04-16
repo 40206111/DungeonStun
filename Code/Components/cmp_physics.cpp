@@ -67,6 +67,31 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
 	*/
 }
 
+PhysicsComponent::PhysicsComponent(Entity * p, bool dyn, const float size)
+	: Component(p), _dynamic(dyn) {
+
+	b2BodyDef BodyDef;
+	// Is Dynamic(moving), or static(Stationary)
+	BodyDef.type = _dynamic ? b2_dynamicBody : b2_staticBody;
+	BodyDef.position = sv2_to_bv2(invert_height(p->getPosition()));
+
+	// Create the body
+	_body = Physics::GetWorld()->CreateBody(&BodyDef);
+	_body->SetActive(true);
+
+	// Create the fixture shape
+	b2CircleShape circle;
+	// SetAsCircl cricle takes radius
+	circle.m_radius = (size / 2.0f);
+	circle.m_p.Set(0.0f, 0.0f);
+	b2FixtureDef FixtureDefCircle;
+	// Fixture properties
+	// FixtureDef.density = _dynamic ? 10.f : 0.f;
+	FixtureDefCircle.shape = &circle;
+	// Add to body
+	_body->CreateFixture(&FixtureDefCircle);
+}
+
 void PhysicsComponent::setFriction(float r) { _fixture->SetFriction(r); }
 
 void PhysicsComponent::setMass(float m) { _fixture->SetDensity(m); }
