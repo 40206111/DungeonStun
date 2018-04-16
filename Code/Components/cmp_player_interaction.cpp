@@ -3,11 +3,12 @@
 #include "..\EntityMaker.h"
 #include "cmp_projectile_physics.h"
 #include "system_physics.h"
+#include <stdio.h>
 
 using namespace std;
 using namespace sf;
 
-PlayerInteraction::PlayerInteraction(Entity* _parent) : Component(_parent){
+PlayerInteraction::PlayerInteraction(Entity* _parent) : Component(_parent) {
 	cooldowns.push_back(&blockCd);
 	cooldowns.push_back(&blockDuration);
 	cooldowns.push_back(&fireCD);
@@ -43,23 +44,9 @@ void PlayerInteraction::Update(const double &dt) {
 	aimDirection = dir;
 	/// Aim end-----------------------
 
-	/// Fire start--------------------
-	if (player1->GetButtonDown(InputManager::FIRE)) {
-		int x = 5;
-	}
-	if (player1->GetButtonHeld(InputManager::FIRE) && fireCD.Ready()) {
-		// Do a shoot
-		shared_ptr<Entity> proj = dynamic_cast<GameScene*>(_parent->scene)->SpawnEntity(em::PROJECTILE);
-		shared_ptr<ProjectilePhysics> pphys = proj->get_components<ProjectilePhysics>()[0];
-		pphys->teleport(_parent->getPosition() + Vector2f(1.0f, 0.0f));
-		pphys->SetDirection({ 1.0f,0.0f });
-		fireCD.Reset();
-	}
-	/// Fire end----------------------
-
 	/// Blocking start---------------------
 	// If block duration is over
-	if (blockDuration.Ready()) {
+	if (blockDuration.Ready() && blocking) {
 		// Stop blocking
 		blocking = false;
 		// Allow firing
@@ -68,7 +55,7 @@ void PlayerInteraction::Update(const double &dt) {
 		blockCd.Reset();
 	}
 	// If block pushed and ready
-	if (player1->GetButtonDown(InputManager::SHIELD) && blockCd.Ready()) {
+	if (player1->GetButtonDown(InputManager::SHIELD) && blockCd.Ready() && !blocking) {
 		// Activate shield component
 		blocking = true;
 		// Prevent firing
@@ -77,6 +64,17 @@ void PlayerInteraction::Update(const double &dt) {
 		blockDuration.Reset();
 	}
 	/// Blocking end-----------------------
+
+	/// Fire start--------------------
+	if (player1->GetButtonHeld(InputManager::FIRE) && fireCD.Ready() && !blocking) {
+		// Do a shoot
+		shared_ptr<Entity> proj = dynamic_cast<GameScene*>(_parent->scene)->SpawnEntity(em::PROJECTILE);
+		shared_ptr<ProjectilePhysics> pphys = proj->get_components<ProjectilePhysics>()[0];
+		pphys->teleport(_parent->getPosition() + Vector2f(1.0f, 0.0f));
+		pphys->SetDirection({ 1.0f,0.0f });
+		fireCD.Reset();
+	}
+	/// Fire end----------------------
 
 	if (player1->GetButtonDown(InputManager::SVM)) {
 		//Special jump

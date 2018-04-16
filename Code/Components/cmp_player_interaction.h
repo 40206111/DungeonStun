@@ -14,7 +14,7 @@ private:
 
 	std::vector<Cooldown*> cooldowns;
 	Cooldown blockCd = Cooldown(4.0f);
-	Cooldown blockDuration = Cooldown(0.25);
+	Cooldown blockDuration = Cooldown(0.5f);
 	Cooldown fireCD = Cooldown(1.0f);
 	Cooldown activeCD = Cooldown(15.0f);
 
