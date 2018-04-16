@@ -56,9 +56,16 @@ void GameScene::Render() {
 	if (!Engine::ShowingMenu()) {
 		screen->setVisible(false);
 		Scene::Render();
+		ls::render();
 	}
 	else if (showBehind) {
 		screen->setVisible(true);
 		Scene::Render();
+		ls::render();
 	}
+}
+
+void GameScene::ReSize()
+{
+	ls::ReSize();
 }

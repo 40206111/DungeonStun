@@ -57,7 +57,7 @@ target_include_directories(lib_maths INTERFACE "${CMAKE_SOURCE_DIR}/engine/lib_m
 file(GLOB_RECURSE SOURCE_FILES engine/lib_tile_level_loader/*.cpp engine/lib_tile_level_loader/*.h)
 add_library(lib_tile_level_loader STATIC ${SOURCE_FILES})
 target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/engine/lib_tile_level_loader/" )
-target_link_libraries(lib_tile_level_loader lib_maths sfml-graphics)
+target_link_libraries(lib_tile_level_loader lib_engine lib_maths sfml-graphics)
 
 ## ECM lib
 file(GLOB_RECURSE SOURCE_FILES engine/lib_ecm/*.cpp engine/lib_ecm/*.h)
