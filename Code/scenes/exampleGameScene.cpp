@@ -25,6 +25,7 @@ void ExampleGameScene::Load() {
 	player = makeEntity();
 	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
 	em::MakeEntity(player, em::PLAYER);
+	for (int i = 0; i < player->get_components<player)
 	/*auto s = player->addComponent<ShapeComponent>();
 	Vector2f playerSize = Vector2f(20.0f, 30.0f);
 	s->setShape<RectangleShape>(playerSize);
