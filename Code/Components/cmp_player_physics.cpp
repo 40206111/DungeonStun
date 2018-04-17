@@ -13,7 +13,7 @@ using namespace Physics;
 bool PlayerPhysicsComponent::isGrounded() const {
 	auto touch = getTouching();
 	const auto& pos = _body->GetPosition();
-	const float halfPlrHeigt = -0.1;//size.y * .5f;
+	const float halfPlrHeigt = -0.15;//size.y * .5f;
 	const float halfPlrWidth = size.x * .5f;
 	b2WorldManifold manifold;
 	for (const auto& contact : touch) {
