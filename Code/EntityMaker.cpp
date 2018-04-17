@@ -62,7 +62,7 @@ void EntityMaker::MakePlayer(std::shared_ptr<Entity> e)
 	auto pc = e->addComponent<PlayerCondition>();
 	pc->SetContainerSprite(AssetLoader::sprites[AssetLoader::HEART_CONTAINTER]);
 	pc->SetHeartSprite(AssetLoader::sprites[AssetLoader::HEART]);
-	pc->SetHalfHeartSprite(AssetLoader::sprites[AssetLoader::HEART_CONTAINTER]);
+	pc->SetHalfHeartSprite(AssetLoader::sprites[AssetLoader::HALF_HEART]);
 	pc->SetTempHeartSprite(AssetLoader::sprites[AssetLoader::HEART_SHEILD]);
 }
 

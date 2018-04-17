@@ -10,7 +10,7 @@ private:
 	std::shared_ptr<PlayerInteraction> playerInt;
 	// Health sprites
 	int maxHealth = 4;
-	int currentHealth = 4;
+	int currentHealth = 3;
 	int tempHealth = 3;
 	sf::Sprite container;
 	sf::Sprite heart;
