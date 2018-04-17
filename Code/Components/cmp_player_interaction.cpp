@@ -3,7 +3,6 @@
 #include "..\EntityMaker.h"
 #include "cmp_projectile_physics.h"
 #include "system_physics.h"
-#include <stdio.h>
 #include "..\AssetLoader.h"
 
 using namespace std;
@@ -164,7 +163,6 @@ void PlayerInteraction::Update(const double &dt) {
 		shared_ptr<ProjectilePhysics> pphys = proj->get_components<ProjectilePhysics>()[0];
 		pphys->teleport(_parent->getPosition() + Vector2f(0.0f, -playerSize.y / 2.0f) + aimDirection * 25.0f);
 		pphys->SetDirection({ aimDirection });
-		printf("dir: %f\n", dot(aimDirection, { 0 , -1 }));
 
 		fireCD.Reset();
 		shootAnim.Reset();

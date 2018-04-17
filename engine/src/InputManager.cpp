@@ -119,73 +119,7 @@ const std::vector<string> InputManager::Actions{ "Left", "Right", "SVM", "Jump",
 
 //Input manager constructor
 InputManager::InputManager()
-{
-	/// DEBUG///
-	sf::Joystick::Identification id = sf::Joystick::getIdentification(0);
-	cout << "\nVendor ID: " << id.vendorId << "\nProduct ID: " << id.productId << endl;
-
-	string controller("Joystick Use: " + id.name);
-	cout << controller << endl;
-
-	if (sf::Joystick::isConnected(0))
-	{
-		unsigned int buttonCount = sf::Joystick::getButtonCount(0);
-
-		bool hasZ = sf::Joystick::hasAxis(0, sf::Joystick::Z);
-
-		cout << "Button count: " << buttonCount << std::endl;
-		cout << "Has a z-axis: " << hasZ << std::endl;
-	}
-	///END OF DEBUG
-}
-
-//method to output what has been pressed
-void InputManager::ButtonDebug()
-{
-	// LEFT, RIGHT, SVM, JUMP, AIM, FIRE, SHIELD, ACTIVE, Back, Accept
-	if (GetButtonDown(LEFT))
-	{
-		cout << "LEFT" << endl;
-	}
-	if (GetButtonDown(RIGHT))
-	{
-		cout << "RIGHT" << endl;
-	}
-	if (GetButtonDown(SVM))
-	{
-		cout << "SVM" << endl;
-	}
-	if (GetButtonDown(JUMP))
-	{
-		cout << "JUMP" << endl;
-	}
-	if (GetButtonDown(AIM))
-	{
-		cout << "AIM" << endl;
-	}
-	if (GetButtonDown(FIRE))
-	{
-		cout << "FIRE" << endl;
-	}
-	if (GetButtonDown(SHIELD))
-	{
-		cout << "SHEILD" << endl;
-	}
-	if (GetButtonDown(ACTIVE))
-	{
-		cout << "ACTIVE" << endl;
-	}
-	if (GetButtonDown(BACK))
-	{
-		cout << "BACK" << endl;
-	}
-	if (GetButtonDown(ACCEPT))
-	{
-		cout << "ACCEPT" << endl;
-	}
-
-
-}
+{}
 
 // method to remap controls
 bool InputManager::Remap(Action action, int primary, int key)
@@ -207,7 +141,6 @@ bool InputManager::Remap(Action action, int primary, int key)
 			{
 				code = event.key.code;
 				kPressed = true;
-				printf("%d\n", event.key.control);
 			}
 
 			//check if text entered
@@ -417,8 +350,6 @@ void InputManager::Update(const double &dt)
 		}
 	}
 	mMoved = mouseMoved();
-	///DEBUG///
-	ButtonDebug();
 }
 
 //Method to get if dPad has been pressed in direction
