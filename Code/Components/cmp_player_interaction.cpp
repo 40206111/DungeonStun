@@ -105,7 +105,13 @@ void PlayerInteraction::Update(const double &dt) {
 
 	/// Aim start---------------------
 	//  Update aim direction
-	Vector2f dir = (Vector2f)sf::Mouse::getPosition(Renderer::GetWindow()) - _parent->getPosition();
+	Vector2f dir;
+	if (player1->activeControls->controlType == "PS4") {
+		dir = Vector2f(Joystick::getAxisPosition(player1->controlerid, Joystick::Z), Joystick::getAxisPosition(player1->controlerid, Joystick::R));
+	}
+	else {
+		dir = (Vector2f)sf::Mouse::getPosition(Renderer::GetWindow()) - _parent->getPosition();
+	}
 	if (dir != Vector2f(0.0f, 0.0f)) {
 		dir = normalize(dir);
 	}
@@ -170,14 +176,6 @@ void PlayerInteraction::Update(const double &dt) {
 		// Active item
 		// Use the active item
 		activeCD.Reset();
-
-		// To test movement impairing---
-		if (CanMove()) {
-			PreventMoving();
-		}
-		else {
-			AllowMoving();
-		}
 		// ------------------------------
 
 
