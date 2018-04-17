@@ -72,6 +72,39 @@ void ExampleGameScene::Load() {
 		bod->CreateFixture(&FixtureDef);
 	}
 	/// End world colliders
+	/// Start platform colliders
+	vector<Vector2f> thickLocs = ls::findTilesV2f(ls::THICK);
+	vector<Vector2f> thinLocs = ls::findTilesV2f(ls::THIN);
+	for (Vector2f f : thinLocs) {
+		thickLocs.push_back(move(f));
+	}
+	thinLocs.clear();
+	b2Body* plats;
+	b2BodyDef platDef;
+	// Is Dynamic(moving), or static(Stationary)
+	BodyDef.type = b2_staticBody;
+	BodyDef.position = b2Vec2(0, 0);
+	// Create the body
+	plats = Physics::GetWorld()->CreateBody(&platDef);
+	plats->SetActive(true);
+	b2Vec2 sizePlat = Physics::sv2_to_bv2({ ls::getTileSize(), ls::getTileSize() / 20.0f });
+	b2Vec2 toMidPlat = b2Vec2(sizePlat.x / 2.0f, -sizePlat.y / 2.0f);
+
+	for (Vector2f vec : thickLocs) {
+		// Create the fixture shape
+		b2PolygonShape Shape;
+		// SetAsBox box takes HALF-Widths!
+		b2Vec2 tPos = Physics::sv2_to_bv2(Physics::invert_height(vec));
+		Shape.SetAsBox(sizePlat.x * 0.5f, sizePlat.y * 0.5f, tPos + toMidPlat, 0);
+		b2FixtureDef FixtureDef;
+		// Fixture properties
+		FixtureDef.density = 0.0f;
+		FixtureDef.friction = 0.8f;
+		FixtureDef.restitution = 0.0f;
+		FixtureDef.shape = &Shape;
+		// Add to body
+		plats->CreateFixture(&FixtureDef);
+	}
 }
 
 void ExampleGameScene::UnLoad() {
