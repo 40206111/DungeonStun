@@ -25,7 +25,7 @@ void ExampleGameScene::Load() {
 	// make level physics
 	// load player
 	player = makeEntity();
-	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]));
+	player->setPosition(ls::getTilePosition(ls::findTiles(ls::START)[0]) + Vector2f(ls::getTileSize()/2.0f, ls::getTileSize() / 2.0f));
 	em::MakeEntity(player, em::PLAYER);
 	/*auto s = player->addComponent<ShapeComponent>();
 	Vector2f playerSize = Vector2f(20.0f, 30.0f);
@@ -106,6 +106,9 @@ void ExampleGameScene::Reset() {
 
 void ExampleGameScene::Update(const double &dt) {
 	GameScene::Update(dt);
+	if (ls::getTileAt(player->getPosition()) == ls::END) {
+		Engine::ChangeScene(victoryScene);
+	}
 	Event event;
 	while (Renderer::GetWindow().pollEvent(event))
 	{
