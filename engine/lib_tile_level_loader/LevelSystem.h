@@ -21,8 +21,12 @@ public:
 		START = 's',
 		END = 'e',
 		WALL = 'w',
+		FILL = 'o',
 		THICK = 'm',
 		THIN = 'l',
+		TWO_THIN = '2',
+		LOW_THICK = 'b',
+		LOW_THIN = 'a',
 		ENEMY = 'n',
 		CHEST = 'c',
 		WAYPOINT = '+'

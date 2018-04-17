@@ -10,6 +10,7 @@ protected:
 	std::vector<std::shared_ptr<Entity>> projectiles;
 	std::shared_ptr<Scene> activeMenu;
 	std::shared_ptr<Entity> screen;
+	std::shared_ptr<Entity> background;
 	bool showBehind = false;
 
 public:
