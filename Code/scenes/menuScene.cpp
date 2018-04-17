@@ -40,15 +40,26 @@ void MenuScene::Update(const double &dt)
 		{
 		case 0:
 			Engine::ChangeMenu(nullptr);
-			Engine::ChangeScene(egScene);
+			if (Engine::GetActive() == homeScene)
+			{
+				Engine::ChangeScene(egScene);
+			}
 			break;
 		case 1:
 			ChangeCurrent(0);
 			Engine::ChangeMenu(settingsScene);
 			break;
 		case 2:
-			Renderer::Shutdown();
-			Renderer::GetWindow().close();
+			if (Engine::GetActive() != homeScene)
+			{
+				Engine::ChangeMenu(nullptr);
+				Engine::ChangeScene(homeScene);
+			}
+			else
+			{
+				Renderer::Shutdown();
+				Renderer::GetWindow().close();
+			}
 			break;
 		default:
 			break;

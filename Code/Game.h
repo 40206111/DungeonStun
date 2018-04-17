@@ -1,7 +1,6 @@
 #pragma once
 #include "engine.h"
 #include "InputManager.h"
-#include "scenes\gameWorkshop.h"
 #include "scenes\exampleGameScene.h"
 #include <memory>
 #include "scenes\gameScene.h"
@@ -13,7 +12,7 @@ extern std::shared_ptr<Scene> menuScene;
 extern std::shared_ptr<Scene> settingsScene;
 extern std::shared_ptr<Scene> graphicsScene;
 extern std::shared_ptr<Scene> controlsScene;
-extern std::shared_ptr<Scene> activeScene;
-extern GameWorkshop gameScene;
+extern std::shared_ptr<Scene> gameOverScene;
+extern std::shared_ptr<Scene> victoryScene;
 extern std::shared_ptr<Scene> disconnected;
 extern std::shared_ptr<Scene> egScene;
