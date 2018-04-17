@@ -1,16 +1,15 @@
 #pragma once
-#include "textScene.h"
+#include "engine.h"
 #include <SFML/Graphics.hpp>
 
-class GraphicsScene : public TextScene
+class Victory : public Scene
 {
 private:
-	bool fullscreen;
-	int shownRes;
+	sf::Text text;
 public:
-	GraphicsScene() = default;
+	Victory() = default;
 	void Update(const double &dt) override;
 	void Render() override;
 	void Load() override;
-	void UnLoad() override;
+	void ReSize() override;
 };

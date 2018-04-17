@@ -17,6 +17,7 @@ void Entity::Update(const double &dt) {
     if (_components[i]->is_fordeletion()) {
       _components.erase(_components.begin() + i);
       --i;
+	  continue;
     }
     _components[i]->Update(dt);
   }

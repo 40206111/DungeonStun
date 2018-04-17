@@ -79,7 +79,5 @@ protected:
 	sf::Vector2i lastMousePos;
 
 	//methods
-	void ButtonDebug();
-	void CreateControlers();
 	bool mouseMoved();
 };

@@ -2,13 +2,13 @@
 #include "textScene.h"
 #include <SFML/Graphics.hpp>
 
-class GraphicsScene : public TextScene
+class Disconnected : public Scene
 {
 private:
-	bool fullscreen;
-	int shownRes;
+	bool loaded = false;
+	sf::Text discont;
 public:
-	GraphicsScene() = default;
+	Disconnected() = default;
 	void Update(const double &dt) override;
 	void Render() override;
 	void Load() override;

@@ -57,7 +57,7 @@ target_include_directories(lib_maths INTERFACE "${CMAKE_SOURCE_DIR}/engine/lib_m
 file(GLOB_RECURSE SOURCE_FILES engine/lib_tile_level_loader/*.cpp engine/lib_tile_level_loader/*.h)
 add_library(lib_tile_level_loader STATIC ${SOURCE_FILES})
 target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/engine/lib_tile_level_loader/" )
-target_link_libraries(lib_tile_level_loader lib_maths sfml-graphics)
+target_link_libraries(lib_tile_level_loader lib_engine lib_maths sfml-graphics)
 
 ## ECM lib
 file(GLOB_RECURSE SOURCE_FILES engine/lib_ecm/*.cpp engine/lib_ecm/*.h)
@@ -120,7 +120,7 @@ ENDIF(WIN32)
 
 set(CPACK_PACKAGE_FILE_NAME ${CMAKE_PROJECT_NAME})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Games eng coursework game")
-set(CPACK_PACKAGE_VENDOR "Groupie")
+set(CPACK_PACKAGE_VENDOR "PETS STEPS")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 
 set(CPACK_PACKAGE_VERSION_MAJOR "0")

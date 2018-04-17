@@ -7,18 +7,21 @@
 #include <future>
 #include <iostream>
 #include <stdexcept>
+#include "../Code/Game.h"
 
 using namespace sf;
 using namespace std;
-Scene* Engine::_activeScene = nullptr;
+shared_ptr<Scene> Engine::_activeScene = nullptr;
+shared_ptr<Scene> Engine::_activeMenu = nullptr;
 std::string Engine::_gameName;
+bool Engine::menuUp = false;
 
 static bool loading = false;
 static float loadingspinner = 0.f;
 static float loadingTime;
 static RenderWindow* _window;
 
-void Loading_Update(float dt, const Scene* const scn) {
+void Loading_Update(float dt, const shared_ptr<Scene> const scn) {
 	//  cout << "Eng: Loading Screen\n";
 	if (scn->isLoaded()) {
 		cout << "Eng: Exiting Loading Screen\n";
@@ -36,11 +39,11 @@ void Loading_render() {
 	octagon.setRotation(loadingspinner);
 	octagon.setPosition(Vcast<float>(Engine::getWindowSize()) * .5f);
 	octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f*loadingTime)));
-	static Text t("Loading", *Resources::get<sf::Font>("RobotoMono-Regular.ttf"));
+	static Text t("Loading", *Resources::get<sf::Font>("rm_typerighter_old.ttf"));
 	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f*loadingTime)));
 	t.setPosition(Vcast<float>(Engine::getWindowSize()) * Vector2f(0.4f, 0.3f));
-	Renderer::Queue(&t);
-	Renderer::Queue(&octagon);
+	Renderer::Queue(Renderer::Layer::UIMID, &t);
+	Renderer::Queue(Renderer::Layer::UIBACK, &octagon);
 }
 
 float frametimes[256] = {};
@@ -66,8 +69,34 @@ void Engine::Update() {
 		Loading_Update(dt, _activeScene);
 	}
 	else if (_activeScene != nullptr) {
-		Physics::Update(dt);
-		_activeScene->Update(dt);
+		if (player1->activeControls != nullptr)
+		{
+			// Update the inputs for player 1
+			player1->Update(dt);
+		}
+		// If no menu is open
+		if (!menuUp) {
+			// Update physics engine
+			Physics::Update(dt);
+			// Update active scene
+			_activeScene->Update(dt);
+			// If the player pauses open the menu
+			if (player1->activeControls != nullptr && player1->GetButtonDown(InputManager::MENU)) {
+				ChangeMenu(menuScene);
+			}
+		}
+		else {
+			// Update active menu screen
+			_activeMenu->Update(dt);
+		}
+		//check if fullscreen
+		if (player1->activeControls != nullptr && player1->GetButtonDown(player1->FULLSCREEN))
+		{
+			Renderer::ToggleFullscreen();
+			if (_activeMenu != nullptr)
+				_activeMenu->ReSize();
+			_activeScene->ReSize();
+		}
 	}
 }
 
@@ -77,13 +106,16 @@ void Engine::Render(RenderWindow& window) {
 	}
 	else if (_activeScene != nullptr) {
 		_activeScene->Render();
+		if (menuUp) {
+			_activeMenu->Render();
+		}
 	}
 
 	Renderer::Render();
 }
 
 void Engine::Start(unsigned int width, unsigned int height,
-	const std::string& gameName, Scene* scn) {
+	const std::string& gameName, shared_ptr<Scene> scn) {
 	RenderWindow window(VideoMode(width, height), gameName);
 	_gameName = gameName;
 	_window = &window;
@@ -91,16 +123,6 @@ void Engine::Start(unsigned int width, unsigned int height,
 	Physics::initialise();
 	ChangeScene(scn);
 	while (window.isOpen()) {
-		Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == Event::Closed) {
-				window.close();
-			}
-		}
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-			window.close();
-		}
-
 		window.clear();
 		Update();
 		Render(window);
@@ -123,7 +145,7 @@ std::shared_ptr<Entity> Scene::makeEntity() {
 
 void Engine::setVsync(bool b) { _window->setVerticalSyncEnabled(b); }
 
-void Engine::ChangeScene(Scene* s) {
+void Engine::ChangeScene(shared_ptr<Scene> s) {
 	cout << "Eng: changing scene: " << s << endl;
 	auto old = _activeScene;
 	_activeScene = s;
@@ -140,9 +162,38 @@ void Engine::ChangeScene(Scene* s) {
 	}
 }
 
+void Engine::ChangeMenu(shared_ptr<Scene> m) {
+	cout << "Eng: changing scene: " << m << endl;
+	shared_ptr<Scene> old = _activeMenu;
+	_activeMenu = m;
+
+	if (old != nullptr) {
+		old->UnLoad();
+	}
+	else {
+		menuUp = true;
+	}
+	if (m != nullptr) {
+		_activeMenu->Load();
+	}
+	else {
+		menuUp = false;
+	}
+}
+
+void Engine::Resize()
+{
+	_activeMenu->ReSize();
+	_activeScene->ReSize();
+}
+
+
+///SCENE///
 void Scene::Update(const double& dt) { ents.Update(dt); }
 
-void Scene::Render() { ents.render(); }
+void Scene::Render() {
+	ents.render();
+}
 
 bool Scene::isLoaded() const {
 	{

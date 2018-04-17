@@ -16,6 +16,7 @@ public:
   virtual void Update(const double& dt);
   virtual void Render();
   virtual void Reset(){}
+  virtual void ReSize() {}
   bool isLoaded() const;
   std::shared_ptr<Entity> makeEntity();
 
@@ -33,15 +34,20 @@ class Engine {
 public:
   Engine() = delete;
   static void Start(unsigned int width, unsigned int height,
-                    const std::string& gameName, Scene* scn);
-  static void ChangeScene(Scene*);
+                    const std::string& gameName, std::shared_ptr<Scene> scn);
+  static void ChangeScene(std::shared_ptr<Scene>);
+  static void ChangeMenu(std::shared_ptr<Scene>);
   static sf::RenderWindow& GetWindow();
   static sf::Vector2u getWindowSize();
   static void setVsync(bool b);
-
+  static bool ShowingMenu() { return menuUp; }
+  static void Resize();
+  static std::shared_ptr<Scene> GetActive() { return _activeScene; }
 private:
-  static Scene* _activeScene;
+  static std::shared_ptr<Scene> _activeScene;
+  static std::shared_ptr<Scene> _activeMenu;
   static std::string _gameName;
+  static bool menuUp;
   static void Update();
   static void Render(sf::RenderWindow& window);
 };

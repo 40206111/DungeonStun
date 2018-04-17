@@ -11,12 +11,20 @@ using namespace std;
 //Load method
 void GraphicsScene::Load()
 {
-	//Load Text
-	for (int i = 0; i < 4; i++)
+	if (!loaded)
 	{
-		text.push_back(sf::Text());
-		text[i].setFont(font);
+		//Load Text
+		for (int i = 0; i < 3; i++)
+		{
+			text.push_back(sf::Text());
+			text[i].setFont(font);
+		}
+		textAmount = text.size();
+		previousScene = settingsScene;
+		loaded = true;
 	}
+	fullscreen = Renderer::GetFullscreen();
+	shownRes = Renderer::currentRes;
 	text[0].setString("Resolution: " + to_string(Renderer::resolutions[Renderer::currentRes].first) + "x" + to_string(Renderer::resolutions[Renderer::currentRes].second));
 	text[0].setColor(sf::Color::Yellow);
 
@@ -29,10 +37,7 @@ void GraphicsScene::Load()
 		text[1].setString("Fullscreen: false");
 	}
 	text[2].setString("Back");
-	textAmount = text.size();
-	previousScene = settingsScene;
-	fullscreen = Renderer::GetFullscreen();
-	shownRes = Renderer::currentRes;
+	ReSize();
 }
 
 //Update method
@@ -51,7 +56,7 @@ void GraphicsScene::Update(const double &dt)
 		{
 			text[1].setString("Fullscreen: false");
 		}
-		
+
 	}
 	//Right
 	if (player1->GetButtonDown(player1->MENURIGHT) || player1->GetAnaDown(player1->R))
@@ -86,13 +91,15 @@ void GraphicsScene::Update(const double &dt)
 		{
 		case 0:
 			Renderer::setResolution(shownRes);
+			Engine::Resize();
 			break;
 		case 1:
 			Renderer::ToggleFullscreen();
+			Engine::Resize();
 			break;
 		case 2:
 			ChangeCurrent(0);
-			activeScene = previousScene;
+			Engine::ChangeMenu(previousScene);
 			break;
 		default:
 			break;
@@ -106,9 +113,8 @@ void GraphicsScene::Render()
 	TextScene::Render();
 }
 
-void GraphicsScene::Reset()
-{
-	fullscreen = Renderer::GetFullscreen();
-	shownRes = Renderer::currentRes;
-	text[0].setString("Resolution: " + to_string(Renderer::resolutions[shownRes].first) + "x" + to_string(Renderer::resolutions[shownRes].second));
+void GraphicsScene::UnLoad() {
+	TextScene::UnLoad();
 }
+
+
