@@ -8,6 +8,7 @@ protected:
 	std::shared_ptr<Entity> player;
 	std::vector<std::shared_ptr<Entity>> enemies;
 	std::vector<std::shared_ptr<Entity>> projectiles;
+	std::vector<std::shared_ptr<Entity>> health;
 	std::shared_ptr<Scene> activeMenu;
 	std::shared_ptr<Entity> screen;
 	std::shared_ptr<Entity> background;
