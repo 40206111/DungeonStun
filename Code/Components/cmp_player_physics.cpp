@@ -13,7 +13,7 @@ using namespace Physics;
 bool PlayerPhysicsComponent::isGrounded() const {
 	auto touch = getTouching();
 	const auto& pos = _body->GetPosition();
-	const float halfPlrHeigt = size.y * .5f;
+	const float halfPlrHeigt = -0.15;//size.y * .5f;
 	const float halfPlrWidth = size.x * .5f;
 	b2WorldManifold manifold;
 	for (const auto& contact : touch) {
@@ -25,10 +25,11 @@ bool PlayerPhysicsComponent::isGrounded() const {
 			onTop &= (manifold.points[j].y < pos.y - halfPlrHeigt);
 		}
 		if (onTop) {
+			playerInt->SetGroundedState(true);
 			return true;
 		}
 	}
-
+	playerInt->SetGroundedState(false);
 	return false;
 }
 
@@ -44,6 +45,7 @@ void PlayerPhysicsComponent::SetSvmState(bool state) {
 	else {
 		svmCD.Reset();
 		playerInt->SetSvmState(false);
+		grounded = false;
 		this->_body->SetGravityScale(1.0f);
 		// Let player know this inhibition is removed for shooting
 		playerInt->AllowFiring();
@@ -58,6 +60,7 @@ void PlayerPhysicsComponent::Jump(const Vector2f &pos) {
 
 void PlayerPhysicsComponent::Update(const double &dt) {
 	svmCD.Update(dt);
+	maybeGrounded.Update(dt);
 	const auto pos = _parent->getPosition();
 
 	//Teleport to start if we fall off map.
@@ -69,7 +72,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 	if (playerInt->CanMove()) {
 		// If svm button toggle svm state
 		if (player1->GetButtonDown(InputManager::SVM) &&
-			svmCD.Ready() && !playerInt->InSvm() /*-------&& isGrounded()----------*/) {
+			svmCD.Ready() && !playerInt->InSvm() && isGrounded()) {
 			SetSvmState(true);
 		}
 		// if not in SVM do regular movement
@@ -127,6 +130,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 					SetSvmState(false);
 				}
 			}
+			grounded = false;
 		}
 	}
 	// If player cannot move
@@ -140,13 +144,17 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 
 	//Are we in air?
 	if (!grounded) {
+		maybeGrounded.Reset();
 		// Check to see if we have landed yet
 		grounded = isGrounded();
 		// disable friction while jumping
 		setFriction(0.f);
 	}
 	else {
-		setFriction(0.1f);
+		if (!maybeGrounded.Ready()) {
+			grounded = isGrounded();
+		}
+		setFriction(0.9f);
 	}
 
 
@@ -170,6 +178,7 @@ PlayerPhysicsComponent::PlayerPhysicsComponent(Entity* p,
 	_body->SetFixedRotation(true);
 	//Bullet items have higher-res collision detection
 	_body->SetBullet(true);
+	_body->GetFixtureList()[0].SetRestitution(0.0f);
 
 	_body->SetUserData("player");
 }

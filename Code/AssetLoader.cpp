@@ -7,7 +7,7 @@ using namespace std;
 //static vectors
 std::vector<sf::Sprite> AssetLoader::sprites;
 #ifdef SOUND
-std::vector<sf::SoundBuffer> sounds;
+std::vector<std::shared_ptr<sf::SoundBuffer>> AssetLoader::sounds;
 #endif // SOUND
 
 void AssetLoader::LoadAssets()
@@ -193,7 +193,6 @@ void AssetLoader::LoadAssets()
 
 	//sounds
 #ifdef SOUND
-	sounds.push_back(Resources::get<SoundBuffer>("collection.wav"));
 	sounds.push_back(Resources::get<SoundBuffer>("collect2.wav"));
 	sounds.push_back(Resources::get<SoundBuffer>("damage.wav"));
 	sounds.push_back(Resources::get<SoundBuffer>("game over.wav"));
@@ -202,8 +201,6 @@ void AssetLoader::LoadAssets()
 	sounds.push_back(Resources::get<SoundBuffer>("jump2.wav"));
 	sounds.push_back(Resources::get<SoundBuffer>("jump3.wav"));
 	sounds.push_back(Resources::get<SoundBuffer>("taser.wav"));
-	sounds.push_back(Resources::get<SoundBuffer>("taser2.wav"));
 	sounds.push_back(Resources::get<SoundBuffer>("upgrade.wav"));
-	sounds.push_back(Resources::get<SoundBuffer>("woosh.wav"));
 #endif // SOUND
 }

@@ -44,5 +44,5 @@ void ProjectilePhysics::Update(const double & dt)
 void ProjectilePhysics::SetDirection(Vector2f dir)
 {
 	direction = dir;
-	setVelocity(direction * maxSpeed);
+	setVelocity(dir * maxSpeed);
 }

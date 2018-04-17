@@ -16,55 +16,54 @@ PhysicsComponent::PhysicsComponent(Entity* p, bool dyn,
 	: Component(p), _dynamic(dyn) {
 
 	b2BodyDef BodyDef;
-	// Is Dynamic(moving), or static(Stationary)
+	 //Is Dynamic(moving), or static(Stationary)
 	BodyDef.type = _dynamic ? b2_dynamicBody : b2_staticBody;
 	BodyDef.position = sv2_to_bv2(invert_height(p->getPosition()));
+	BodyDef.bullet = true;
 
-	// Create the body
+	//// Create the body
 	_body = Physics::GetWorld()->CreateBody(&BodyDef);
 	_body->SetActive(true);
-	{
-		// Create the fixture shape
-		b2PolygonShape Shape;
-		// SetAsBox box takes HALF-Widths!
-		Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
-		b2FixtureDef FixtureDef;
-		// Fixture properties
-		// FixtureDef.density = _dynamic ? 10.f : 0.f;
-		FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
-		FixtureDef.restitution = .2;
-		FixtureDef.shape = &Shape;
-		// Add to body
-		_fixture = _body->CreateFixture(&FixtureDef);
-		//_fixture->SetRestitution(.9)
-		FixtureDef.restitution = .2;
-	}
+	//{
+	//	// Create the fixture shape
+	//	b2PolygonShape Shape;
+	//	// SetAsBox box takes HALF-Widths!
+	//	Shape.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f, b2Vec2(0.0f, sv2_to_bv2(size).y * 0.5f),0.0f);
+	//	b2FixtureDef FixtureDef;
+	//	// Fixture properties
+	//	// FixtureDef.density = _dynamic ? 10.f : 0.f;
+	//	FixtureDef.friction = _dynamic ? 0.1f : 0.8f;
+	//	FixtureDef.restitution = .2;
+	//	FixtureDef.shape = &Shape;
+	//	// Add to body
+	//	_fixture = _body->CreateFixture(&FixtureDef);
+	//	//_fixture->SetRestitution(.9)
+	//	FixtureDef.restitution = .2;
+	//}
 
 	// An ideal Pod/capusle shape should be used for hte player,
 	// this isn't built into B2d, but we can combine two shapes to do so.
 	// This would allwo the player to go up steps
-	/*
-	  BodyDef.bullet = true;
-	  b2PolygonShape shape1;
-	  shape1.SetAsBox(sv2_to_bv2(size).x * 0.5f, sv2_to_bv2(size).y * 0.5f);
-	  {
-		b2PolygonShape poly ;
-		poly.SetAsBox(0.45f, 1.4f);
-		b2FixtureDef FixtureDefPoly;
 
-		FixtureDefPoly.shape = &poly;
-		_body->CreateFixture(&FixtureDefPoly);
+	b2PolygonShape shape1;
+	shape1.SetAsBox(sv2_to_bv2(size).x * 0.45f, sv2_to_bv2(size).y * 0.25f, b2Vec2(0.0f, sv2_to_bv2(size).y * 0.75f), 0.0f);
 
-	  }
-	  {
-		b2CircleShape circle;
-		circle.m_radius = 0.45f;
-		circle.m_p.Set(0, -1.4f);
-		b2FixtureDef FixtureDefCircle;
-		FixtureDefCircle.shape = &circle;
-		_body->CreateFixture(&FixtureDefCircle);
-	  }
-	*/
+	b2FixtureDef FixtureDefPoly;
+
+	FixtureDefPoly.friction = _dynamic ? 0.1f : 0.8f;
+	FixtureDefPoly.restitution = .2;
+	FixtureDefPoly.shape = &shape1;
+	_body->CreateFixture(&FixtureDefPoly);
+
+	b2CircleShape circle;
+	circle.m_radius = sv2_to_bv2(size).x * 0.5f;
+	circle.m_p.Set(0.0f, sv2_to_bv2(size).y * 0.25f);
+	b2FixtureDef FixtureDefCircle;
+	FixtureDefCircle.friction = _dynamic ? 0.1f : 0.8f;
+	FixtureDefCircle.restitution = .0;
+	FixtureDefCircle.shape = &circle;
+	_fixture = _body->CreateFixture(&FixtureDefCircle);
+
 }
 
 PhysicsComponent::PhysicsComponent(Entity * p, bool dyn, const float size)
@@ -82,13 +81,13 @@ PhysicsComponent::PhysicsComponent(Entity * p, bool dyn, const float size)
 	// Create the fixture shape
 	b2CircleShape circle;
 	// SetAsCircl cricle takes radius
-	circle.m_radius = (size * physics_scale_inv / 2.0f);
+	circle.m_radius = (size * physics_scale_inv);
 	circle.m_p.Set(0.0f, 0.0f);
 	b2FixtureDef FixtureDefCircle;
 	// Fixture properties
 	// FixtureDef.density = _dynamic ? 10.f : 0.f;
 	FixtureDefCircle.shape = &circle;
-	FixtureDefCircle.filter.maskBits = 6;
+	//FixtureDefCircle.filter.maskBits = 8;
 	// Add to body
 	_body->CreateFixture(&FixtureDefCircle);
 	_body->SetGravityScale(0.0f);
@@ -103,20 +102,24 @@ void PhysicsComponent::teleport(const sf::Vector2f& v) {
 }
 
 const sf::Vector2f PhysicsComponent::getVelocity() const {
-	return bv2_to_sv2(_body->GetLinearVelocity(), true);
+	Vector2f out = bv2_to_sv2(_body->GetLinearVelocity(), true);
+	out.y *= -1.0f;
+	return out;
 }
 void PhysicsComponent::setVelocity(const sf::Vector2f& v) {
-	_body->SetLinearVelocity(sv2_to_bv2(v, true));
+	b2Vec2 in = sv2_to_bv2(v, true);
+	in.y *= -1.0f;
+	_body->SetLinearVelocity(in);
 }
 
 b2Fixture* const PhysicsComponent::getFixture() const { return _fixture; }
 
 PhysicsComponent::~PhysicsComponent() {
 	auto a = Physics::GetWorld();
-	_body->SetActive(false);
-	Physics::GetWorld()->DestroyBody(_body);
-	// delete _body;
-	_body = nullptr;
+	//_body->SetActive(false);
+	 //delete _body;
+	a->DestroyBody(_body);
+	//_body = nullptr;
 }
 
 void PhysicsComponent::render() {}

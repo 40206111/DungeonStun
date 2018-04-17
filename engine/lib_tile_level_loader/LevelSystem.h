@@ -46,6 +46,8 @@ public:
 
 	static std::vector<sf::Vector2ul> findTiles(Tile);
 
+	static std::vector<sf::Vector2f> findTilesV2f(Tile);
+
 	static sf::Color getColor(Tile t);
 
 	static void setColor(Tile t, sf::Color c);

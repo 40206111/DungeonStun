@@ -12,7 +12,7 @@ protected:
 public:
 	ProjectilePhysics() = delete;
 	explicit ProjectilePhysics(Entity* p, const float size);
-	~ProjectilePhysics() = default;
+	~ProjectilePhysics() { PhysicsComponent::~PhysicsComponent(); }
 
 	void Update(const double &dt) override;
 	void render()override {}
