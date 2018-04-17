@@ -12,7 +12,8 @@ protected:
 	bool grounded;
 	float groundspeed;
 
-	Cooldown svmCD = Cooldown(3.0);
+	Cooldown svmCD = Cooldown(3.0f);
+	Cooldown maybeGrounded = Cooldown(0.1f);
 	std::shared_ptr<PlayerInteraction> playerInt;
 
 	void Jump(const sf::Vector2f &pos);

@@ -636,6 +636,14 @@ std::vector<sf::Vector2ul> LevelSystem::findTiles(LevelSystem::Tile type) {
 	return v;
 }
 
+vector<Vector2f> LevelSystem::findTilesV2f(LevelSystem::Tile type) {
+	vector<Vector2f> out = vector<Vector2f>();
+	for (Vector2ul vec : findTiles(type)) {
+		out.push_back(Vector2f(vec) * _tileSize + _offset);
+	}
+	return out;
+}
+
 LevelSystem::Tile LevelSystem::getTileAt(Vector2f v) {
 	auto a = v - _offset;
 	if (a.x < 0 || a.y < 0) {
@@ -649,7 +657,7 @@ bool LevelSystem::isOnGrid(sf::Vector2f v) {
 	if (a.x < 0 || a.y < 0) {
 		return false;
 	}
-	auto p = Vector2ul((v - _offset) / (_tileSize));
+	auto p = Vector2ul(a / (_tileSize));
 	if (p.x > _width || p.y > _height) {
 		return false;
 	}
