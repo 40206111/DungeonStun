@@ -45,6 +45,7 @@ void PlayerPhysicsComponent::SetSvmState(bool state) {
 	else {
 		svmCD.Reset();
 		playerInt->SetSvmState(false);
+		grounded = false;
 		this->_body->SetGravityScale(1.0f);
 		// Let player know this inhibition is removed for shooting
 		playerInt->AllowFiring();
@@ -71,7 +72,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 	if (playerInt->CanMove()) {
 		// If svm button toggle svm state
 		if (player1->GetButtonDown(InputManager::SVM) &&
-			svmCD.Ready() && !playerInt->InSvm() /*-------&& isGrounded()----------*/) {
+			svmCD.Ready() && !playerInt->InSvm() && isGrounded()) {
 			SetSvmState(true);
 		}
 		// if not in SVM do regular movement

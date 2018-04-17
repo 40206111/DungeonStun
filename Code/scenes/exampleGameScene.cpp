@@ -21,6 +21,7 @@ void ExampleGameScene::Load() {
 	ls::loadLevelFile("Assets/level.txt", tileSize);
 	float off = Engine::getWindowSize().y - (ls::getHeight() * tileSize);
 	ls::setOffset(Vector2f(0.0f, off));
+	ls::ReSize();
 	// make level physics
 	// load player
 	player = makeEntity();
@@ -59,6 +60,11 @@ void ExampleGameScene::Load() {
 	shared_ptr<Entity> world = makeEntity();
 	/// Start world colliders
 	vector<Vector2f> tileLocs = ls::findTilesV2f(ls::WALL);
+	vector<Vector2f> fillLocs = ls::findTilesV2f(ls::FILL);
+	for (Vector2f f : fillLocs) {
+		tileLocs.push_back(move(f));
+	}
+	fillLocs.clear();
 	b2Body* bod;
 	b2BodyDef BodyDef;
 	// Is Dynamic(moving), or static(Stationary)
