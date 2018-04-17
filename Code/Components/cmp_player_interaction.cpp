@@ -4,6 +4,7 @@
 #include "cmp_projectile_physics.h"
 #include "system_physics.h"
 #include <stdio.h>
+#include "..\AssetLoader.h"
 
 using namespace std;
 using namespace sf;
@@ -14,6 +15,9 @@ PlayerInteraction::PlayerInteraction(Entity* _parent) : Component(_parent) {
 	cooldowns.push_back(&fireCD);
 	cooldowns.push_back(&activeCD);
 	cooldowns.push_back(&shootAnim);
+
+	sound.setBuffer(*AssetLoader::sounds[AssetLoader::sfx::TASER]);
+	sound.setVolume(25.0f);
 }
 
 void PlayerInteraction::SetSvmState(bool state) {
@@ -161,8 +165,10 @@ void PlayerInteraction::Update(const double &dt) {
 		pphys->teleport(_parent->getPosition() + Vector2f(0.0f, -playerSize.y / 2.0f) + aimDirection * 25.0f);
 		pphys->SetDirection({ aimDirection });
 		printf("dir: %f\n", dot(aimDirection, { 0 , -1 }));
+
 		fireCD.Reset();
 		shootAnim.Reset();
+		sound.play();
 	}
 	/// Fire end----------------------
 

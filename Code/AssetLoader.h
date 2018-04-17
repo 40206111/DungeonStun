@@ -1,5 +1,9 @@
 #pragma once
+
+#define SOUND
+
 #include <SFML/Graphics.hpp>
+#include <memory>
 #ifdef SOUND
 #include <SFML/Audio/Sound.hpp>
 
@@ -27,19 +31,18 @@ public:
 
 	//enum describing the sound effects in the sounds vector
 	enum sfx {
-		COLLECT, COLLECT2,
+		COLLECT,
 		DAMAGE, GAME_OVER, HEAL,
 		JUMP, JUMP2, JUMP3, 
-		TASER, TASER2,
+		TASER,
 		UPGRADE,
-		WOOSH
 	};
 	//vector of sprites
 	static std::vector<sf::Sprite> sprites;
 
 	//sounds
 #ifdef SOUND
-	static std::vector<sf::SoundBuffer> sounds;
+	static std::vector<std::shared_ptr<sf::SoundBuffer>> sounds;
 #endif // SOUND
 
 	//load assets method

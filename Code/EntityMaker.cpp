@@ -67,7 +67,7 @@ void EntityMaker::MakeProjectile(std::shared_ptr<Entity> e)
 	shared_ptr<ShapeComponent> s = e->addComponent<ShapeComponent>();
 	float projSize = 10.0f;
 	s->setShape<CircleShape>(projSize);
-	s->getShape().setFillColor(Color::Red);
+	s->getShape().setFillColor(Color::Yellow);
 	s->getShape().setOrigin(Vector2f(projSize / 2.0f, projSize / 2.0f));
 	s->SetRenderLayer(Renderer::Layer::PROJECTILES);
 	shared_ptr<ProjectilePhysics> p = e->addComponent<ProjectilePhysics>(projSize);

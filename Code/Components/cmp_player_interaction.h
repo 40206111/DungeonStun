@@ -2,6 +2,7 @@
 #include "ecm.h"
 #include "..\Cooldown.h"
 #include "cmp_sprite.h"
+#include <SFML\Audio.hpp>
 
 class SpriteComponent;
 
@@ -19,6 +20,8 @@ private:
 	int antiFire = 0;
 	bool isAlive = false;
 	sf::Vector2f playerSize;
+
+	sf::Sound sound;
 
 	std::weak_ptr<SpriteComponent> playerSprite;
 	sf::Sprite playerWalk;
