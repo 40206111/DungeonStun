@@ -91,7 +91,7 @@ PhysicsComponent::PhysicsComponent(Entity * p, bool dyn, const float size)
 	//FixtureDefCircle.filter.maskBits = 8;
 	// Add to body
 	_body->CreateFixture(&FixtureDefCircle);
-	_body->SetGravityScale(1.0f);
+	_body->SetGravityScale(0.0f);
 }
 
 void PhysicsComponent::setFriction(float r) { _fixture->SetFriction(r); }
@@ -103,10 +103,14 @@ void PhysicsComponent::teleport(const sf::Vector2f& v) {
 }
 
 const sf::Vector2f PhysicsComponent::getVelocity() const {
-	return bv2_to_sv2(_body->GetLinearVelocity(), true);
+	Vector2f out = bv2_to_sv2(_body->GetLinearVelocity(), true);
+	out.y *= -1.0f;
+	return out;
 }
 void PhysicsComponent::setVelocity(const sf::Vector2f& v) {
-	_body->SetLinearVelocity(sv2_to_bv2(v, true));
+	b2Vec2 in = sv2_to_bv2(v, true);
+	in.y *= -1.0f;
+	_body->SetLinearVelocity(in);
 }
 
 b2Fixture* const PhysicsComponent::getFixture() const { return _fixture; }

@@ -29,6 +29,10 @@ void PlayerInteraction::SetAlive(bool state) {
 	}
 }
 
+float dot(Vector2f a, Vector2f b) {
+	return a.x * b.x + a.y * b.y;
+}
+
 void PlayerInteraction::Update(const double &dt) {
 	// Update all cooldowns
 	for (Cooldown* cd : cooldowns) {
@@ -37,7 +41,7 @@ void PlayerInteraction::Update(const double &dt) {
 
 	/// Aim start---------------------
 	//  Update aim directin
-	Vector2f dir = (Vector2f)sf::Mouse::getPosition() - _parent->getPosition();
+	Vector2f dir = (Vector2f)sf::Mouse::getPosition(Renderer::GetWindow()) - _parent->getPosition();
 	if (dir != Vector2f(0.0f, 0.0f)) {
 		dir = normalize(dir);
 	}
@@ -66,12 +70,19 @@ void PlayerInteraction::Update(const double &dt) {
 	/// Blocking end-----------------------
 
 	/// Fire start--------------------
-	if (player1->GetButtonHeld(InputManager::FIRE) && fireCD.Ready() && !blocking) {
+	if (player1->GetButtonHeld(InputManager::FIRE) && fireCD.Ready() 
+		&& !blocking) {
+		if (dot(aimDirection, { 0 , -1 }) < -0.5f) {
+			int side = (aimDirection.x > 0 ? 1 : -1);
+			aimDirection = normalize(Vector2f( sqrtf(2), 1 ));
+			aimDirection.x *= side;
+		}
 		// Do a shoot
 		shared_ptr<Entity> proj = dynamic_cast<GameScene*>(_parent->scene)->SpawnEntity(em::PROJECTILE);
 		shared_ptr<ProjectilePhysics> pphys = proj->get_components<ProjectilePhysics>()[0];
-		pphys->teleport(_parent->getPosition() + Vector2f(1.0f, 0.0f));
-		pphys->SetDirection({ 1.0f,0.0f });
+		pphys->teleport(_parent->getPosition() + Vector2f(0.0f, -playerSize.y/2.0f) + aimDirection * 25.0f);
+		pphys->SetDirection({ aimDirection });
+		printf("dir: %f\n", dot(aimDirection, { 0 , -1 }));
 		fireCD.Reset();
 	}
 	/// Fire end----------------------

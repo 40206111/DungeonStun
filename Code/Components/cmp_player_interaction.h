@@ -11,6 +11,7 @@ private:
 	int antiMoves = 0;
 	int antiFire = 0;
 	bool isAlive = false;
+	sf::Vector2f playerSize;
 
 	std::vector<Cooldown*> cooldowns;
 	Cooldown blockCd = Cooldown(4.0f);
@@ -35,6 +36,8 @@ public:
 	bool InSvm() { return inSVM; }
 	bool IsBlocking() { return blocking; }
 	void SetAlive(bool);
+	void SetPlayerSize(sf::Vector2f ps) { playerSize = ps; }
+	sf::Vector2f GetPlayerSize() { return playerSize; }
 
 	void Update(const double &dt) override;
 	void render() override {}

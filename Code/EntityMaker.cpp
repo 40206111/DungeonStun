@@ -51,7 +51,9 @@ void EntityMaker::MakePlayer(std::shared_ptr<Entity> e)
 
 	s->SetRenderLayer(Renderer::Layer::ENTITIES);
 	shared_ptr<PlayerPhysicsComponent> pPhys = e->addComponent<PlayerPhysicsComponent>(playerSize);
-	pPhys->SetPlayerInteraction(e->addComponent<PlayerInteraction>());
+	shared_ptr<PlayerInteraction> pInt = e->addComponent<PlayerInteraction>();
+	pPhys->SetPlayerInteraction(pInt);
+	pInt->SetPlayerSize(playerSize);
 	e->addComponent<PlayerCondition>();
 }
 
