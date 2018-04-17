@@ -25,10 +25,11 @@ bool PlayerPhysicsComponent::isGrounded() const {
 			onTop &= (manifold.points[j].y < pos.y - halfPlrHeigt);
 		}
 		if (onTop) {
+			playerInt->SetGroundedState(true);
 			return true;
 		}
 	}
-
+	playerInt->SetGroundedState(false);
 	return false;
 }
 
@@ -58,6 +59,7 @@ void PlayerPhysicsComponent::Jump(const Vector2f &pos) {
 
 void PlayerPhysicsComponent::Update(const double &dt) {
 	svmCD.Update(dt);
+	maybeGrounded.Update(dt);
 	const auto pos = _parent->getPosition();
 
 	//Teleport to start if we fall off map.
@@ -127,6 +129,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 					SetSvmState(false);
 				}
 			}
+			grounded = false;
 		}
 	}
 	// If player cannot move
@@ -138,16 +141,19 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		dampen({ 0.9f, 1.0f });
 	}
 
-	playerInt->SetGroundedState(grounded);
 	//Are we in air?
 	if (!grounded) {
+		maybeGrounded.Reset();
 		// Check to see if we have landed yet
 		grounded = isGrounded();
 		// disable friction while jumping
 		setFriction(0.f);
 	}
 	else {
-		setFriction(0.1f);
+		if (!maybeGrounded.Ready()) {
+			grounded = isGrounded();
+		}
+		setFriction(0.9f);
 	}
 
 
