@@ -37,4 +37,44 @@ void PlayerCondition::Update(const double &dt) {
 
 void PlayerCondition::render() {
 
+	for (int i = 0; i < maxHealth; i+=2)
+	{
+		Sprite* h = new Sprite();
+
+		if ((currentHealth - i) == 1)
+		{
+			halfHeart.setPosition(10 + i * 30, 10);
+			*h = halfHeart;
+			Renderer::Queue(Renderer::UIFORE, h);
+		}
+		else if (i < currentHealth)
+		{
+			heart.setPosition(10 + i * 30, 10);
+			*h = heart;
+			Renderer::Queue(Renderer::UIFORE,h);
+		}
+		else if (i > currentHealth)
+		{
+			container.setPosition(10 + i * 30, 10);
+			*h = container;
+			Renderer::Queue(Renderer::UIMID, h);
+		}
+	}
+
+	for (int i = 0; i < tempHealth; i++)
+	{
+		Sprite* h = new Sprite();
+		temp.setPosition(5 + i * 60, 5);
+		*h = temp;
+		Renderer::Queue(Renderer::UIBACK, h);
+	}
+}
+
+void PlayerCondition::SetTempHeartSprite(sf::Sprite sc)
+{
+	temp = sc;
+	temp.scale(0.5, 0.5);
+	container.scale(0.5, 0.5);
+	heart.scale(0.5, 0.5);
+	halfHeart.scale(0.5, 0.5);
 }

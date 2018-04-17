@@ -59,7 +59,11 @@ void EntityMaker::MakePlayer(std::shared_ptr<Entity> e)
 	pInt->SetJumpingSprite(AssetLoader::sprites[AssetLoader::LIB_JUMP]);
 	pInt->SetClimbingSprite(AssetLoader::sprites[AssetLoader::LIB_CLIMB]);
 	pInt->SetPlayerSprite(s);
-	e->addComponent<PlayerCondition>();
+	auto pc = e->addComponent<PlayerCondition>();
+	pc->SetContainerSprite(AssetLoader::sprites[AssetLoader::HEART_CONTAINTER]);
+	pc->SetHeartSprite(AssetLoader::sprites[AssetLoader::HEART]);
+	pc->SetHalfHeartSprite(AssetLoader::sprites[AssetLoader::HEART_CONTAINTER]);
+	pc->SetTempHeartSprite(AssetLoader::sprites[AssetLoader::HEART_SHEILD]);
 }
 
 void EntityMaker::MakeProjectile(std::shared_ptr<Entity> e)
