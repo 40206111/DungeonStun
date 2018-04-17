@@ -54,6 +54,11 @@ void EntityMaker::MakePlayer(std::shared_ptr<Entity> e)
 	shared_ptr<PlayerInteraction> pInt = e->addComponent<PlayerInteraction>();
 	pPhys->SetPlayerInteraction(pInt);
 	pInt->SetPlayerSize(playerSize);
+	pInt->SetWalkingSprite(AssetLoader::sprites[AssetLoader::LIB_IDLE]);
+	pInt->SetShootingSprite(AssetLoader::sprites[AssetLoader::LIB_BAM]);
+	pInt->SetJumpingSprite(AssetLoader::sprites[AssetLoader::LIB_JUMP]);
+	pInt->SetClimbingSprite(AssetLoader::sprites[AssetLoader::LIB_CLIMB]);
+	pInt->SetPlayerSprite(s);
 	e->addComponent<PlayerCondition>();
 }
 

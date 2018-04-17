@@ -138,6 +138,7 @@ void PlayerPhysicsComponent::Update(const double &dt) {
 		dampen({ 0.9f, 1.0f });
 	}
 
+	playerInt->SetGroundedState(grounded);
 	//Are we in air?
 	if (!grounded) {
 		// Check to see if we have landed yet
