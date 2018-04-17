@@ -56,9 +56,9 @@ void ExampleGameScene::Load() {
 	proj->setPosition({ (float)(Engine::getWindowSize().x / 2.0f), (float)(Engine::getWindowSize().y / 2.0f) });
 	em::MakeEntity(proj, em::PROJECTILE);
 
-	vector<Vector2f> tileLocs = ls::findTilesV2f(ls::WALL);
 	shared_ptr<Entity> world = makeEntity();
-
+	/// Start world colliders
+	vector<Vector2f> tileLocs = ls::findTilesV2f(ls::WALL);
 	b2Body* bod;
 	b2BodyDef BodyDef;
 	// Is Dynamic(moving), or static(Stationary)
@@ -85,7 +85,7 @@ void ExampleGameScene::Load() {
 		// Add to body
 		bod->CreateFixture(&FixtureDef);
 	}
-
+	/// End world colliders
 }
 
 void ExampleGameScene::UnLoad() {

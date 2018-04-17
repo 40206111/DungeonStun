@@ -13,7 +13,7 @@ using namespace Physics;
 bool PlayerPhysicsComponent::isGrounded() const {
 	auto touch = getTouching();
 	const auto& pos = _body->GetPosition();
-	const float halfPlrHeigt = size.y * .5f;
+	const float halfPlrHeigt = -0.1;//size.y * .5f;
 	const float halfPlrWidth = size.x * .5f;
 	b2WorldManifold manifold;
 	for (const auto& contact : touch) {
@@ -170,6 +170,7 @@ PlayerPhysicsComponent::PlayerPhysicsComponent(Entity* p,
 	_body->SetFixedRotation(true);
 	//Bullet items have higher-res collision detection
 	_body->SetBullet(true);
+	_body->GetFixtureList()[0].SetRestitution(0.0f);
 
 	_body->SetUserData("player");
 }
